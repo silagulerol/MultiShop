@@ -1,0 +1,13 @@
+﻿namespace MultiShop.Catalog.Dtos.ProductImageDtos
+{
+    public class UpdateProductImageDto
+    {
+        public string ProductImageId { get; set; }
+        public string Image1 { get; set; }
+        public string Image2 { get; set; }
+        public string Image3 { get; set; }
+
+        // Product 1 --- N ProductImages
+        public string ProductId { get; set; }
+    }
+}
