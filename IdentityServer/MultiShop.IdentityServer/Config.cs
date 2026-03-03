@@ -35,7 +35,8 @@ namespace MultiShop.IdentityServer
             new ApiScope("CatalogReadPermission", "Read authority for catalog operations"),
             new ApiScope("DiscountFullPermission", "Full authority  for discount operations"),
             new ApiScope("OrderFullPermission" , "Full authority  for order operations"),
-           new ApiScope(IdentityServerConstants.LocalApi.ScopeName)
+            new ApiScope("OrderReadPermission" , "Read authority for order operations"), 
+            new ApiScope(IdentityServerConstants.LocalApi.ScopeName)
 
         };
 
@@ -65,7 +66,7 @@ namespace MultiShop.IdentityServer
                 ClientName = "Multi Shop Admin User",
                 AllowedGrantTypes= GrantTypes.ClientCredentials,
                 ClientSecrets= {new Secret("multishopsecret".Sha256()) },
-                AllowedScopes= { "CatalogReadPermission", "CatalogFullPermission", "DiscountFullPermission" , "OrderFullPermission",
+                AllowedScopes= { "CatalogReadPermission", "CatalogFullPermission", "DiscountFullPermission" , "OrderFullPermission", "OrderReadPermission",
                 IdentityServerConstants.LocalApi.ScopeName,
                 IdentityServerConstants.StandardScopes.Email,
                 IdentityServerConstants.StandardScopes.Profile,
