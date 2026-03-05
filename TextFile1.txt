@@ -1,0 +1,7 @@
+ürün grubu
+cinsiyet
+renk
+beden
+fiyat
+yaka tipi
+kol boyu
