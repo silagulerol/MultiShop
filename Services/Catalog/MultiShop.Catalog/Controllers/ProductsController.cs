@@ -6,7 +6,7 @@ using MultiShop.Catalog.Services.ProductService;
 
 namespace MultiShop.Catalog.Controllers
 {
-    [Authorize]
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
@@ -50,6 +50,13 @@ namespace MultiShop.Catalog.Controllers
         {
             await _productService.DeleteProductAsync(id);
             return Ok();
+        }
+
+        [HttpGet("ProductListWithCategory")]
+        public async Task<IActionResult> ProductListWithCategory()
+        {
+           var values= await _productService.GetProductsWithCategoryAsync();
+            return Ok(values);
         }
     }
 }

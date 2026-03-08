@@ -35,7 +35,21 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiShop.IdentityServer", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Requierements", "Requierements", "{3B0BDB69-021F-4A78-8AD9-CEE5362A6DCA}"
 	ProjectSection(SolutionItems) = preProject
+		..\..\..\Downloads\MultiShop-master\AdminStatisticApiForUI.txt = ..\..\..\Downloads\MultiShop-master\AdminStatisticApiForUI.txt
+		..\..\..\Downloads\MultiShop-master\Card.txt = ..\..\..\Downloads\MultiShop-master\Card.txt
+		..\..\..\Downloads\MultiShop-master\Card2.txt = ..\..\..\Downloads\MultiShop-master\Card2.txt
+		..\..\..\Downloads\MultiShop-master\FontAwesomeLink.txt = ..\..\..\Downloads\MultiShop-master\FontAwesomeLink.txt
+		..\..\..\Downloads\MultiShop-master\IdentityServerVersionErrorSolution.txt = ..\..\..\Downloads\MultiShop-master\IdentityServerVersionErrorSolution.txt
+		..\..\..\Downloads\MultiShop-master\LoginIndex.txt = ..\..\..\Downloads\MultiShop-master\LoginIndex.txt
+		..\..\..\Downloads\MultiShop-master\OcelotCodeExample.txt = ..\..\..\Downloads\MultiShop-master\OcelotCodeExample.txt
+		..\..\..\Downloads\MultiShop-master\OcelotLink.txt = ..\..\..\Downloads\MultiShop-master\OcelotLink.txt
+		..\..\..\Downloads\MultiShop-master\OrderHtml.txt = ..\..\..\Downloads\MultiShop-master\OrderHtml.txt
 		PortainerCmd.txt = PortainerCmd.txt
+		..\..\..\Downloads\MultiShop-master\PortainerCmd.txt = ..\..\..\Downloads\MultiShop-master\PortainerCmd.txt
+		..\..\..\Downloads\MultiShop-master\PortNumbers.txt = ..\..\..\Downloads\MultiShop-master\PortNumbers.txt
+		..\..\..\Downloads\MultiShop-master\SimpleCode.txt = ..\..\..\Downloads\MultiShop-master\SimpleCode.txt
+		..\..\..\Downloads\MultiShop-master\TokenExampleCodeUIProgramCs.txt = ..\..\..\Downloads\MultiShop-master\TokenExampleCodeUIProgramCs.txt
+		..\..\..\Downloads\MultiShop-master\UserExample.txt = ..\..\..\Downloads\MultiShop-master\UserExample.txt
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cargo", "Cargo", "{C5B1703A-BAEA-48B0-875D-777AA7C450C9}"
@@ -62,6 +76,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Requirements", "Requirement
 	ProjectSection(SolutionItems) = preProject
 		TextFile1.txt = TextFile1.txt
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiShop.DtoLayer", "Frontends\MultiShop.DtoLayer\MultiShop.DtoLayer.csproj", "{FD0FD22A-5A01-4C63-AB2C-8BDD0387D03E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -125,6 +141,10 @@ Global
 		{CD8EF77F-1F60-4243-8403-DE24D0AE8072}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD8EF77F-1F60-4243-8403-DE24D0AE8072}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD8EF77F-1F60-4243-8403-DE24D0AE8072}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD0FD22A-5A01-4C63-AB2C-8BDD0387D03E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD0FD22A-5A01-4C63-AB2C-8BDD0387D03E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD0FD22A-5A01-4C63-AB2C-8BDD0387D03E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD0FD22A-5A01-4C63-AB2C-8BDD0387D03E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -153,6 +173,7 @@ Global
 		{D0BDD5E6-AEDC-42B4-8FD0-327ECABD17D2} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{8BFE9390-1D0E-46E4-890D-99F95EFDC4B5} = {D0BDD5E6-AEDC-42B4-8FD0-327ECABD17D2}
 		{CD8EF77F-1F60-4243-8403-DE24D0AE8072} = {8F58858A-1B0F-4DF8-9144-DC10A1261AAA}
+		{FD0FD22A-5A01-4C63-AB2C-8BDD0387D03E} = {8F58858A-1B0F-4DF8-9144-DC10A1261AAA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E23347B0-C150-4ED3-A033-A66471329BD4}
