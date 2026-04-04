@@ -17,9 +17,9 @@
                                 <th>#</th>
                                 <th>Product Name</th>
                                 <th>Product Price</th>
-                                <th>Product Image Url</th>
-                                <th>Description</th>
                                 <th>Category Name</th>
+                                <th>Product Images</th>
+                                <th>Product Details</th>
                                 <th>Delete</th>
                                 <th>Update</th>
                             </tr>
@@ -33,9 +33,9 @@
                                     <th scope="row">@count</th>
                                     <td>@item.ProductName</td>
                                     <td>@item.ProductPrice</td>
-                                    <td>@item.ProductImageUrl</td>
-                                    <td>@item.Description</td>
                                     <td>@item.Category.Name</td>
+                                    <td><a href="/Admin/ProductImage/ProductImageDetail/@item.ProductId" class="btn btn-warning">Product Images</a></td>
+                                    <td><a href="/Admin/ProductDetail/UpdateProductDetail/@item.ProductId" class="btn btn-warning">Product Details</a></td>
                                     <td><a href="/Admin/Product/DeleteProduct/@item.ProductId" class="btn btn-danger">Delete</a></td>
                                     <td><a href="/Admin/Product/UpdateProduct/@item.ProductId" class="btn btn-success">Update</a></td>
                                 </tr>

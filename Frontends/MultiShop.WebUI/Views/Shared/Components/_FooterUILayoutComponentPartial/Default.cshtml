@@ -1,15 +1,19 @@
-﻿<div class="container-fluid bg-dark text-secondary mt-5 pt-5">
+﻿@model ResultAboutDto
+
+<div class="container-fluid bg-dark text-secondary mt-5 pt-5">
     <div class="row px-xl-5 pt-5">
+        
         <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
             <h5 class="text-secondary text-uppercase mb-4">Get In Touch</h5>
             <p class="mb-4">
-                Need help with your order or have a question about a product? Our support team is here to assist you.
-                Reach out anytime and we’ll get back to you as soon as possible.
+               @Model.Description
             </p>
-            <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street, New York, USA</p>
-            <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>info@example.com</p>
-            <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890</p>
+            <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>@Model.Address</p>
+            <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>@Model.Email</p>
+            <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>@Model.Phone</p>
         </div>
+
+
         <div class="col-lg-8 col-md-12">
             <div class="row">
                 <div class="col-md-4 mb-5">

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MultiShop.IdentityServer.Dtos;
 using MultiShop.IdentityServer.Models;
 using System.Threading.Tasks;
@@ -19,6 +20,13 @@ namespace MultiShop.IdentityServer.Controllers
         public RegistersController(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UserList()
+        {
+            var values =await _userManager.Users.ToListAsync();
+            return Ok(values);
         }
 
         [HttpPost]
@@ -39,7 +47,8 @@ namespace MultiShop.IdentityServer.Controllers
                 return Ok("Usser is regitered successfully");
             }else
             {
-                return Ok("There is an error, please try again");
+                return BadRequest(result.Errors);
+                //return Ok("There is an error, please try again");
             }
         }
     }

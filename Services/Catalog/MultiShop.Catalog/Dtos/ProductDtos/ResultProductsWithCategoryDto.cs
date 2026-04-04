@@ -3,7 +3,7 @@ using MultiShop.Catalog.Entities;
 
 namespace MultiShop.Catalog.Dtos.ProductDtos
 {
-    public class ResultProductsWithCategory
+    public class ResultProductsWithCategoryDto
     {
         public string ProductId { get; set; }
         public string ProductName { get; set; }

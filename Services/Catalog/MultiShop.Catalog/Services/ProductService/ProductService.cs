@@ -52,14 +52,30 @@ namespace MultiShop.Catalog.Services.ProductService
             await _productCollection.ReplaceOneAsync(x => x.ProductId == value.ProductId, value);
         }
 
-        public async Task<List<ResultProductsWithCategory>> GetProductsWithCategoryAsync()
+        public async Task<List<ResultProductsWithCategoryDto>> GetProductsWithCategoryAsync()
         {
+            //tüm product'ları db'den çektik
             var values = await _productCollection.Find(_ => true).ToListAsync();
+            // ResultProductsWithCategoryDto nesnesindeki Category property'sini
+            // CategoryId'si product ile aynı olan Category nesnesi ile doldurduk.
             foreach (var item in values)
             {
                 item.Category = await _categoryCollection.Find(x => x.CategoryId == item.CategoryId).FirstAsync();
             }
-            return _mapper.Map<List<ResultProductsWithCategory>>(values);
+            return _mapper.Map<List<ResultProductsWithCategoryDto>>(values);
+        }
+
+
+        public async Task<List<ResultProductsWithCategoryDto>> GetProductsWithCategoryByCategoryIdAsync(string CategoryId)
+        {
+            var values = await _productCollection.Find(x => x.CategoryId == CategoryId).ToListAsync();
+            
+            foreach (var item in values)
+            {
+                item.Category = await _categoryCollection.Find(x => x.CategoryId == item.CategoryId).FirstAsync();
+            }
+            
+            return _mapper.Map<List<ResultProductsWithCategoryDto>>(values);
         }
     }
 }

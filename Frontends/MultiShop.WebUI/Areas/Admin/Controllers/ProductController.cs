@@ -38,6 +38,20 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetProductsWithCategory()
+        {
+            var client = _httpClientFactory.CreateClient();
+            var responseMessage = await client.GetAsync("https://localhost:7070/api/Products/ProductListWithCategory");
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var jsonData = await responseMessage.Content.ReadAsStringAsync();
+                var values = JsonConvert.DeserializeObject<List<ResultProductWithCategoryDto>>(jsonData);
+                return View(values);
+            }
+            return View();
+        }
+
+        [HttpGet]
         public async Task<IActionResult> CreateProduct()
         {
             var client = _httpClientFactory.CreateClient();
@@ -125,18 +139,6 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
             return View();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetProductsWithCategory()
-        {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7070/api/Products/ProductListWithCategory");
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                var jsonData = await responseMessage.Content.ReadAsStringAsync();
-                var values = JsonConvert.DeserializeObject<List<ResultProductWithCategoryDto>>(jsonData);
-                return View(values);
-            }
-            return View();
-        }
+        
     }
 }
