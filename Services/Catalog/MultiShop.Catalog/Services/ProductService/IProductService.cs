@@ -7,9 +7,7 @@ namespace MultiShop.Catalog.Services.ProductService
     {
         Task<List<ResultProductDto>> GetAllProductAsync();
 
-
-        //Bu method async çalışır ama geriye değer döndürmez.
-        //Yani async versiyonu void gibi düşünebilirsin. return olmaz 
+        //Bu method async çalışır ama geriye değer döndürmez.Yani async versiyonu void gibi düşünebilirsin. return olmaz 
         Task UpdateProductAsync(UpdateProductDto updateProductDto);
 
         Task CreateProductAsync(CreateProductDto createProductDto);

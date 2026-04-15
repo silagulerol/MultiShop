@@ -13,25 +13,26 @@ namespace MultiShop.WebUI.Services.Concrete
     public class IdentityService : IIdentityService
     {
         private readonly HttpClient _httpClient;
-        private readonly IHttpContextAccessor _httpContextAccessor ;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ClientSettings _clientSettings;
+        private readonly ServiceApiSettings _serviceApiSettings;
 
-        public IdentityService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, IOptions<ClientSettings> clientSettings)
+        public IdentityService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, IOptions<ClientSettings> clientSettings, IOptions<ServiceApiSettings> serviceApiSettings)
         {
             _httpClient = httpClient;
             _httpContextAccessor = httpContextAccessor;
             _clientSettings = clientSettings.Value;
+            _serviceApiSettings = serviceApiSettings.Value;
         }
 
-        //Giriş yapma metodum
         public async Task<bool> SignIn(SignInDto signInDto)
-        {
+         {
             // GetDiscoveryDocumentAsync: Uygulamanın, IdentityServer'ın hangi kurallarla ve hangi adreslerle çalıştığını öğrenmesini sağlar.
             // normalde bu method https ile çalışır ama biz http ile çalıştığımız için hata verecektir. Bu yüzden Method parametrelerine yeni bir obje oluşturup içine http'yi ekliyoruz.
             var discoveryEndPoint = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
             {
-                Address = "http://localhost:5001",
-                Policy =new DiscoveryPolicy
+                Address = _serviceApiSettings.IdentityServerUrl,
+                Policy = new DiscoveryPolicy
                 {
                     RequireHttps = false
                 }
@@ -53,8 +54,6 @@ namespace MultiShop.WebUI.Services.Concrete
              * "Benim bu kapıdan geçmeye iznim var" demek için kullandığımız anahtardır. Genelde şifreli bir metin yığınıdır.        */
             var token = await _httpClient.RequestPasswordTokenAsync(passwordTokenRequest);
 
-
-
             /* elindeki Access Token (erişim anahtarı) ile IdentityServer’ın kapısını tekrar çalıp,
              * "Bu anahtarın sahibi olan kullanıcının gerçek bilgileri (Adı, Soyadı, Email vb.) nelerdir?" sorusunu sorma işlemini yapar */
             var userInfoRequest = new UserInfoRequest
@@ -74,6 +73,8 @@ namespace MultiShop.WebUI.Services.Concrete
 
             var authenticationProperties = new AuthenticationProperties();
 
+            // IdentityServer'dan aldığın AccessToken (giriş anahtarı), RefreshToken (anahtar eskidiğinde yenisini alma hakkı)
+            // ve ExpiresIn (süre) bilgilerini bu paketin içine koyuyorsun.
             authenticationProperties.StoreTokens(new List<AuthenticationToken>()
             {
                 new AuthenticationToken
@@ -96,11 +97,67 @@ namespace MultiShop.WebUI.Services.Concrete
 
             authenticationProperties.IsPersistent = false;
 
+            //1. Hazırladığın tüm bilgileri (Kimlik + Tokenlar) alır.
+            //2. Bunları karmaşık ve güvenli bir şekilde şifreler.
+            //3. Kullanıcının tarayıcısına bir **Cookie(Çerez) * *olarak gönderir.
             await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                claimsPrincipal , //hazırladığımız kimlik bilgileri, 
+                claimsPrincipal, //hazırladığımız kimlik bilgileri, 
                 authenticationProperties); //Tokenlar
 
             return true;
         }
+
+        public async Task<bool> GetRefreshToken()
+        {
+            var discoveryEndPoint = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
+            {
+                Address = _serviceApiSettings.IdentityServerUrl,
+                Policy = new DiscoveryPolicy
+                {
+                    RequireHttps = false
+                }
+            });
+
+            var refreshToken = await _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
+
+            RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest
+            {
+                ClientId = _clientSettings.MultiShopManagerClient.ClientId,
+                ClientSecret = _clientSettings.MultiShopManagerClient.ClientSecret,
+                RefreshToken = refreshToken,
+                Address = discoveryEndPoint.TokenEndpoint
+            };
+
+            var token = await _httpClient.RequestRefreshTokenAsync(refreshTokenRequest);
+
+            var authenticationToken = new List<AuthenticationToken>()
+            {
+                new AuthenticationToken
+                {
+                    Name = OpenIdConnectParameterNames.AccessToken,
+                    Value = token.AccessToken
+                },
+                new AuthenticationToken
+                {
+                    Name = OpenIdConnectParameterNames.RefreshToken,
+                    Value = token.RefreshToken
+                },
+                new AuthenticationToken
+                {
+                    Name = OpenIdConnectParameterNames.ExpiresIn,
+                    Value = DateTime.Now.AddSeconds(token.ExpiresIn).ToString()
+                }
+            };
+
+            var result = await _httpContextAccessor.HttpContext.AuthenticateAsync();
+
+            var properties = result.Properties;
+
+            properties.StoreTokens(authenticationToken);
+
+            await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, result.Principal, properties);
+            return true;
+        }
+
     }
 }

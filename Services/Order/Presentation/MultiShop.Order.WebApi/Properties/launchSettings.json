@@ -9,22 +9,12 @@
     }
   },
   "profiles": {
-    "http": {
+    "MultiShop.Order.WebApi": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:5003",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "https": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:7070",
+      "applicationUrl": "http://localhost:7072;",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

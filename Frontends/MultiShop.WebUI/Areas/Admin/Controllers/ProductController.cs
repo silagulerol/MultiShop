@@ -8,7 +8,6 @@ using System.Text;
 
 namespace MultiShop.WebUI.Areas.Admin.Controllers
 {
-    [AllowAnonymous]
     [Area("Admin")]
     public class ProductController : Controller
     {
@@ -19,13 +18,17 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
+        void ProductViewBagList()
+        {
+            ViewBag.v1 = "Ana Sayfa";
+            ViewBag.v2 = "Ürünler";
+            ViewBag.v3 = "Ürün Listesi";
+            ViewBag.v0 = "Ürün İşlemleri";
+        }
+
         public async Task<IActionResult> Index()
         {
-            ViewBag.v1 = "Home";
-            ViewBag.v2 = "Categories";
-            ViewBag.v3 = "Product List";
-            ViewBag.v0 = "Product Operation";
-
+            ProductViewBagList();
             var client = _httpClientFactory.CreateClient();
             var responseMessage = await client.GetAsync("https://localhost:7070/api/Products");
             if (responseMessage.IsSuccessStatusCode)

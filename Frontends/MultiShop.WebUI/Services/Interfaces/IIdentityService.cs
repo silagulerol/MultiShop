@@ -6,5 +6,6 @@ namespace MultiShop.WebUI.Services.Interfaces
     {
         // burada kullanıcı girişi için gerekli metodu tanımlayacağız
          Task<bool> SignIn(SignInDto signInDto);
+         Task<bool> GetRefreshToken();
     }
 }
