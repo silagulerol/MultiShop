@@ -11,45 +11,45 @@ namespace MultiShop.Catalog.Controllers
     [ApiController]
     public class FeaturesController : ControllerBase
     {
-        private readonly IFeatureService _featuredService;
+        private readonly IFeatureService _featureService;
 
         public FeaturesController(IFeatureService featuredService)
         {
-            _featuredService = featuredService;
+            _featureService = featuredService;
         }
 
         [HttpGet]
         public async Task<IActionResult> ListFeatures()
         {
-            var values = await _featuredService.GetAllFeatureAsync();
+            var values = await _featureService.GetAllFeatureAsync();
             return Ok(values);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetFeatureById(string id)
         {
-            var value = await _featuredService.GetByIdFeatureAsync(id);
+            var value = await _featureService.GetByIdFeatureAsync(id);
             return Ok(value);
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateFeatureSlide(CreateFeatureDto createFeatureDto)
         {
-            await _featuredService.CreateFeatureAsync(createFeatureDto);
+            await _featureService.CreateFeatureAsync(createFeatureDto);
             return Ok();
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateFeature(UpdateFeatureDto updateFeatureDto)
         {
-            await _featuredService.UpdateFeatureAsync(updateFeatureDto);
+            await _featureService.UpdateFeatureAsync(updateFeatureDto);
             return Ok();
         }
 
         [HttpDelete]
         public async Task<IActionResult> DeleteFeatureSlide(string id)
         {
-            await _featuredService.DeleteFeatureAsync(id);
+            await _featureService.DeleteFeatureAsync(id);
             return Ok();
         }
 

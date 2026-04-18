@@ -17,12 +17,18 @@ namespace MultiShop.WebUI.Controllers
         public async Task<IActionResult> Index(string id)
         {
             ViewBag.i = id;
+            ViewBag.directory1 = "Home";
+            ViewBag.directory2 = "Shop";
+            ViewBag.directory3 = "Products";
             return View();
         }
 
         public async Task<IActionResult> ProductDetail(string id)
         {
             ViewBag.x = id;
+            ViewBag.directory1 = "Home";
+            ViewBag.directory2 = "Shop";
+            ViewBag.directory3 = "Product Detail";
             return View();
         }
 

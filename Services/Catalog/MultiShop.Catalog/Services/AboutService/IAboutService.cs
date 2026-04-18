@@ -6,7 +6,6 @@ namespace MultiShop.Catalog.Services.AboutService
     {
         Task<List<ResultAboutDto>> GetAllAboutAsync();
         Task UpdateAboutAsync(UpdateAboutDto updateAboutDto);
-
         Task CreateAboutAsync(CreateAboutDto createAboutDto);
         Task DeleteAboutAsync(string id);
         Task<ResultAboutDto> GetByIdAboutAsync(string id);

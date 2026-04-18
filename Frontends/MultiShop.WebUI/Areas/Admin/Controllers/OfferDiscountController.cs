@@ -1,110 +1,75 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MultiShop.DtoLayer.CatalogDtos.OfferDiscountDtos;
+using MultiShop.WebUI.Services.CatalogServices.OfferDiscount;
 using Newtonsoft.Json;
 using System.Text;
 
 namespace MultiShop.WebUI.Areas.Admin.Controllers
 {
-    [AllowAnonymous]
     [Area("Admin")]
     public class OfferDiscountController : Controller
     {
 
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IOfferDiscountService _offerDiscountService;
 
-        public OfferDiscountController(IHttpClientFactory httpClientFactory)
+        public OfferDiscountController(IOfferDiscountService offerDiscountService)
         {
-            _httpClientFactory = httpClientFactory;
+            _offerDiscountService = offerDiscountService;
         }
+
         public async Task<IActionResult> Index()
         {
-
-            ViewBag.v1 = "Home";
-            ViewBag.v2 = "OfferDiscount";
-            ViewBag.v3 = "Offer Discount";
-            ViewBag.v0 = "Offer Discount Operations";
-
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7070/api/OfferDiscounts");
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                var jsonData = await responseMessage.Content.ReadAsStringAsync();
-                var values = JsonConvert.DeserializeObject<List<ResultOfferDiscountDto>>(jsonData);
-                return View(values);
-            }
-            return View();
+            OfferDiscountViewbagList();
+            var values = await _offerDiscountService.GetAllOfferDiscountAsync();
+            return View(values);
         }
 
         [HttpGet]
         public async Task<IActionResult> CreateOfferDiscount()
         {
-            ViewBag.v1 = "Home";
-            ViewBag.v2 = "OfferDiscounts";
-            ViewBag.v3 = "Adding New Offer Discount";
-            ViewBag.v0 = "OfferDiscount Operation";
+            OfferDiscountViewbagList();
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateOfferDiscount(CreateOfferDiscountDto createOfferDiscountDto)
         {
-            var client = _httpClientFactory.CreateClient();
-            var jsonData = JsonConvert.SerializeObject(createOfferDiscountDto);
-            StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            var responseMessage = await client.PostAsync("https://localhost:7070/api/OfferDiscounts", stringContent);
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                return RedirectToAction("Index", "OfferDiscount", new { area = "Admin" });
-            }
-            return View();
+            OfferDiscountViewbagList();
+            await _offerDiscountService.CreateOfferDiscountAsync(createOfferDiscountDto);
+            return RedirectToAction("Index", "OfferDiscount", new { area = "Admin" });
         }
 
         public async Task<IActionResult> DeleteOfferDiscount(string id)
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.DeleteAsync($"https://localhost:7070/api/OfferDiscounts?id={id}");
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                return RedirectToAction("Index", "OfferDiscount", new { area = "Admin" });
-            }
-            return View();
+            OfferDiscountViewbagList();
+            await _offerDiscountService.DeleteOfferDiscountAsync(id);
+            return RedirectToAction("Index", "OfferDiscount", new { area = "Admin" });
         }
 
 
         [HttpGet]
         public async Task<IActionResult> UpdateOfferDiscount(string id)
         {
-
-            ViewBag.v1 = "Home";
-            ViewBag.v2 = "OfferDiscounts";
-            ViewBag.v3 = "Offer Discount Update";
-            ViewBag.v0 = "Offer Discount Operation";
-
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync($"https://localhost:7070/api/OfferDiscounts/{id}");
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                var jsonData = await responseMessage.Content.ReadAsStringAsync();
-                var values = JsonConvert.DeserializeObject<UpdateOfferDiscountDto>(jsonData);
-                return View(values);
-            }
-            return View();
+            OfferDiscountViewbagList();
+            var value = await _offerDiscountService.GetByIdOfferDiscountAsync(id);
+            return View(value);
         }
 
         [HttpPost]
         public async Task<IActionResult> UpdateOfferDiscount(UpdateOfferDiscountDto updateOfferDiscountDto)
         {
-            var client = _httpClientFactory.CreateClient();
-            var jsonData = JsonConvert.SerializeObject(updateOfferDiscountDto);
-            StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            var responseMessage = await client.PutAsync("https://localhost:7070/api/OfferDiscounts", stringContent);
+            OfferDiscountViewbagList();
+            await _offerDiscountService.UpdateOfferDiscountAsync(updateOfferDiscountDto);
+            return RedirectToAction("Index", "OfferDiscount", new { area = "Admin" });
+        }
 
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                return RedirectToAction("Index", "OfferDiscount", new { area = "Admin" });
-            }
-            return View();
+        void OfferDiscountViewbagList()
+        {
+            ViewBag.v1 = "Home Page";
+            ViewBag.v2 = "Categories";
+            ViewBag.v3 = "Category List";
+            ViewBag.v0 = "Category Operations";
         }
 
     }

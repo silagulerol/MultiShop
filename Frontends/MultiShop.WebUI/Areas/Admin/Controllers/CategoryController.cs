@@ -11,11 +11,9 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
     [Route("Admin/Category")]
     public class CategoryController : Controller
     {
-        private readonly IHttpClientFactory _httpClientFactory;
         private readonly ICategoryService _categoryService;
-        public CategoryController(IHttpClientFactory httpClientFactory, ICategoryService categoryService)
+        public CategoryController(ICategoryService categoryService)
         {
-            _httpClientFactory = httpClientFactory;
             _categoryService = categoryService;
         }
 
@@ -68,10 +66,10 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
 
         void CategoryViewbagList()
         {
-            ViewBag.v1 = "Ana Sayfa";
-            ViewBag.v2 = "Kategoriler";
-            ViewBag.v3 = "Kategori Listesi";
-            ViewBag.v0 = "Kategori İşlemleri";
+            ViewBag.v1 = "Home Page";
+            ViewBag.v2 = "Categories";
+            ViewBag.v3 = "Category List";
+            ViewBag.v0 = "Category Operations";
         }
     }
 }

@@ -2,11 +2,11 @@
 
 namespace MultiShop.WebUI.Services.CatalogServices.CategoryServices
 {
-    public class CategoryService : ICategoryService
+    public class OfferService : ICategoryService
     {
         private readonly HttpClient _httpClient;
 
-        public CategoryService(HttpClient httpClient)
+        public OfferService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
