@@ -43,7 +43,7 @@
 
     },
 
-    //Order Microservice
+    //Order Mikroservis
     {
       "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",

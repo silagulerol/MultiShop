@@ -38,9 +38,9 @@ namespace MultiShop.WebUI.Handlers
 
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
-                //Diyelim ki istek mikroservise ulaştı ama mikroservis "Bu token'ın süresi dolmuş!" dedi
-                //ve 401 hatası döndü. Kod burada durur ve durumu fark eder.
-                //_identityService.GetRefreshToken() metodunu çağırarak IdentityServer'dan yeni bir Access Token alır.
+                // Diyelim ki istek mikroservise ulaştı ama mikroservis "Bu token'ın süresi dolmuş!" dedi
+                // ve 401 hatası döndü. Kod burada durur ve durumu fark eder.
+                // _identityService.GetRefreshToken() metodunu çağırarak IdentityServer'dan yeni bir Access Token alır.
                 var tokenResponse = await _identityService.GetRefreshToken();
 
                 if (tokenResponse != null)

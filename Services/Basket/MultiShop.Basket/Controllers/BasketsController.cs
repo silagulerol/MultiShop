@@ -9,13 +9,13 @@ namespace MultiShop.Basket.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BasketController : ControllerBase
+    public class BasketsController : ControllerBase
     {
-        private readonly ILoginService _loginServide;
+        private readonly ILoginService _loginService;
         private readonly IBasketService _basketService;
-        public BasketController(ILoginService loginServide, IBasketService basketService)
+        public BasketsController(ILoginService loginService, IBasketService basketService)
         {
-            _loginServide = loginServide;
+            _loginService = loginService;
             _basketService = basketService;
         }
 
@@ -24,14 +24,14 @@ namespace MultiShop.Basket.Controllers
         {
             //bu bize sisteme girmiş olan token'a ait bilgileri(jwt.io da gördüğümüz datalar) vericek
             var user = User.Claims;
-            var value = await _basketService.GetBasketAsync(_loginServide.GetUserId);
+            var value = await _basketService.GetBasketAsync(_loginService.GetUserId);
             return Ok(value);
         }
 
         [HttpPost]
         public async Task<IActionResult> SaveBasketAsync(BasketTotalDto basketTotalDto)
         {
-            basketTotalDto.UserId = _loginServide.GetUserId;
+            basketTotalDto.UserId = _loginService.GetUserId;
             await _basketService.SaveBasketAsync(basketTotalDto);
             return Ok();
         }
@@ -39,7 +39,7 @@ namespace MultiShop.Basket.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteBasketAsync()
         {
-            await _basketService.DeleteBasketAsync(_loginServide.GetUserId);
+            await _basketService.DeleteBasketAsync(_loginService.GetUserId);
             return Ok();
         }
 

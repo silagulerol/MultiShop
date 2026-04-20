@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/UILayout/_UILayout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <div class="col-lg-8">
+            @await Component.InvokeAsync("_OrderAdressesComponentPartial")
+        </div>
+        <div class="col-lg-4">
+            @await Component.InvokeAsync("_OrderDetailComponentPartial")
+            <div class="mb-5">
+                @await Component.InvokeAsync("_OrderPaymentComponentPartial")
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,6 +1,11 @@
-﻿namespace MultiShop.Basket.Dtos
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MultiShop.DtoLayer.BasketDtos
 {
-    // Basket'in içindeki her bir Item için oluşturulan Dto
     public class BasketItemDto
     {
         public string ProductId { get; set; }

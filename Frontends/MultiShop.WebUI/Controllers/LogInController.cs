@@ -35,8 +35,11 @@ namespace MultiShop.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(SignInDto signInDto) 
         {
+            signInDto.UserName = "sam01";
+            signInDto.Password = "1111aA*";
             await _identityService.SignIn(signInDto);
-            return View();
+            return RedirectToAction("Index", "Default");
+            //return View();
         }
 
         // Kullanıcı bilgilerini doğrulamak ve JWT token almak için giriş işlemi

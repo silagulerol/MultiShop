@@ -44,11 +44,11 @@ namespace MultiShop.WebUI.Services.Concrete
                 ClientSecret = _clientSettings.MultiShopManagerClient.ClientSecret,
                 UserName = signInDto.UserName,
                 Password = signInDto.Password,
-                // Address: burada http://localhost/5001/connect/token adresine istek atılacak. Bu adres IdentityServer'ın token alma endpoint'idir.
                 Address = discoveryEndPoint.TokenEndpoint
+                // Address: burada http://localhost/5001/connect/token adresine istek atılacak. Bu adres IdentityServer'ın token alma endpoint'idir.
             };
 
-            //IdentityServer her şey doğruysa içinde kullanıcının yetkilerinin olduğu bir Token dönüyor.
+            // IdentityServer her şey doğruysa içinde kullanıcının yetkilerinin olduğu bir Token dönüyor.
             /* token (Access Token): Bu bir yetki (authorization) aracıdır. 
              * Bizim API'lere (örneğin Katalog veya Sipariş mikroservisine) istek atarken 
              * "Benim bu kapıdan geçmeye iznim var" demek için kullandığımız anahtardır. Genelde şifreli bir metin yığınıdır.        */
