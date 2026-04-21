@@ -29,7 +29,7 @@ namespace MultiShop.Order.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetOrderingById(int id) 
+        public async Task<IActionResult> GetOrderingById(int id)
         {
             var value = await _mediator.Send(new GetOrderingByIdQuery(id));
             return Ok(value);
@@ -53,7 +53,14 @@ namespace MultiShop.Order.WebApi.Controllers
         public async Task<IActionResult> UpdateOrdering(UpdateOrderingCommand command)
         {
             await _mediator.Send(command);
-            return Ok("deletion is successfull");
+            return Ok("update is successfull");
+        }
+
+        [HttpGet("GetOrderingsByUserId/{userId}")]
+        public async Task<IActionResult> GetOrderingsByUserId(string userId)
+        {
+            var values = await _mediator.Send(new GetOrderingByUserIdQuery(userId));
+            return Ok(values);
         }
     }
 }
