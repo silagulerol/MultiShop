@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+ï»¿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using MultiShop.Catalog.Services.AboutService;
 using MultiShop.Catalog.Services.BrandService;
@@ -18,7 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
 {
-    //IdentityServerUrl appsettings.json içinden gelicek. OenID'i çaðýrýcaðýmýz yer. Bu token'ý kiminle kullanacaðýz
+    //IdentityServerUrl appsettings.json iï¿½inden gelicek. OenID'i ï¿½aï¿½ï¿½rï¿½caï¿½ï¿½mï¿½z yer. Bu token'ï¿½ kiminle kullanacaï¿½ï¿½z
     opt.Authority = builder.Configuration["IdentityServerUrl"];
     opt.RequireHttpsMetadata = false;
     opt.Audience = "ResourceCatalog";
@@ -42,9 +42,9 @@ builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("DatabaseSettings"));
 
 builder.Services.AddScoped<IDatabaseSettings>(sp =>
-    {
-        return sp.GetRequiredService<IOptions<DatabaseSettings>>().Value;
-    });
+{
+    return sp.GetRequiredService<IOptions<DatabaseSettings>>().Value;
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

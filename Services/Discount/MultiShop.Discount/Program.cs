@@ -14,8 +14,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 
 
-// Add services to the container.
-
 //Constructor injection ile kullanýlan dependency’leri DI container’a register etmelisin.
 // Yani DiscountService constructor methodu parametre olarak DapperContext alýyor,
 // o yüzden DapperContext'i de register etmelisin. Aksi takdirde runtime error alýrsýn.
