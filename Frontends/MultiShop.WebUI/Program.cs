@@ -4,6 +4,7 @@ using MultiShop.WebUI.Areas.Admin.Controllers;
 using MultiShop.WebUI.Handlers;
 using MultiShop.WebUI.Services.BasketServices;
 using MultiShop.WebUI.Services.CargoServices.CargoCompanyServices;
+using MultiShop.WebUI.Services.CargoServices.CargoCustomerServices;
 using MultiShop.WebUI.Services.CatalogServices.AboutService;
 using MultiShop.WebUI.Services.CatalogServices.BrandService;
 using MultiShop.WebUI.Services.CatalogServices.CategoryServices;
@@ -169,6 +170,11 @@ builder.Services.AddHttpClient<IUserIdentityService, UserIdentityService>(opt =>
 }).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
 
 builder.Services.AddHttpClient<ICargoCompanyService, CargoCompanyService>(opt =>
+{
+    opt.BaseAddress = new Uri($"{values.OcelotUrl}/{values.Cargo.Path}");
+}).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+
+builder.Services.AddHttpClient<ICargoCustomerService, CargoCustomerService>(opt =>
 {
     opt.BaseAddress = new Uri($"{values.OcelotUrl}/{values.Cargo.Path}");
 }).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();

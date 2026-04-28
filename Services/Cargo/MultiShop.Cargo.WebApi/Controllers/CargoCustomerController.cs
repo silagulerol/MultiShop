@@ -43,7 +43,8 @@ namespace MultiShop.Cargo.WebApi.Controllers
                 Phone = createCargoCustomerDto.Phone,
                 Address = createCargoCustomerDto.Address,
                 City = createCargoCustomerDto.City,
-                District = createCargoCustomerDto.District
+                District = createCargoCustomerDto.District,
+                UserCustomerId = createCargoCustomerDto.UserCustomerId,
             };
             _service.TInsert(cargoCustomer);
             return Ok();
@@ -73,5 +74,12 @@ namespace MultiShop.Cargo.WebApi.Controllers
             _service.TDelete(id);
             return Ok();
         }
+
+        [HttpGet("GetCargoCustomerById")]
+        public IActionResult GetCargoCustomerById(string id)
+        {
+            return Ok(_service.TGetCargoCustomerById(id));
+        }
+
     }
 }
