@@ -1,6 +1,6 @@
 User Name ----- Password
 -------------------------
-sam01  
+sam01  ---- 1111aA*
 
 alice01 ---- 2222aA*
 cam01 ---- 3333aA*
