@@ -8,6 +8,7 @@ using System.Text.Json.Nodes;
 
 namespace MultiShop.WebUI.Controllers
 {
+
     //burada amaç visitor token üretip sonrasında bu syafaya erişim sağlayıp sağlayamayacağını test etmekti. 
     //Visitor token'ı ürettikten sonra bu sayfaya erişim sağlanırsa token'ın geçerli olduğunu ve yetkilerin doğru şekilde tanımlandığını görmüş oluruz.
     public class TestController : Controller
@@ -23,7 +24,7 @@ namespace MultiShop.WebUI.Controllers
 
         public async Task<IActionResult> Index()
         {
-            
+
             string token = ""; //Burada API’den gelecek access_token saklanacak.
 
             //API’ye istek atmak için kullanılıyor. using → iş bitince otomatik dispose eder(memory leak olmaz)
@@ -44,11 +45,11 @@ namespace MultiShop.WebUI.Controllers
                 };
                 using (var response = await httpClient.SendAsync(request))
                 {
-                      //Gelen JSON şöyle olur:
-                      //{"access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
-                      //    "expires_in": 3600,
-                      //    "token_type": "Bearer"}
-                  
+                    //Gelen JSON şöyle olur:
+                    //{"access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+                    //    "expires_in": 3600,
+                    //    "token_type": "Bearer"}
+
                     if (response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsStringAsync();
@@ -63,7 +64,7 @@ namespace MultiShop.WebUI.Controllers
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             // isteğimizi ataca olan client'a token türünü ve token'ının Authorization propertysine ekeledik. Categories microservice'ine böylece token ile istedk atmış olduk.
             var responseMessage = await client.GetAsync("https://localhost:7070/api/Categories");
-            
+
             if (responseMessage.IsSuccessStatusCode)
             {
                 //Gelen response'un Conetntini okuduk ve içindeki jsondatayı ResultCategoryDto'ya çevirerek view' ilettik modeli.

@@ -3,7 +3,11 @@
     "Name": "New Profile",
     "Projects": [
       {
-        "Path": "IdentityServer\\MultiShop.IdentityServer\\MultiShop.IdentityServer.csproj",
+        "Path": "Frontends\\MultiShop.WebUI\\MultiShop.WebUI.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "SignalRRealTime\\MultiShop.SignalRRealTime\\MultiShop.SignalRRealTime.csproj",
         "Action": "Start"
       },
       {
@@ -11,15 +15,19 @@
         "Action": "Start"
       },
       {
+        "Path": "IdentityServer\\MultiShop.IdentityServer\\MultiShop.IdentityServer.csproj",
+        "Action": "Start"
+      },
+      {
         "Path": "ApiGateway\\MultiShop.OcelotGateway\\MultiShop.OcelotGateway.csproj",
         "Action": "Start"
       },
       {
-        "Path": "Frontends\\MultiShop.WebUI\\MultiShop.WebUI.csproj",
+        "Path": "Services\\Message\\MultiShop.Message\\MultiShop.Message.csproj",
         "Action": "Start"
       },
       {
-        "Path": "Services\\Message\\MultiShop.Message\\MultiShop.Message.csproj",
+        "Path": "Services\\Comment\\MultiShop.Comment\\MultiShop.Comment.csproj",
         "Action": "Start"
       }
     ]

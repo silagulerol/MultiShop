@@ -22,5 +22,11 @@ namespace MultiShop.WebUI.Services.MessageService
             var values = _httpClient.GetFromJsonAsync<List<ResultSendboxMessageDto>>($"UserMessages/GetMessageSendbox?id={id}");
             return values;
         }
+
+        public Task<int> GetTotalMessageCountByReceiverId(string id)
+        {
+            var values = _httpClient.GetFromJsonAsync<int>($"UserMessages/GetTotalMessageCountByReceiverId?id={id}");
+            return values;
+        }
     }
 }

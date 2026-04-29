@@ -1,0 +1,54 @@
+version: "3.8"
+
+services:
+  basketdb:
+    image: redis:latest
+    container_name: BasketDb
+    ports:
+      - "6379:6379"
+    volumes:
+      - basketdb_data:/data
+    restart: always
+
+  identitydb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: IdentityDb
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Sero1234."
+    ports:
+      - "1433:1433"
+    restart: always
+
+  orderdb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: OrderDb
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Sero1234."
+    ports:
+      - "1440:1433"
+    restart: always
+
+  cargodb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: CargoDb
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Sero1234."
+    ports:
+      - "1441:1433"
+    restart: always
+  
+  commentdb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: CommentDb
+    environment:
+        ACCEPT_EULA: "Y"
+        SA_PASSWORD: "Sero1234."
+    ports:
+        - "1442:1433"
+    restart: always
+
+volumes:
+  basketdb_data:

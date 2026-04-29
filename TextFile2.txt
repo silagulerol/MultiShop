@@ -1,0 +1,31 @@
+Her gün projeyi açmak için sýrayla þunlarý çalýþtýr:
+
+cd C:\Users\LENOVO\Desktop\MultiShop\MultiShop
+
+sc.exe start com.docker.service
+
+wsl --shutdown
+
+wsl -d docker-desktop
+
+Linux ekraný açýlýrsa:
+
+	exit
+
+Sonra kontrol:
+
+	wsl -l -v
+
+docker-desktop Running görünürse:
+
+	docker compose up -d
+
+Son kontrol:
+
+	docker ps
+
+Kapatýrken:
+
+	docker compose stop
+
+Not: docker compose up -d komutunu mutlaka docker-compose.yml dosyasýnýn olduðu klasörde çalýþtýrmalýsýn: C:\Users\LENOVO\Desktop\MultiShop\MultiShop
