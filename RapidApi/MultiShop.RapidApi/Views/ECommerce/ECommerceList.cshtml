@@ -1,0 +1,78 @@
+﻿@model List<MultiShop.RapidApi.Models.ECommerceViewModel.Product>
+
+@{
+    Layout = null;
+}
+
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<div class="container">
+    <h1 class="mt-4 mb-4">E-Commerce List</h1>
+
+    <form method="get" asp-controller="ECommerce" asp-action="ECommerceList" class="mb-4">
+        <div class="row">
+            <div class="col-md-5">
+                <label>Search Product</label>
+                <input type="text" name="q" value="@ViewBag.Query" class="form-control" placeholder="nike shoe, logitech mouse..." />
+            </div>
+
+            <div class="col-md-3">
+                <label>Country</label>
+                <select name="country" class="form-control">
+                    <option value="us">US</option>
+                    <option value="tr">TR</option>
+                    <option value="de">DE</option>
+                    <option value="gb">GB</option>
+                </select>
+            </div>
+
+            <div class="col-md-2 mt-4">
+                <button type="submit" class="btn btn-success">
+                    Search
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>#</th>
+            <th>Product Title</th>
+            <th>Product Rating</th>
+            <th>Product Price</th>
+            <th>Product Details</th>
+        </tr>
+
+        @{
+            int count = 0;
+        }
+
+        @foreach (var item in Model)
+        {
+            count++;
+
+            <tr>
+                <td>@count</td>
+                <td>@item.product_title</td>
+                <td>@item.product_rating</td>
+
+                <td>
+                    @if (item.typical_price_range != null && item.typical_price_range.Length > 0)
+                    {
+                        @item.typical_price_range[0]
+                    }
+                    else
+                    {
+                        <span>-</span>
+                    }
+                </td>
+
+                <td>
+                    <a href="@item.product_page_url" target="_blank" class="btn btn-primary btn-sm">
+                        Detail
+                    </a>
+                </td>
+            </tr>
+        }
+    </table>
+</div>

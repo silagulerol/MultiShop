@@ -1,0 +1,44 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Exchange</title>
+</head>
+<body>
+
+    <h2>Exchange Rate</h2>
+
+    <form method="get" asp-controller="Default" asp-action="Exchange">
+
+        <label>From:</label>
+        <select name="from_symbol">
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="TRY">TRY</option>
+        </select>
+
+        <label>To:</label>
+        <select name="to_symbol">
+            <option value="TRY">TRY</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+        </select>
+
+        <button type="submit">Get Exchange Rate</button>
+
+    </form>
+
+    <hr />
+
+    <h3>
+        Current Exchange Rate:
+        @ViewBag.FromSymbol / @ViewBag.ToSymbol =
+        @ViewBag.ExchangeRate
+    </h3>
+
+</body>
+</html>
