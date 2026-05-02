@@ -1,28 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using MultiShop.DtoLayer.IdentityDtos.LogInDtos;
-using MultiShop.WebUI.Models;
 using MultiShop.WebUI.Services.Interfaces;
-using System.Data;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Principal;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace MultiShop.WebUI.Controllers
 {
     public class LogInController : Controller
     {
-        private readonly IHttpClientFactory _httpClientFactory;
         private readonly IIdentityService _identityService;
 
-        public LogInController(IHttpClientFactory httpClientFactory, IIdentityService identityService)
+        public LogInController(IIdentityService identityService)
         {
-            _httpClientFactory = httpClientFactory;
             _identityService = identityService;
         }
 
@@ -33,22 +22,43 @@ namespace MultiShop.WebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(SignInDto signInDto) 
+        public async Task<IActionResult> Index(SignInDto signInDto)
         {
-            signInDto.UserName = "ayse01";
-            signInDto.Password = "1111Aa*";
-            await _identityService.SignIn(signInDto);
-            return RedirectToAction("Index", "Default");
-            //return View();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var result = await _identityService.SignIn(signInDto);
+
+            if (!result)
+            {
+                ModelState.AddModelError("", "Kullanıcı adı veya şifre hatalı.");
+                return View(signInDto);
+            }
+
+            return RedirectToAction("RedirectByRole");
         }
 
-        // Kullanıcı bilgilerini doğrulamak ve JWT token almak için giriş işlemi
-        /*public async Task<IActionResult> SignIn(SignInDto signInDto)
+        [HttpGet]
+        public IActionResult RedirectByRole()
         {
-            signInDto.UserName = "sam01";
-            signInDto.Password = "1111aA*";
-            await _identityService.SignIn(signInDto);
-            return RedirectToAction("Index", "User");
-        }*/
+            var role = User.Claims.FirstOrDefault(x => x.Type == "role")?.Value;
+
+            
+            if (role == "Admin")
+            {
+                return Redirect("/Admin/Product/Index");
+            }
+
+            if (role == "Vendor")
+            {
+                return RedirectToAction("Index", "Default");
+            }
+
+            if (role == "Customer")
+            {
+                return RedirectToAction("Index", "Default");
+            }
+
+            return RedirectToAction("Index", "Default");
+        }
     }
 }

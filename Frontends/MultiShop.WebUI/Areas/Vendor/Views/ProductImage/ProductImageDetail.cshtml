@@ -1,0 +1,36 @@
+﻿@model UpdateProductImageDto
+@{
+    ViewData["Title"] = "ProductImageDetail";
+    Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
+}
+
+<section class="content container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="chart-box">
+                <h4>Update Product Image</h4>
+                <br />
+                <div class="bs-example" data-example-id="bordered-table">
+
+                    <form method="post">
+                        <input type="hidden" readonly class="form-control" asp-for="@Model.ProductImageId">
+                        <input type="hidden" readonly class="form-control" asp-for="@Model.ProductId">
+                        <label>Image-1</label>
+                        <input type="text" class="form-control" asp-for="@Model.Image1" />
+                        <br />
+                        <label>Image-2</label>
+                        <input type="text" class="form-control" asp-for="@Model.Image2">
+                        <br />
+                        <label>Image-3</label>
+                        <input type="text" class="form-control" asp-for="@Model.Image3">
+                        <br />
+                        <label>Image-4</label>
+                        <input type="text" class="form-control" asp-for="@Model.Image4">
+                        <br />
+                        <button class="btn btn-primary">Update Product Image</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using MultiShop.DtoLayer.IdentityDtos.LogInDtos;
 using MultiShop.WebUI.Services.Interfaces;
 using MultiShop.WebUI.Settings;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace MultiShop.WebUI.Services.Concrete
@@ -67,7 +68,25 @@ namespace MultiShop.WebUI.Services.Concrete
 
             /* Bu kod bloğu, aslında tüm sürecin "Final" kısmıdır. IdentityServer'dan aldığın ham verileri (tokenlar ve kullanıcı bilgileri) alıp,
              * bunları tarayıcıda saklanacak bir Giriş Oturumuna (Session/Cookie) dönüştürüyorsun.        */
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity(userValues.Claims, CookieAuthenticationDefaults.AuthenticationScheme, "name", "role");
+            //ClaimsIdentity claimsIdentity = new ClaimsIdentity(userValues.Claims, CookieAuthenticationDefaults.AuthenticationScheme, "name", "role");
+            var claims = userValues.Claims.ToList();
+
+            var jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(token.AccessToken);
+
+            var roleClaim = jwtToken.Claims.FirstOrDefault(x => x.Type == "role");
+
+            if (roleClaim != null)
+            {
+                claims.RemoveAll(x => x.Type == "role");
+                claims.Add(new Claim("role", roleClaim.Value));
+            }
+
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(
+                claims,
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                "name",
+                "role"
+            );
 
             ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 

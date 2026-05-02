@@ -8,10 +8,10 @@ using MultiShop.WebUI.Services.CatalogServices.ProductServices;
 using Newtonsoft.Json;
 using System.Text;
 
-namespace MultiShop.WebUI.Areas.Admin.Controllers
+namespace MultiShop.WebUI.Areas.Vendor.Controllers
 {
-    [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    [Area("Vendor")]
+    [Authorize(Roles = "Vendor")]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;

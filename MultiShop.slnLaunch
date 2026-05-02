@@ -7,10 +7,6 @@
         "Action": "Start"
       },
       {
-        "Path": "Services\\Catalog\\MultiShop.Catalog\\MultiShop.Catalog.csproj",
-        "Action": "Start"
-      },
-      {
         "Path": "IdentityServer\\MultiShop.IdentityServer\\MultiShop.IdentityServer.csproj",
         "Action": "Start"
       },
@@ -19,7 +15,15 @@
         "Action": "Start"
       },
       {
+        "Path": "Services\\Catalog\\MultiShop.Catalog\\MultiShop.Catalog.csproj",
+        "Action": "Start"
+      },
+      {
         "Path": "Services\\Order\\Presentation\\MultiShop.Order.WebApi\\MultiShop.Order.WebApi.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Services\\Discount\\MultiShop.Discount\\MultiShop.Discount.csproj",
         "Action": "Start"
       },
       {
@@ -32,6 +36,10 @@
       },
       {
         "Path": "Services\\Comment\\MultiShop.Comment\\MultiShop.Comment.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "RabbitMQMessage\\MultiShop.RabbitMQMessageApi\\MultiShop.RabbitMQMessageApi.csproj",
         "Action": "Start"
       }
     ]

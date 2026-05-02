@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MultiShop.IdentityServer.Dtos;
@@ -20,6 +21,8 @@ namespace MultiShop.IdentityServer.Controllers
             _signInManager = signInManager;
             _userManager = userManager;
         }
+
+
         [HttpPost]
         public async Task<IActionResult> UserLogIn(UserLogInDto userLogInDto)
         {

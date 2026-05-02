@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
+}
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <script type="text/javascript">
+                $(document).ready(() => {
+                    // Frontend → SignalRHub’a bağlanıyor
+                    var connection = new signalR.HubConnectionBuilder().withUrl("https://localhost:7266/SignalRHub").build();
+                    $("#connstatus").text(connection.state);
+
+                    connection.start().then(() => {
+                        $("#connstatus").text(connection.state);
+                        //Frontend → Server’daki Hub methodunu çağırıyor. (invoke: server çağırma)
+                        connection.invoke("SendStatisticCount");
+                    }).catch((err) => { console.log(err) });
+
+                    //Server bu eventi gönderirse → ben dinliyorum (Server’dan veri alma) (on: server dinleme))
+                    connection.on("ReceiveCommentCount", (getTotalCommentCount) => {
+                        //gelen değer → ekrana yazılır
+                        $("#commentcount").text(getTotalCommentCount);
+                    });
+
+                });
+
+                /**
+                1. Sayfa açılır
+                2. SignalR bağlantısı kurulur
+                3. Frontend → SendStatisticCount çağırır
+                4. Server → DB’den yorum sayısını alır
+                5. Server → ReceiveCommentCount ile geri gönderir
+                6. Frontend → ekrana yazdırır
+
+                NEDEN BU KADAR ÖNEMLİ?
+                Bu yapı sayesinde: Sayfa REFRESH OLMADAN veri güncellenir
+                Normal API olsaydı : setInterval → sürekli API çağır
+                SignalR ile :  Server → otomatik push
+                
+                 */
+            </script>
+        </div>
+    </div>
+</div>
+
+
+<section class="content container-fluid">
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="chart-box">
+                <div class="bs-example" data-example-id="bordered-table">
+                    <div class="col-md-8 offset-2">
+                        <div class="alert alert-primary">Bağlantının Durumu:<strong id="connstatus"></strong></div>
+                        <div class="alert alert-primary">Yorum Sayısı:<strong id="commentcount"></strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</section>
+
