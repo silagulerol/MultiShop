@@ -29,3 +29,12 @@ Kapatýrken:
 	docker compose stop
 
 Not: docker compose up -d komutunu mutlaka docker-compose.yml dosyasýnýn olduðu klasörde çalýþtýrmalýsýn: C:\Users\LENOVO\Desktop\MultiShop\MultiShop
+
+
+
+C:\Windows\System32>set "params="   && cd /d "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\"   && pushd "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\"   && (if exist "C:\Users\LENOVO\AppData\Local\Temp\getadmin.vbs" del "C:\Users\LENOVO\AppData\Local\Temp\getadmin.vbs"  )  && fsutil dirty query C:   1>nul 2>nul  || (echo Set UAC = CreateObject("Shell.Application") : UAC.ShellExecute "cmd.exe", "/k cd ""C:\PROGRA~3\MICROS~1\Windows\STARTM~1\Programs\Startup\"" && C:\PROGRA~3\MICROS~1\Windows\STARTM~1\Programs\Startup\SAMSUN~1.BAT ", "", "runas", 1   1>>"C:\Users\LENOVO\AppData\Local\Temp\getadmin.vbs"  && "C:\Users\LENOVO\AppData\Local\Temp\getadmin.vbs"   && exit /B  )
+Terminate batch job (Y/N)?
+
+
+
+

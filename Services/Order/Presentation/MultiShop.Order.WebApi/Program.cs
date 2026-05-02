@@ -10,17 +10,18 @@ using System.Security.Cryptography;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // JWKS'den gelen public key
 var rsa = RSA.Create();
 rsa.ImportParameters(new RSAParameters
 {
-    Modulus = Base64UrlEncoder.DecodeBytes("p_JJ3MUyIf3Sc2Ns08PytzwHBKvdbmVwPRl_QuDnVVFI-1AU8VV7jlnzb5dWl6Efl0Lr6xhrI6iticTVIu_ogwW-jVzIEe-0gTgkirVPDZ1YexKZY_fJVmqfY5QOJ01OawOUwi6oQP2Wj7iBXLy66tfXfwYH0oIWqEXJdYosfQVEcS-X5eSCk3AbipOsrfjTNK3b5tN915Yph9_nzFl6ZlDw-GSFWCwB69WXAVL08frBFwhNuXCKHDAwsNLTxodP5TpBxBW_5_whmxA5YItCxeSjbN-oGyypXNwSBqoIjrlTsPhIzvlAZDeUaTT-7oRwmHS7m8hzVd2YJZurB5nI5Q"),
+    Modulus = Base64UrlEncoder.DecodeBytes("xygPrLAdgaS-MRZ8w2UnMP1NPJWzLdVk1v6O4W52BG-5wWypFzxUeJJd6BtzcGO5a2mWv8MMUvgne2bMNk0XcLKN__mQ41T29fjFrep_PXppUdV0EDeA5IoUuan98_gOxUauXXOtwTiPmXN94Eli3qYY-qpQZL-xs_Nhm5BlIKoEm4b27KisIVAxsNg_WZ5JbPyr0QHXkRm8mW2mByAqbiHiyKSyIBIq6i5JswsZehttoki3P93OISvECiVB-bupdBTIbvm39ovXWF863EVg4scPbm6f-7YDkbBFmcuZMn_iPrFXYGLOC9eGlADbSJqeAp3NSpM5Jew3UWnwRbRfjQ"),
     Exponent = Base64UrlEncoder.DecodeBytes("AQAB")
 });
 
 var securityKey = new RsaSecurityKey(rsa)
 {
-    KeyId = "E07468C1864DCEC8754F6256F7F519DF"
+    KeyId = "3EE6973FCFCBE7A3E351E91D36D87526"
 };
 
 builder.Services
@@ -45,6 +46,7 @@ builder.Services
         };
 
     });
+
 
 builder.Services.AddAuthorization();
 

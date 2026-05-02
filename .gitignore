@@ -361,3 +361,28 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+#  Secrets (ÇOK KRÝTÝK)
+*.json
+!appsettings.json
+!appsettings.Development.json
+
+*service-account*.json
+*avian-silicon*.json
+
+#  Env files
+.env
+.env.*
+
+#  Connection strings backup
+*.config.local
+
+#  Docker
+docker-compose.override.yml
+
+#  VS Code
+.vscode/
+
+#  OS
+.DS_Store
+Thumbs.db
