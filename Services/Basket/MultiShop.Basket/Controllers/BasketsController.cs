@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using MultiShop.Basket.Dtos;
@@ -13,6 +13,7 @@ namespace MultiShop.Basket.Controllers
     {
         private readonly ILoginService _loginService;
         private readonly IBasketService _basketService;
+
         public BasketsController(ILoginService loginService, IBasketService basketService)
         {
             _loginService = loginService;
@@ -20,9 +21,9 @@ namespace MultiShop.Basket.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetBasketDetailAsync() 
+        public async Task<IActionResult> GetBasketDetailAsync()
         {
-            //bu bize sisteme girmiş olan token'a ait bilgileri(jwt.io da gördüğümüz datalar) vericek
+            // bu bize sisteme girmiş olan token'a ait bilgileri(jwt.io da gördüğümüz datalar) vericek
             var user = User.Claims;
             var value = await _basketService.GetBasketAsync(_loginService.GetUserId);
             return Ok(value);
@@ -42,6 +43,5 @@ namespace MultiShop.Basket.Controllers
             await _basketService.DeleteBasketAsync(_loginService.GetUserId);
             return Ok();
         }
-
     }
 }

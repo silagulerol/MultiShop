@@ -1,0 +1,34 @@
+var client = _httpClientFactory.CreateClient();
+            var jsonData = JsonSerializer.Serialize(createLogInDto);
+            var stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
+            var response = await client.PostAsync("http://localhost:5001/api/LogIns", stringContent);
+            if(response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadAsStringAsync();
+                var tokenModel = JsonSerializer.Deserialize<JwtResponseModel>(data, new JsonSerializerOptions 
+                { 
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                });
+
+                if (tokenModel != null)
+                {
+                    JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+                    var token = handler.ReadJwtToken(tokenModel.Token);
+                    var claims = token.Claims.ToList();
+
+                    if(tokenModel.Token != null)
+                    {
+                        claims.Add(new Claim("multishoptoken", tokenModel.Token));
+                        var claimsIdentity = new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme); 
+                        var authProps = new AuthenticationProperties
+                        {
+                            IsPersistent = true,
+                            ExpiresUtc = tokenModel.ExpireDate
+                        };
+
+                        await HttpContext.SignInAsync(JwtBearerDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity),authProps);
+                        var id = _loginService.GetUserId;
+                        return RedirectToAction("Index", "Default");
+                    }
+                }
+            }
