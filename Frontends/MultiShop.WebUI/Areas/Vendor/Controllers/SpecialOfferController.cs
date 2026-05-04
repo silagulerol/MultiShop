@@ -4,10 +4,12 @@ using MultiShop.DtoLayer.CatalogDtos.SpecialOfferDtos;
 using MultiShop.WebUI.Services.CatalogServices.SpecialOfferService;
 using Newtonsoft.Json;
 using System.Text;
+using System.Security.Claims;
 
-namespace MultiShop.WebUI.Areas.Admin.Controllers
+namespace MultiShop.WebUI.Areas.Vendor.Controllers
 {
-    [Area("Admin")]
+    [Area("Vendor")]
+    [Authorize(Roles = "Vendor")]
     public class SpecialOfferController : Controller
     {
         private readonly ISpecialOfferService _specialOfferService;
@@ -17,11 +19,28 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
             _specialOfferService = specialOfferService;
         }
 
+        private string GetCurrentVendorId()
+        {
+            return User.FindFirst("sub")?.Value
+                ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+
+        private async Task<bool> IsSpecialOfferOwner(string specialOfferId)
+        {
+            var offer = await _specialOfferService.GetSpecialOfferByIdAsync(specialOfferId);
+
+            if (offer == null)
+                return false;
+
+            return offer.VendorId == GetCurrentVendorId();
+        }
+
         public async Task<IActionResult> Index()
         {
             SpecialOfferViewbagList();
-            var values = await _specialOfferService.GetAllSpecialOffersAsync();
-           return View(values);
+            var vendorId = GetCurrentVendorId();
+            var values = await _specialOfferService.GetSpecialOffersByVendorIdAsync(vendorId);
+            return View(values);
         }
 
         [HttpGet]
@@ -35,21 +54,27 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         public async Task<IActionResult> CreateSpecialOffer(CreateSpecialOfferDto createSpecialOfferDto)
         {
             SpecialOfferViewbagList();
+            createSpecialOfferDto.VendorId = GetCurrentVendorId();
             await _specialOfferService.InsertSpecialOfferAsync(createSpecialOfferDto);
-            return RedirectToAction("Index", "SpecialOffer", new { area = "Admin" });   
+            return Redirect("/Vendor/SpecialOffer/Index");   
         }
 
         public async Task<IActionResult> DeleteSpecialOffer(string id)
         {
-            SpecialOfferViewbagList();
+            if (!await IsSpecialOfferOwner(id))
+                return Forbid();
+
             await _specialOfferService.DeleteSpecialOfferAsync(id);
-            return RedirectToAction("Index", "SpecialOffer", new { area = "Admin" });
+            return Redirect("/Vendor/SpecialOffer/Index");
         }
 
 
         [HttpGet]
         public async Task<IActionResult> UpdateSpecialOffer(string id)
         {
+            if (!await IsSpecialOfferOwner(id))
+                return Forbid();
+
             SpecialOfferViewbagList();
             var value = await _specialOfferService.GetSpecialOfferByIdAsync(id);
             return View(value);
@@ -58,9 +83,13 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateSpecialOffer(UpdateSpecialOfferDto updateSpecialOfferDto)
         {
-            SpecialOfferViewbagList();
+            if (!await IsSpecialOfferOwner(updateSpecialOfferDto.SpecialOfferId))
+                return Forbid();
+
+            updateSpecialOfferDto.VendorId = GetCurrentVendorId();
+
             await _specialOfferService.UpdateSpecialOfferAsync(updateSpecialOfferDto);
-            return RedirectToAction("Index", "SpecialOffer", new { area = "Admin" });
+            return Redirect("/Vendor/SpecialOffer/Index");
         }
 
         void SpecialOfferViewbagList()

@@ -53,6 +53,16 @@ namespace MultiShop.WebUI.Services.CatalogServices.ProductServices
             return await _httpClient.GetFromJsonAsync<List<ResultProductWithCategoryDto>>($"products/ProductListWithCategoryByCategoryId/{CategoryId}");
         }
 
-      
+        public async Task<List<ResultProductDto>> GetProductsByVendorIdAsync(string vendorId)
+        {
+            return await _httpClient.GetFromJsonAsync<List<ResultProductDto>>(
+                $"products/GetProductsByVendorId/{vendorId}");
+        }
+
+        public async Task<List<ResultProductWithCategoryDto>> GetProductsWithCategoryByVendorIdAsync(string vendorId)
+        {
+            return await _httpClient.GetFromJsonAsync<List<ResultProductWithCategoryDto>>(
+                $"products/ProductListWithCategoryByVendorId/{vendorId}");
+        }
     }
 }

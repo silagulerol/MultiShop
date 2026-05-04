@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "CargoCompanyList";
-    Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
+    Layout = "~/Areas/Vendor/Views/VendorLayout/Index.cshtml";
     int count = 0;
 }
 
@@ -27,13 +27,13 @@
                                 <tr>
                                     <th scope="row">@count</th>
                                     <td>@item.cargoCompanyName</td>
-                                    <td><a href="/Admin/Cargo/DeleteCargoCompany/@item.cargoCompanyId" class="btn btn-danger">Delete</a></td>
-                                    <td><a href="/Admin/Cargo/UpdateCargoCompany/@item.cargoCompanyId" class="btn btn-success">Update</a></td>
+                                    <td><a href="/Vendor/Cargo/DeleteCargoCompany/@item.cargoCompanyId" class="btn btn-danger">Delete</a></td>
+                                    <td><a href="/Vendor/Cargo/UpdateCargoCompany/@item.cargoCompanyId" class="btn btn-success">Update</a></td>
                                 </tr>
                             }
                         </tbody>
                     </table>
-                    <a href="/Admin/Cargo/CreateCargoCompany" class="btn btn-primary">Add new Cargo Company</a>
+                    <a href="/Vendor/Cargo/CreateCargoCompany" class="btn btn-primary">Add new Cargo Company</a>
                 </div>
             </div>
         </div>

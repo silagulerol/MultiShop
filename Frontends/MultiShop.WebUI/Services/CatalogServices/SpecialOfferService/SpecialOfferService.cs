@@ -44,5 +44,10 @@ namespace MultiShop.WebUI.Services.CatalogServices.SpecialOfferService
         {
             throw new NotImplementedException();
         }
+        public async Task<List<ResultSpecialOfferDto>> GetSpecialOffersByVendorIdAsync(string vendorId)
+        {
+            return await _httpClient.GetFromJsonAsync<List<ResultSpecialOfferDto>>
+                ($"specialOffers/GetSpecialOffersByVendorId/{vendorId}");
+        }
     }
 }

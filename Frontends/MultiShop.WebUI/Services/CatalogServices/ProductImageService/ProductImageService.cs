@@ -13,7 +13,13 @@ namespace MultiShop.WebUI.Services.CatalogServices.ProductImageService
 
         public async Task CreateProductImageAsync(CreateProductImageDto createProductImageDto)
         {
-            await _httpClient.PostAsJsonAsync("productimages", createProductImageDto);
+            var response = await _httpClient.PostAsJsonAsync("productimages", createProductImageDto);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"ProductImage create failed. Status: {response.StatusCode}, Error: {error}");
+            }
         }
 
         public async Task DeleteProductImageAsync(string id)
@@ -33,15 +39,43 @@ namespace MultiShop.WebUI.Services.CatalogServices.ProductImageService
 
         public async Task<UpdateProductImageDto> GetByProductIdProductImageAsync(string id)
         {
-            //var responseMessage = await _httpClient.GetAsync($"productimages/ProductImagesByProductId/{id}");
-            //var values= await responseMessage.Content.ReadFromJsonAsync<UpdateProductImageDto>();
-            //return values;
-            return await _httpClient.GetFromJsonAsync<UpdateProductImageDto>($"productimages/ProductImagesByProductId/{id}");
+            var response = await _httpClient.GetAsync($"productimages/ProductImagesByProductId/{id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return new UpdateProductImageDto
+                {
+                    ProductId = id
+                };
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return new UpdateProductImageDto
+                {
+                    ProductId = id
+                };
+            }
+
+            var value = System.Text.Json.JsonSerializer.Deserialize<UpdateProductImageDto>(
+                json,
+                new System.Text.Json.JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+            return value ?? new UpdateProductImageDto
+            {
+                ProductId = id
+            };
         }
 
         public async Task UpdateProductImageAsync(UpdateProductImageDto updateProductImageDto)
         {
-            await _httpClient.PutAsJsonAsync("productimages", updateProductImageDto);
+            var response= await _httpClient.PutAsJsonAsync("productimages", updateProductImageDto);
+            response.EnsureSuccessStatusCode();
         }
     }
 }

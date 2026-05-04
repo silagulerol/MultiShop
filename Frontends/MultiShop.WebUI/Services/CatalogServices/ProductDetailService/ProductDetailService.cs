@@ -33,7 +33,37 @@ namespace MultiShop.WebUI.Services.CatalogServices.ProductDetailService
 
         public async Task<UpdateProductDetailDto> GetByProductIdProductDetailAsync(string ProductId)
         {
-            return await _httpClient.GetFromJsonAsync<UpdateProductDetailDto>($"productdetails/product/{ProductId}");
+            var response = await _httpClient.GetAsync($"productdetails/product/{ProductId}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return new UpdateProductDetailDto
+                {
+                    ProductId = ProductId
+                };
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return new UpdateProductDetailDto
+                {
+                    ProductId = ProductId
+                };
+            }
+
+            var value = System.Text.Json.JsonSerializer.Deserialize<UpdateProductDetailDto>(
+                json,
+                new System.Text.Json.JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+            return value ?? new UpdateProductDetailDto
+            {
+                ProductId = ProductId
+            };
         }
 
         public async Task UpdateProductDetailAsync(UpdateProductDetailDto updateProductDetailDto)

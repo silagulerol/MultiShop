@@ -10,8 +10,9 @@ namespace MultiShop.DtoLayer.CatalogDtos.ProductDtos
     {
         public string ProductName { get; set; }
         public decimal ProductPrice { get; set; }
-        public string ProductImageUrl { get; set; }
+        public string? ProductImageUrl { get; set; }
         public string Description { get; set; }
         public string CategoryId { get; set; }
+        public string VendorId { get; set; }
     }
 }

@@ -10,12 +10,14 @@ namespace MultiShop.Catalog.Entities
         public string ProductId { get; set; }
         public string ProductName { get; set; }
         public decimal ProductPrice { get; set; }
-        public string ProductImageUrl { get; set; }
+        public string? ProductImageUrl { get; set; }
         public string Description { get; set; }
 
         [BsonRepresentation(BsonType.ObjectId)]
         public string CategoryId { get; set; }
 
+        public string VendorId { get; set; }
+        
         [BsonIgnore]
         //bir property’nin veritabanına kaydedilmemesini sağlayan bir attribute’tur.
         //Bu property C# tarafında var ama MongoDB’ye yazma.

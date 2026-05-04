@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MultiShop.DtoLayer.CatalogDtos.CategoryDtos;
@@ -7,6 +7,7 @@ using MultiShop.WebUI.Services.CatalogServices.CategoryServices;
 using MultiShop.WebUI.Services.CatalogServices.ProductServices;
 using Newtonsoft.Json;
 using System.Text;
+using System.Security.Claims;
 
 namespace MultiShop.WebUI.Areas.Vendor.Controllers
 {
@@ -14,6 +15,24 @@ namespace MultiShop.WebUI.Areas.Vendor.Controllers
     [Authorize(Roles = "Vendor")]
     public class ProductController : Controller
     {
+        private string GetCurrentVendorId()
+        {
+            return User.FindFirst("sub")?.Value 
+                ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+
+        private async Task<bool> IsProductOwner(string productId)
+        {
+            var product = await _productService.GetByIdProductAsync(productId);
+
+            if (product == null)
+            {
+                return false;
+            }
+
+            return product.VendorId == GetCurrentVendorId();
+        }
+
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
 
@@ -26,14 +45,19 @@ namespace MultiShop.WebUI.Areas.Vendor.Controllers
         public async Task<IActionResult> Index()
         {
             ProductViewBagList();
-            var values= await _productService.GetAllProductAsync();
+
+            var vendorId = GetCurrentVendorId();
+            var values = await _productService.GetProductsByVendorIdAsync(vendorId);
+
             return View(values);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetProductsWithCategory()
         {
-            var values = await _productService.GetProductsWithCategoryAsync();
+            var vendorId = GetCurrentVendorId();
+            var values = await _productService.GetProductsWithCategoryByVendorIdAsync(vendorId);
+
             return View(values);
         }
 
@@ -55,38 +79,57 @@ namespace MultiShop.WebUI.Areas.Vendor.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProduct(CreateProductDto createProductDto)
         {
-            await _productService.CreateProductAsync(createProductDto);
-            return RedirectToAction("Index", "Product", new { area = "Admin" });
+            createProductDto.VendorId = GetCurrentVendorId();
 
+            await _productService.CreateProductAsync(createProductDto);
+
+            return Redirect("/Vendor/Product/Index");
         }
 
         public async Task<IActionResult> DeleteProduct(string id)
         {
+            if (!await IsProductOwner(id))
+            {
+                return Forbid();
+            }
+
             await _productService.DeleteProductAsync(id);
-            return RedirectToAction("Index", "Product", new { area = "Admin" });
+            return Redirect("/Vendor/Product/Index");
         }
 
         [HttpGet]
         public async Task<IActionResult> UpdateProduct(string id)
         {
+            if (!await IsProductOwner(id))
+            {
+                return Forbid();
+            }
+
             var values = await _categoryService.GetAllCategoryAsync();
             List<SelectListItem> categoryValues = (from x in values
-                                                       select new SelectListItem
-                                                       {
-                                                           Text = x.Name,
-                                                           Value = x.CategoryId
-                                                       }).ToList();
+                                                   select new SelectListItem
+                                                   {
+                                                       Text = x.Name,
+                                                       Value = x.CategoryId
+                                                   }).ToList();
             ViewBag.CategoryValues = categoryValues;
+
             var value = await _productService.GetByIdProductAsync(id);
             return View(value);
-           
         }
 
         [HttpPost]
         public async Task<IActionResult> UpdateProduct(UpdateProductDto updateProductDto)
         {
+            if (!await IsProductOwner(updateProductDto.ProductId))
+            {
+                return Forbid();
+            }
+
+            updateProductDto.VendorId = GetCurrentVendorId();
+
             await _productService.UpdateProductAsync(updateProductDto);
-            return RedirectToAction("GetProductsWithCategory", "Product", new { area = "Admin" });
+            return Redirect("/Vendor/Product/GetProductsWithCategory");
         }
 
         void ProductViewBagList()

@@ -1,7 +1,7 @@
 ﻿@model List<ResultProductWithCategoryDto>
 @{
     ViewData["Title"] = "GetProductsWithCategory";
-    Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
+    Layout = "~/Areas/Vendor/Views/VendorLayout/Index.cshtml";
     int count = 0;
 }
 
@@ -34,15 +34,15 @@
                                     <td>@item.ProductName</td>
                                     <td>@item.ProductPrice</td>
                                     <td>@item.Category.Name</td>
-                                    <td><a href="/Admin/ProductImage/ProductImageDetail/@item.ProductId" class="btn btn-warning">Product Images</a></td>
-                                    <td><a href="/Admin/ProductDetail/UpdateProductDetail/@item.ProductId" class="btn btn-warning">Product Details</a></td>
-                                    <td><a href="/Admin/Product/DeleteProduct/@item.ProductId" class="btn btn-danger">Delete</a></td>
-                                    <td><a href="/Admin/Product/UpdateProduct/@item.ProductId" class="btn btn-success">Update</a></td>
+                                    <td><a href="/Vendor/ProductImage/ProductImageDetail/@item.ProductId" class="btn btn-warning">Product Images</a></td>
+                                    <td><a href="/Vendor/ProductDetail/UpdateProductDetail/@item.ProductId" class="btn btn-warning">Product Details</a></td>
+                                    <td><a href="/Vendor/Product/DeleteProduct/@item.ProductId" class="btn btn-danger">Delete</a></td>
+                                    <td><a href="/Vendor/Product/UpdateProduct/@item.ProductId" class="btn btn-success">Update</a></td>
                                 </tr>
                             }
                         </tbody>
                     </table>
-                    <a href="/Admin/Product/CreateProduct" class="btn btn-primary">Add New Product</a>
+                    <a href="/Vendor/Product/CreateProduct" class="btn btn-primary">Add New Product</a>
                 </div>
             </div>
         </div>
