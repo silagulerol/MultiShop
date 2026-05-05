@@ -23,6 +23,7 @@
                                         <th>Unit Price</th>
                                         <th>Quantity</th>
                                         <th>Total Price</th>
+                                        <th>Order Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -35,6 +36,20 @@
                                             <td>@item.UnitPrice</td>
                                             <td>@item.Quantity</td>
                                             <td>@item.ProductTotalPrice</td>
+                                            @{
+                                                string statusClass = item.OrderStatus switch
+                                                {
+                                                    "Pending" => "badge badge-secondary",
+                                                    "Preparing" => "badge badge-warning",
+                                                    "Shipped" => "badge badge-info",
+                                                    "Delivered" => "badge badge-success",
+                                                    "Cancelled" => "badge badge-danger",
+                                                    _ => "badge badge-dark"
+                                                };
+                                            }
+                                            <td>
+                                                <span class="@statusClass">@item.OrderStatus</span>
+                                            </td>
                                         </tr>
                                     }
                                 </tbody>

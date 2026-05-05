@@ -20,9 +20,15 @@ namespace MultiShop.WebUI.Services.OrderServices.OrderDetailServices
         {
             await _httpClient.PostAsJsonAsync("orderdetails", dto);
         }
+        
         public async Task<List<ResultOrderDetailDto>> GetOrderDetailsByOrderingIdAsync(int orderingId)
         {
             return await _httpClient.GetFromJsonAsync<List<ResultOrderDetailDto>>($"orderdetails/GetByOrderingId/{orderingId}");
+        }
+
+        public async Task UpdateOrderDetailAsync(UpdateOrderDetailDto updateOrderDetailDto)
+        {
+            await _httpClient.PutAsJsonAsync("orderdetails", updateOrderDetailDto);
         }
     }
 }

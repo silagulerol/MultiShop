@@ -9,5 +9,6 @@ namespace MultiShop.DtoLayer.OrderDtos.OrderDetailDtos
         public decimal ProductTotalPrice { get; set; }
         public int OrderingId { get; set; }
         public string VendorId { get; set; }
+        public string OrderStatus { get; set; }
     }
 }

@@ -18,5 +18,6 @@ namespace MultiShop.Order.Domain.Entities
         public int OrderingId { get; set; }
         public Ordering Ordering { get; set; }
         public string VendorId { get; set; }
+        public string OrderStatus { get; set; } = "Pending";
     }
 }

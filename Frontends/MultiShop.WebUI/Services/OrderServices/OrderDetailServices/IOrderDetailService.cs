@@ -8,5 +8,6 @@ namespace MultiShop.WebUI.Services.OrderServices.OrderDetailServices
         Task CreateOrderDetailAsync(CreateOrderDetailDto dto);
         Task<List<ResultOrderDetailDto>> GetOrderDetailsByOrderingIdAsync(int orderingId);
         
+        Task UpdateOrderDetailAsync(UpdateOrderDetailDto updateOrderDetailDto);
     }
 }

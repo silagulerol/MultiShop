@@ -1,4 +1,6 @@
 using System.Net.Http.Json;
+using MultiShop.DtoLayer.PaymentDtos;
+
 namespace MultiShop.WebUI.Services.PaymentServices
 {
     public class PaymentService : IPaymentService
@@ -8,15 +10,17 @@ namespace MultiShop.WebUI.Services.PaymentServices
         {
             _httpClient = httpClient;
         }
-        public async Task CompletePaymentAsync()
+        public async Task<PaymentResultDto> CompletePaymentAsync()
         {
             var response = await _httpClient.PostAsync("payment", null);
 
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();
-                throw new Exception($"Payment failed: {response.StatusCode} - {error}");
+                throw new Exception(error);
             }
+
+            return await response.Content.ReadFromJsonAsync<PaymentResultDto>();
         }
     }
 }

@@ -1,6 +1,6 @@
 namespace MultiShop.DtoLayer.OrderDtos.OrderDetailDtos
 {
-    public class ResultOrderDetailDto
+    public class UpdateOrderDetailDto
     {
         public int OrderDetailId { get; set; }
         public string ProductId { get; set; }

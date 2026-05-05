@@ -21,11 +21,39 @@ namespace MultiShop.WebUI.Controllers
             return View();
         }
 
+        
         [HttpPost]
         public async Task<IActionResult> Index(string cardNumber, string cardHolder, string month, string year, string cvv)
         {
-            await _paymentService.CompletePaymentAsync();
-            return Redirect("/User/MyOrder/MyOrderList" );
+            try
+            {
+                var result = await _paymentService.CompletePaymentAsync();
+
+                return RedirectToAction("Success", new
+                {
+                    orderingId = result.OrderingId,
+                    totalPrice = result.TotalPrice
+                });
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Fail", new { message = ex.Message });
+            }
         }
-    }
+
+        [HttpGet]
+        public IActionResult Success(int orderingId, decimal totalPrice)
+        {
+            ViewBag.OrderingId = orderingId;
+            ViewBag.TotalPrice = totalPrice;
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Fail(string message)
+        {
+            ViewBag.Error = message;
+            return View();
+        }
+    } 
 }

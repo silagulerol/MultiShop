@@ -14,57 +14,90 @@
                 <h4>Vendor Orders</h4>
                 <br />
 
-                @foreach (var orderGroup in Model.GroupBy(x => x.OrderingId))
-                {
-                    orderCount++;
-
-                    <div class="panel panel-default" style="margin-bottom:20px;">
-                        <div class="panel-heading">
-                            <strong>Order #@orderGroup.Key</strong>
-                            <span style="float:right;">
-                                Vendor Total:
-                                @orderGroup.Sum(x => x.ProductTotalPrice)
-                            </span>
-                        </div>
-
-                        <div class="panel-body">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Product</th>
-                                        <th>Unit Price</th>
-                                        <th>Quantity</th>
-                                        <th>Product Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @{
-                                        int itemCount = 0;
-                                    }
-
-                                    @foreach (var item in orderGroup)
-                                    {
-                                        itemCount++;
-                                        <tr>
-                                            <td>@itemCount</td>
-                                            <td>@item.ProductName</td>
-                                            <td>@item.UnitPrice</td>
-                                            <td>@item.Quantity</td>
-                                            <td>@item.ProductTotalPrice</td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                }
-
                 @if (!Model.Any())
                 {
                     <div class="alert alert-info">
                         No order details found for this vendor.
                     </div>
+                }
+                else
+                {
+                    @foreach (var orderGroup in Model.GroupBy( x => x.OrderingId))
+                    {
+                        orderCount++;
+
+                        <div class="panel panel-default" style="margin-bottom:20px;">
+                            <div class="panel-heading">
+                                <strong>Order #@orderGroup.Key</strong>
+                                <span style="float:right;">
+                                    Vendor Total:
+                                    @orderGroup.Sum(x => x.ProductTotalPrice)
+                                </span>
+                            </div>
+
+                            <div class="panel-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Product</th>
+                                            <th>Unit Price</th>
+                                            <th>Quantity</th>
+                                            <th>Product Total</th>
+                                            <th>Status</th>
+                                            <th>Update Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            int itemCount = 0;
+                                        }
+
+                                        @foreach (var item in orderGroup)
+                                        {
+                                            itemCount++;
+
+                                            string statusClass = item.OrderStatus switch
+                                            {
+                                                "Pending" => "label label-default",
+                                                "Preparing" => "label label-warning",
+                                                "Shipped" => "label label-info",
+                                                "Delivered" => "label label-success",
+                                                "Cancelled" => "label label-danger",
+                                                _ => "label label-default"
+                                            };
+
+                                            <tr>
+                                                <td>@itemCount</td>
+                                                <td>@item.ProductName</td>
+                                                <td>@item.UnitPrice</td>
+                                                <td>@item.Quantity</td>
+                                                <td>@item.ProductTotalPrice</td>
+                                                <td>
+                                                    <span class="@statusClass">@item.OrderStatus</span>
+                                                </td>
+                                                <td>
+                                                    <form method="post" action="/Vendor/Order/UpdateStatus">
+                                                        <input type="hidden" name="orderDetailId" value="@item.OrderDetailId" />
+                                                        <select name="orderStatus" class="form-control">
+                                                            <option value="Pending" selected="@(item.OrderStatus == "Pending")">Pending</option>
+                                                            <option value="Preparing" selected="@(item.OrderStatus == "Preparing")">Preparing</option>
+                                                            <option value="Shipped" selected="@(item.OrderStatus == "Shipped")">Shipped</option>
+                                                            <option value="Delivered" selected="@(item.OrderStatus == "Delivered")">Delivered</option>
+                                                            <option value="Cancelled" selected="@(item.OrderStatus == "Cancelled")">Cancelled</option>
+                                                        </select>
+                                                        <button type="submit" class="btn btn-sm btn-success" style="margin-top:5px;">
+                                                            Update
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
                 }
             </div>
         </div>

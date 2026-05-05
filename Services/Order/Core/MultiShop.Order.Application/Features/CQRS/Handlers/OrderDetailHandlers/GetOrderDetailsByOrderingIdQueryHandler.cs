@@ -27,7 +27,8 @@ namespace MultiShop.Order.Application.Features.CQRS.Handlers.OrderDetailHandlers
                 ProductName = x.ProductName,
                 UnitPrice = x.UnitPrice,
                 Quantity = x.Quantity,
-                ProductTotalPrice = x.ProductTotalPrice
+                ProductTotalPrice = x.ProductTotalPrice,
+                OrderStatus= x.OrderStatus
             }).ToList();
         }
     }

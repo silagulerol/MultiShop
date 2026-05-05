@@ -104,7 +104,12 @@ namespace MultiShop.Payment.Controllers
                 return StatusCode((int)deleteBasketResponse.StatusCode, $"Basket delete request failed: {deleteBasketError}");
             }
 
-                return Ok("Payment completed & order created");
+                return Ok(new
+                {
+                    Message = "Payment completed & order created",
+                    OrderingId = createdOrder.OrderingId,
+                    TotalPrice = basket.TotalPrice
+                });
             }
             catch (Exception ex)
             {
