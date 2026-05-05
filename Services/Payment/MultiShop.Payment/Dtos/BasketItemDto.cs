@@ -1,4 +1,4 @@
-﻿namespace MultiShop.Basket.Dtos
+namespace MultiShop.Payment.Dtos
 {
     // Basket'in içindeki her bir Item için oluşturulan Dto
     public class BasketItemDto
@@ -11,4 +11,5 @@
         public int BasketId { get; set; }
         public string VendorId { get; set; }
     }
+
 }

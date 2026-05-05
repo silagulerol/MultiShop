@@ -10,3 +10,4 @@ osascript -e 'tell application "Terminal" to do script "cd ~/Desktop/MultiShop/S
 osascript -e 'tell application "Terminal" to do script "cd ~/Desktop/MultiShop/Services/Cargo/MultiShop.Cargo.WebApi && dotnet run"'
 osascript -e 'tell application "Terminal" to do script "cd ~/Desktop/MultiShop/Services/Basket/MultiShop.Basket && dotnet run"'
 osascript -e 'tell application "Terminal" to do script "cd ~/Desktop/MultiShop/Services/Message/MultiShop.Message && dotnet run"'
+osascript -e 'tell application "Terminal" to do script "cd ~/Desktop/MultiShop/Services/Payment/MultiShop.Payment && dotnet run"'

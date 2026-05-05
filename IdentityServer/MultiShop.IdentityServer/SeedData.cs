@@ -71,6 +71,18 @@ namespace MultiShop.IdentityServer
                 givenName: "Vendor",
                 familyName: "User"
             );
+
+            SeedUser(
+                userMgr,
+                username: "vendor02",
+                email: "vendor02@multishop.com",
+                password: "Vendor123*",
+                role: "Vendor",
+                name: "Vendor Two",
+                givenName: "Vendor",
+                familyName: "Two"
+            );
+            
         }
 
         private static void SeedRole(RoleManager<IdentityRole> roleMgr, string roleName)

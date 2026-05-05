@@ -62,7 +62,8 @@ namespace MultiShop.WebUI.Controllers
                     ProductName = product.ProductName,
                     UnitPrice = product.ProductPrice,
                     Quantity = 1,
-                    ProductImageUrl= product.ProductImageUrl
+                    ProductImageUrl= product.ProductImageUrl,
+                    VendorId = product.VendorId
                 };
                 await _basketService.AddBasketItem(items);
             }

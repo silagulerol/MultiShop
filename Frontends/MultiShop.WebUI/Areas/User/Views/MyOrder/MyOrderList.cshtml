@@ -39,7 +39,7 @@
                                             <td>@count</td>
                                             <td>@item.TotalPrice</td>
                                             <td>@(((DateTime)item.OrderDate).ToString("MMM"))</td>
-                                            <td><a href="#" class="btn btn-warning">View Details</a></td>
+                                            <td><a href="/User/MyOrder/MyOrderDetail/@item.OrderingId" class="btn btn-warning">View Details</a></td>
                                         </tr>
                                     }
                                 </tbody>

@@ -1,15 +1,8 @@
-﻿using MultiShop.Order.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MultiShop.Order.Application.Features.CQRS.Commands.OrderDetailCommands
+namespace MultiShop.Payment.Dtos
 {
-    public class UpdateOrderDetailCommand
+    // Basket'in içindeki her bir Item için oluşturulan Dto
+   public class CreateOrderDetailDto
     {
-        public int OrderDetailId { get; set; }
         public string ProductId { get; set; }
         public string ProductName { get; set; }
         public decimal UnitPrice { get; set; }
@@ -18,4 +11,5 @@ namespace MultiShop.Order.Application.Features.CQRS.Commands.OrderDetailCommands
         public int OrderingId { get; set; }
         public string VendorId { get; set; }
     }
+
 }

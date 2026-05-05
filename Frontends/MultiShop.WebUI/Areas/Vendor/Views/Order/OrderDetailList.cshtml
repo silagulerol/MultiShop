@@ -1,0 +1,72 @@
+@using MultiShop.DtoLayer.OrderDtos.OrderDetailDtos
+@model List<ResultOrderDetailDto>
+
+@{
+    ViewData["Title"] = "OrderDetailList";
+    Layout = "~/Areas/Vendor/Views/VendorLayout/Index.cshtml";
+    int orderCount = 0;
+}
+
+<section class="content container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="chart-box">
+                <h4>Vendor Orders</h4>
+                <br />
+
+                @foreach (var orderGroup in Model.GroupBy(x => x.OrderingId))
+                {
+                    orderCount++;
+
+                    <div class="panel panel-default" style="margin-bottom:20px;">
+                        <div class="panel-heading">
+                            <strong>Order #@orderGroup.Key</strong>
+                            <span style="float:right;">
+                                Vendor Total:
+                                @orderGroup.Sum(x => x.ProductTotalPrice)
+                            </span>
+                        </div>
+
+                        <div class="panel-body">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Product</th>
+                                        <th>Unit Price</th>
+                                        <th>Quantity</th>
+                                        <th>Product Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int itemCount = 0;
+                                    }
+
+                                    @foreach (var item in orderGroup)
+                                    {
+                                        itemCount++;
+                                        <tr>
+                                            <td>@itemCount</td>
+                                            <td>@item.ProductName</td>
+                                            <td>@item.UnitPrice</td>
+                                            <td>@item.Quantity</td>
+                                            <td>@item.ProductTotalPrice</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                }
+
+                @if (!Model.Any())
+                {
+                    <div class="alert alert-info">
+                        No order details found for this vendor.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
