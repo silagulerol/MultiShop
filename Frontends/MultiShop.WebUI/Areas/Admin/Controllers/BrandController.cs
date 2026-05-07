@@ -36,14 +36,14 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         {
             BrandViewbagList();
             await _brandService.CreateBrandAsync(createBrandDto);
-            return RedirectToAction("Index", "Brand", new { area = "Admin" });
+            return Redirect("/Admin/Brand/Index");
         }
 
         public async Task<IActionResult> DeleteBrand(string id)
         {
             BrandViewbagList();
             await _brandService.DeleteBrandAsync(id);
-            return RedirectToAction("Index", "Brand", new { area = "Admin" });
+             return Redirect("/Admin/Brand/Index");
         }
 
         [HttpGet]
@@ -59,7 +59,7 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         {
             BrandViewbagList();
             await _brandService.UpdateBrandAsync(updateBrandDto);
-            return RedirectToAction("Index", "Brand", new { area = "Admin" });
+             return Redirect("/Admin/Brand/Index");
         }
 
         void BrandViewbagList()

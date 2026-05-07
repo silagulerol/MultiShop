@@ -11,5 +11,9 @@ namespace MultiShop.DtoLayer.OrderDtos.OrderDetailDtos
         public decimal ProductTotalPrice { get; set; }
         public int OrderingId { get; set; }
         public string OrderStatus { get; set; } 
+        public bool HasShipment { get; set; }
+        public string? TrackingNumber { get; set; }
+        public string? ShipmentStatus { get; set; }
+        public string? VendorName { get; set; }
     }
 }

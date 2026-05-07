@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MultiShop.DtoLayer.BasketDtos;
 using MultiShop.WebUI.Services.BasketServices;
 using MultiShop.WebUI.Services.CatalogServices.ProductServices;
@@ -7,6 +8,7 @@ using NuGet.ContentModel;
 
 namespace MultiShop.WebUI.Controllers
 {
+    [Authorize]
     public class ShoppingCartController : Controller
     {
        
@@ -41,16 +43,6 @@ namespace MultiShop.WebUI.Controllers
             return View();
         }
 
-        /* /ShoppingCart/AddBasketItem/productId
-         * ASP.NET Core’un varsayılan route yapısında bu son kısım genelde id olarak eşleşir:
-
-        {controller=Home}/{action=Index}/{id?} --->  route’ta gelen değer adı zaten varsayılan olarak id.
-        Yani framework şunu anlar:
-            controller = ShoppingCart
-            action = AddBasketItem
-            route value = id
-        
-         */
         public async Task<IActionResult> AddBasketItem(string id)
         {
             var product = await _productService.GetByIdProductAsync(id);
@@ -67,7 +59,7 @@ namespace MultiShop.WebUI.Controllers
                 };
                 await _basketService.AddBasketItem(items);
             }
-            return RedirectToAction("Index");
+            return Redirect("/ShoppingCart/Index");
         }
 
         // {controller=Home}/{action=Index}/{id?}

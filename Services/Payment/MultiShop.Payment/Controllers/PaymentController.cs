@@ -95,6 +95,7 @@ namespace MultiShop.Payment.Controllers
                 }
             }
 
+            
             // Basket temizle
             var deleteBasketResponse = await _httpClient.DeleteAsync("http://localhost:7074/api/baskets");
 

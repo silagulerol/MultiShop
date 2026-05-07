@@ -4,25 +4,20 @@
     Layout = "~/Views/UILayout/_UILayout.cshtml";
 }
 
-<div class="container-fluid">
-    <div class="row px-xl-5">
-        <div class="col-lg-3 col-md-4">
-
-            @await Component.InvokeAsync("_ProductListPriceFilterComponentPartial")
-            @await Component.InvokeAsync("_ProductListColorFilterComponentPartial")
-            @await Component.InvokeAsync("_ProductListSizeFilterComponentPartial")
-            
-        </div>
-
-        <div class="col-lg-9 col-md-8">
-            <div class="row pb-3">
-
-                @await Component.InvokeAsync("_ProductListGetProductCountComponentPartial")
-                @await Component.InvokeAsync("_ProductListProductsFilterComponentPartial", new {id =ViewBag.i})
+<div class="container-fluid product-list-page">
+    <div class="product-list-shell">
+        <aside class="product-list-sidebar product-filter-sidebar">
+            <div class="product-filter-stack">
+                @await Component.InvokeAsync("_ProductListPriceFilterComponentPartial")
+                @await Component.InvokeAsync("_ProductListColorFilterComponentPartial")
+                @await Component.InvokeAsync("_ProductListSizeFilterComponentPartial")
             </div>
-        </div>
+        </aside>
 
+        <div class="product-list-main">
+            @await Component.InvokeAsync("_ProductListGetProductCountComponentPartial")
+            @await Component.InvokeAsync("_ProductListProductsFilterComponentPartial", new {id =ViewBag.i})
             @await Component.InvokeAsync("_ProductListPaginationComponentPartial")
-                
+        </div>
     </div>
 </div>

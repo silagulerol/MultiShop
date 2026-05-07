@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MultiShop.WebUI.Services.OrderServices.OrderDetailServices;
 using MultiShop.DtoLayer.OrderDtos.OrderDetailDtos;
 using System.Security.Claims;
+using MultiShop.WebUI.Services.CargoServices.CargoDetailServices;
 
 namespace MultiShop.WebUI.Areas.Vendor.Controllers
 {
@@ -11,10 +12,12 @@ namespace MultiShop.WebUI.Areas.Vendor.Controllers
     public class OrderController : Controller
     {
         private readonly IOrderDetailService _orderDetailService;
+        private readonly ICargoDetailService _cargoDetailService;
 
-        public OrderController(IOrderDetailService orderDetailService)
+        public OrderController(IOrderDetailService orderDetailService, ICargoDetailService cargoDetailService)
         {
             _orderDetailService = orderDetailService;
+            _cargoDetailService = cargoDetailService;
         }
 
         private string GetCurrentVendorId()
@@ -27,6 +30,22 @@ namespace MultiShop.WebUI.Areas.Vendor.Controllers
         {
             var vendorId = GetCurrentVendorId();
             var values = await _orderDetailService.GetOrderDetailsByVendorIdAsync(vendorId);
+            foreach (var item in values)
+            {
+                var cargo = await _cargoDetailService.GetByOrderDetailIdAsync(item.OrderDetailId);
+
+                if (cargo != null)
+                {
+                    item.HasShipment = true;
+                    item.TrackingNumber = cargo.TrackingNumber;
+                    item.ShipmentStatus = cargo.CargoStatus;
+                }
+                else
+                {
+                    item.HasShipment = false;
+                    item.ShipmentStatus = item.OrderStatus;
+                }
+            }
             return View(values);
         }
 

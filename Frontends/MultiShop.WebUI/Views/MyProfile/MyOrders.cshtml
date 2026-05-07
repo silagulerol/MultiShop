@@ -1,0 +1,289 @@
+@model List<MultiShop.DtoLayer.OrderDtos.OrderOrderingDtos.ResultOrderingByUserId>
+@{
+    ViewData["Title"] = "My Orders";
+    Layout = "~/Views/UILayout/_UILayout.cshtml";
+}
+
+<style>
+    .account-page {
+        background-color: #f8f8f8;
+    }
+
+    .account-sidebar-card,
+    .orders-header-card,
+    .order-card {
+        background: #fff;
+        border: 1px solid #e6e6e6;
+        border-radius: 12px;
+    }
+
+    .account-sidebar-card .card-header {
+        background: #fff;
+        border-bottom: 1px solid #eeeeee;
+        font-size: 18px;
+        font-weight: 700;
+        padding: 18px 22px;
+    }
+
+    .account-sidebar-card .list-group-item {
+        border: 0;
+        padding: 14px 22px;
+        font-size: 15px;
+        color: #333;
+    }
+
+    .account-sidebar-card .list-group-item.active,
+    .account-sidebar-card .list-group-item:hover {
+        background-color: #fff4ec;
+        color: #f27a1a;
+        font-weight: 600;
+    }
+
+    .orders-header-card {
+        padding: 28px 32px;
+        margin-bottom: 24px;
+    }
+
+    .orders-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #333;
+    }
+
+    .order-search-box {
+        background: #f3f3f3;
+        border: 0;
+        border-radius: 8px;
+        height: 56px;
+        padding: 0 18px;
+        width: 100%;
+        font-size: 15px;
+    }
+
+    .order-filter-btn {
+        border: 1px solid #d8d8d8;
+        border-radius: 28px;
+        background: #fff;
+        color: #555;
+        padding: 10px 24px;
+        font-weight: 600;
+        margin-right: 10px;
+    }
+
+    .order-filter-btn.active {
+        border-color: #f27a1a;
+        color: #f27a1a;
+    }
+
+    .order-card {
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+
+    .order-card-header {
+        background: #f7f7f7;
+        border-bottom: 1px solid #e6e6e6;
+        padding: 18px 24px;
+    }
+
+    .order-info-title {
+        font-weight: 700;
+        color: #333;
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .order-info-text {
+        color: #333;
+        margin: 0;
+    }
+
+    .order-total {
+        color: #f27a1a;
+        font-weight: 700;
+    }
+
+    .order-receiver-text {
+        color: #333;
+        margin: 0;
+        word-break: break-word;
+    }
+
+    .order-actions-column {
+        padding-left: 18px;
+    }
+
+    .order-detail-btn {
+        background: #f27a1a;
+        border-color: #f27a1a;
+        color: #fff;
+        width: 100%;
+        min-width: 120px;
+        height: 44px;
+        font-weight: 700;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+    }
+
+    .order-detail-btn:hover {
+        background: #df6f15;
+        border-color: #df6f15;
+        color: #fff;
+    }
+
+    .order-card-body {
+        padding: 22px 24px;
+    }
+
+    .order-delivery-box {
+        border: 1px solid #e5e5e5;
+        border-radius: 10px;
+        padding: 22px;
+        min-height: 110px;
+    }
+
+    .order-status-success {
+        color: #2e8b4e;
+        font-weight: 700;
+        font-size: 18px;
+    }
+
+    .review-btn {
+        border: 1px solid #f27a1a;
+        color: #f27a1a;
+        background: #fff;
+        border-radius: 6px;
+        min-width: 130px;
+        height: 42px;
+        font-weight: 700;
+    }
+</style>
+
+<div class="account-page">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="account-sidebar-card mb-3 p-3">
+                    <h5 class="mb-1">@ViewBag.UserEmail</h5>
+                    <small>@ViewBag.UserEmail</small>
+                    <button class="btn btn-sm btn-warning mt-2">Verify</button>
+                </div>
+
+                <div class="account-sidebar-card mb-3">
+                    <div class="card-header">Orders</div>
+                    <div class="list-group list-group-flush">
+                        <a href="/Account/MyOrders" class="list-group-item list-group-item-action active">My Orders</a>
+                        <a href="#" class="list-group-item list-group-item-action">My Reviews</a>
+                        <a href="#" class="list-group-item list-group-item-action">Seller Messages</a>
+                        <a href="#" class="list-group-item list-group-item-action">Buy Again</a>
+                    </div>
+                </div>
+
+                <div class="account-sidebar-card mb-3">
+                    <div class="card-header">Personal</div>
+                    <div class="list-group list-group-flush">
+                        <a href="#" class="list-group-item list-group-item-action">Coupons</a>
+                        <a href="#" class="list-group-item list-group-item-action">Recently Viewed</a>
+                        <a href="#" class="list-group-item list-group-item-action">Followed Stores</a>
+                    </div>
+                </div>
+
+                <div class="account-sidebar-card">
+                    <div class="card-header">Account & Support</div>
+                    <div class="list-group list-group-flush">
+                        <a href="#" class="list-group-item list-group-item-action">User Information</a>
+                        <a href="#" class="list-group-item list-group-item-action">Address Information</a>
+                        <a href="#" class="list-group-item list-group-item-action">Saved Cards</a>
+                        <a href="#" class="list-group-item list-group-item-action">Change Password</a>
+                        <a href="#" class="list-group-item list-group-item-action">Help</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="orders-header-card">
+                    <div class="row align-items-center">
+                        <div class="col-md-5">
+                            <div class="orders-title">My Orders</div>
+                        </div>
+                        <div class="col-md-7">
+                            <input type="text" class="order-search-box" placeholder="Search by product or brand name" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <button class="order-filter-btn active">All</button>
+                        <button class="order-filter-btn">Ongoing</button>
+                        <button class="order-filter-btn">Cancelled</button>
+                        <button class="order-filter-btn">Returns</button>
+                    </div>
+                    <select class="form-control" style="max-width:220px; height:48px;">
+                        <option>All dates</option>
+                        <option>Last 30 days</option>
+                        <option>Last 6 months</option>
+                        <option>2026</option>
+                    </select>
+                </div>
+
+                @if (Model == null || !Model.Any())
+                {
+                    <div class="alert alert-info">
+                        You have no orders yet.
+                    </div>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <div class="order-card">
+                            <div class="order-card-header">
+                                <div class="row align-items-center">
+                                    <div class="col-md-2">
+                                        <span class="order-info-title">Order Date</span>
+                                        <p class="order-info-text">@item.OrderDate.ToString("dd MMMM yyyy")</p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <span class="order-info-title">Order Summary</span>
+                                        <p class="order-info-text">Order #@item.OrderingId</p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <span class="order-info-title">Receiver</span>
+                                        <p class="order-receiver-text">
+                                            @(string.IsNullOrWhiteSpace(Convert.ToString(ViewBag.UserFullName)) ? Convert.ToString(ViewBag.UserName) : Convert.ToString(ViewBag.UserFullName))
+                                        </p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="order-info-title">Total</span>
+                                        <p class="order-total mb-0 text-nowrap">@item.TotalPrice ₺</p>
+                                    </div>
+                                    <div class="col-md-2 text-right order-actions-column">
+                                        <a href="/User/OrderDetail/@item.OrderingId" class="btn order-detail-btn">
+                                            Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="order-card-body">
+                                <div class="order-delivery-box d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="order-status-success">✓ Order received</div>
+                                        <p class="mb-0 mt-2">You can view shipment details from the order detail page.</p>
+                                    </div>
+                                    <button type="button" class="review-btn" disabled>
+                                        Review
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

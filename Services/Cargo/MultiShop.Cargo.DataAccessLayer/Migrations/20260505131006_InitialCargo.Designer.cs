@@ -12,8 +12,8 @@ using MultiShop.Cargo.DataAccessLayer.Concrete;
 namespace MultiShop.Cargo.DataAccessLayer.Migrations
 {
     [DbContext(typeof(CargoContext))]
-    [Migration("20260428112911_mig2")]
-    partial class mig2
+    [Migration("20260505131006_InitialCargo")]
+    partial class InitialCargo
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -94,17 +94,24 @@ namespace MultiShop.Cargo.DataAccessLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CargoDetailId"));
 
-                    b.Property<int>("Barcode")
-                        .HasColumnType("int");
-
                     b.Property<int>("CargoCompanyId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ReceiverCustomer")
+                    b.Property<string>("CargoStatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SenderCustomer")
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrderDetailId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TrackingNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VendorId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -117,15 +124,14 @@ namespace MultiShop.Cargo.DataAccessLayer.Migrations
 
             modelBuilder.Entity("MultiShop.Cargo.EntityLayer.Concrete.CargoOperation", b =>
                 {
-                    b.Property<int>("CargoOperationID")
+                    b.Property<int>("CargoOperationId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CargoOperationID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CargoOperationId"));
 
-                    b.Property<string>("Barcode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CargoDetailId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -134,9 +140,37 @@ namespace MultiShop.Cargo.DataAccessLayer.Migrations
                     b.Property<DateTime>("OperationDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("CargoOperationID");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CargoOperationId");
+
+                    b.HasIndex("CargoDetailId");
 
                     b.ToTable("CargoOperations");
+                });
+
+            modelBuilder.Entity("MultiShop.Cargo.EntityLayer.Concrete.VendorCargoCompany", b =>
+                {
+                    b.Property<int>("VendorCargoCompanyId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VendorCargoCompanyId"));
+
+                    b.Property<int>("CargoCompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VendorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("VendorCargoCompanyId");
+
+                    b.HasIndex("CargoCompanyId");
+
+                    b.ToTable("VendorCargoCompanies");
                 });
 
             modelBuilder.Entity("MultiShop.Cargo.EntityLayer.Concrete.CargoDetail", b =>
@@ -148,6 +182,33 @@ namespace MultiShop.Cargo.DataAccessLayer.Migrations
                         .IsRequired();
 
                     b.Navigation("CargoCompany");
+                });
+
+            modelBuilder.Entity("MultiShop.Cargo.EntityLayer.Concrete.CargoOperation", b =>
+                {
+                    b.HasOne("MultiShop.Cargo.EntityLayer.Concrete.CargoDetail", "CargoDetail")
+                        .WithMany()
+                        .HasForeignKey("CargoDetailId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CargoDetail");
+                });
+
+            modelBuilder.Entity("MultiShop.Cargo.EntityLayer.Concrete.VendorCargoCompany", b =>
+                {
+                    b.HasOne("MultiShop.Cargo.EntityLayer.Concrete.CargoCompany", "CargoCompany")
+                        .WithMany("VendorCargoCompanies")
+                        .HasForeignKey("CargoCompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CargoCompany");
+                });
+
+            modelBuilder.Entity("MultiShop.Cargo.EntityLayer.Concrete.CargoCompany", b =>
+                {
+                    b.Navigation("VendorCargoCompanies");
                 });
 #pragma warning restore 612, 618
         }

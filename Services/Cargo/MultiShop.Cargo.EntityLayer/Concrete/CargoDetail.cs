@@ -1,21 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MultiShop.Cargo.EntityLayer.Concrete
 {
     public class CargoDetail
     {
         public int CargoDetailId { get; set; }
-        //Göderici firma hakkında- Sender
-        public string SenderCustomer { get; set; }
 
-        //Cargou alan müşteriyi User tablosundan çekicez bu nedenle Id string -  
-        public string ReceiverCustomer { get; set; }
-        public int Barcode { get; set; }
+        // hangi sipariş ürünü kargoya verildi
+        public int OrderDetailId { get; set; }
+
+        // hangi satıcı kargoladı
+        public string VendorId { get; set; } = null!;
+
+        // takip numarası
+        public string TrackingNumber { get; set; } = null!;
+
+        // hangi kargo firması
         public int CargoCompanyId { get; set; }
-        public CargoCompany CargoCompany { get; set; }
+        public CargoCompany? CargoCompany { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+
+        // kargonun mevcut durumu
+        public string CargoStatus { get; set; } = "Preparing";
     }
 }

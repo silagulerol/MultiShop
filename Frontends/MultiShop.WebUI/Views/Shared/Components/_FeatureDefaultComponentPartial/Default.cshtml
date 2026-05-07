@@ -1,18 +1,18 @@
 ﻿@model List<ResultFeatureDto>
 
-
-<div class="container-fluid pt-5">
-    <div class="row px-xl-5 pb-3">
-
-        @foreach(var item in Model)
+<section class="service-features-section">
+    <div class="service-features-shell">
+        @foreach (var item in Model)
         {
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="d-flex align-items-center bg-light mb-4" style="padding: 30px;">
-                    <h1 class="@item.IconUrl text-primary m-0 mr-3"></h1>
-                    <h5 class="font-weight-semi-bold m-0">@item.Title</h5>
+            <article class="service-feature-card">
+                <div class="service-feature-icon" aria-hidden="true">
+                    <i class="@item.IconUrl"></i>
                 </div>
-            </div>
+
+                <div class="service-feature-content">
+                    <h3>@item.Title</h3>
+                </div>
+            </article>
         }
-        
     </div>
-</div>
+</section>

@@ -2,27 +2,29 @@
     decimal total = ViewBag.total != null ? Convert.ToDecimal(ViewBag.total) : 0;
 }
 
-<h5 class="section-title position-relative text-uppercase mb-3">
-    <span class="bg-secondary pr-3">Cart Summary</span>
-</h5>
+<div class="cart-summary-card">
+    <div class="cart-summary-header">
+        <span>Order Summary</span>
+        <h2>Cart Total</h2>
+    </div>
 
-<div class="bg-light p-30 mb-5 w-100">
-    <div class="border-bottom pb-2">
-        <div class="d-flex justify-content-between mb-3">
-            <h6>Subtotal</h6>
-            <h6>$@total</h6>
+    <div class="cart-summary-lines">
+        <div class="cart-summary-line">
+            <span>Subtotal</span>
+            <strong>$@total</strong>
+        </div>
+        <div class="cart-summary-line muted">
+            <span>Shipping</span>
+            <strong>Calculated at checkout</strong>
         </div>
     </div>
 
-    <div class="pt-2">
-        <div class="d-flex justify-content-between mt-2">
-            <h5>Total</h5>
-            <h5>$@total</h5>
-        </div>
-
-        <a class="btn btn-block btn-primary font-weight-bold my-3 py-3"
-        href="/Order/Index">
-            Proceed To Checkout
-        </a>
+    <div class="cart-summary-total">
+        <span>Total</span>
+        <strong>$@total</strong>
     </div>
+
+    <a class="cart-checkout-btn" href="/Order/Index">
+        Proceed To Checkout
+    </a>
 </div>

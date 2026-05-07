@@ -30,7 +30,7 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         {
             ProductImageViewBag();
             await _productImageService.UpdateProductImageAsync(updateProductImageDto);
-            return RedirectToAction("GetProductsWithCategory", "Product", new { area = "Admin" });
+            return Redirect("/Admin/Product/GetProductsWithCategory"); 
         }
 
         void ProductImageViewBag()

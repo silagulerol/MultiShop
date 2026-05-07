@@ -16,11 +16,8 @@ namespace MultiShop.WebUI.Services.BasketServices
             var values = await GetBasketAsync();
 
             // Sepet hiç yoksa yeni bir tane oluştur
-            if (values == null)
-            {
-                values = new BasketTotalDto();
-                values.BasketItems = new List<BasketItemDto>();
-            }
+            values ??= new BasketTotalDto();
+            values.BasketItems ??= new List<BasketItemDto>();
 
             // Ürün sepette var mı bak
             var existingItem = values.BasketItems.FirstOrDefault(x => x.ProductId == basketItemDto.ProductId);
@@ -41,12 +38,15 @@ namespace MultiShop.WebUI.Services.BasketServices
 
         public async Task DeleteBasketAsync()
         {
-            await _httpClient.DeleteAsync("baskets");
+            var response = await _httpClient.DeleteAsync("baskets");
+            response.EnsureSuccessStatusCode();
         }
 
         public async Task<BasketTotalDto> GetBasketAsync()
         {
-            return await _httpClient.GetFromJsonAsync<BasketTotalDto>("baskets");
+            var response = await _httpClient.GetAsync("baskets");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<BasketTotalDto>();
         }
 
         public async Task<bool> RemoveBasketItem(string productId)
@@ -84,7 +84,14 @@ namespace MultiShop.WebUI.Services.BasketServices
 
         public async Task SaveBasketAsync(BasketTotalDto basketTotalDto)
         {
-            await _httpClient.PostAsJsonAsync($"baskets", basketTotalDto);
+            var response = await _httpClient.PostAsJsonAsync("baskets", basketTotalDto);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Basket save failed. Status: {response.StatusCode}, Error: {error}");
+            }
+            response.EnsureSuccessStatusCode();
         }
     }
 }

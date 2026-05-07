@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MultiShop.Cargo.BusinessLayer.Abstract;
 using MultiShop.Cargo.DtoLayer.CargoOperationDetailDtos;
 using MultiShop.Cargo.EntityLayer.Concrete;
+using System;
+using System.Linq;
 
 namespace MultiShop.Cargo.WebApi.Controllers
 {
@@ -30,41 +31,63 @@ namespace MultiShop.Cargo.WebApi.Controllers
         public IActionResult GetCargoOperationById(int id)
         {
             var value = _service.TGetById(id);
+
+            if (value == null)
+            {
+                return NotFound("Cargo operation not found.");
+            }
+
             return Ok(value);
+        }
+
+        [HttpGet("GetByCargoDetailId/{cargoDetailId}")]
+        public IActionResult GetByCargoDetailId(int cargoDetailId)
+        {
+            var values = _service.TGetByCargoDetailId(cargoDetailId);
+
+            return Ok(values);
         }
 
         [HttpPost]
         public IActionResult AddCargoOperation(CreateCargoOperationDto createCargoOperationDto)
         {
-            CargoOperation cargoOperation = new CargoOperation()
+            var cargoOperation = new CargoOperation
             {
-                Barcode = createCargoOperationDto.Barcode,
+                CargoDetailId = createCargoOperationDto.CargoDetailId,
+                Status = string.IsNullOrWhiteSpace(createCargoOperationDto.Status)
+                    ? "Preparing"
+                    : createCargoOperationDto.Status,
                 Description = createCargoOperationDto.Description,
-                OperationDate = createCargoOperationDto.OperationDate
+                OperationDate = createCargoOperationDto.OperationDate == default
+                    ? DateTime.Now
+                    : createCargoOperationDto.OperationDate
             };
+
             _service.TInsert(cargoOperation);
-            return Ok();
+            return Ok("Cargo operation created successfully.");
         }
 
         [HttpPut]
         public IActionResult UpdateCargoOperation(UpdateCargoOperationDto updateCargoOperationDto)
         {
-            CargoOperation cargoOperation = new CargoOperation()
+            var cargoOperation = new CargoOperation
             {
-                CargoOperationID = updateCargoOperationDto.CargoOperationID,
-                Barcode = updateCargoOperationDto.Barcode,
+                CargoOperationId = updateCargoOperationDto.CargoOperationId,
+                CargoDetailId = updateCargoOperationDto.CargoDetailId,
+                Status = updateCargoOperationDto.Status,
                 Description = updateCargoOperationDto.Description,
                 OperationDate = updateCargoOperationDto.OperationDate
             };
+
             _service.TUpdate(cargoOperation);
-            return Ok();
+            return Ok("Cargo operation updated successfully.");
         }
 
         [HttpDelete]
         public IActionResult DeleteCargoOperation(int id)
         {
             _service.TDelete(id);
-            return Ok();
+            return Ok("Cargo operation deleted successfully.");
         }
     }
 }

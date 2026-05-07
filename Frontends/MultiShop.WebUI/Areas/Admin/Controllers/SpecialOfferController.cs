@@ -36,14 +36,14 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         {
             SpecialOfferViewbagList();
             await _specialOfferService.InsertSpecialOfferAsync(createSpecialOfferDto);
-            return RedirectToAction("Index", "SpecialOffer", new { area = "Admin" });   
+            return Redirect("/Admin/SpecialOffer/Index"); 
         }
 
         public async Task<IActionResult> DeleteSpecialOffer(string id)
         {
             SpecialOfferViewbagList();
             await _specialOfferService.DeleteSpecialOfferAsync(id);
-            return RedirectToAction("Index", "SpecialOffer", new { area = "Admin" });
+            return Redirect("/Admin/SpecialOffer/Index"); 
         }
 
 
@@ -60,7 +60,7 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         {
             SpecialOfferViewbagList();
             await _specialOfferService.UpdateSpecialOfferAsync(updateSpecialOfferDto);
-            return RedirectToAction("Index", "SpecialOffer", new { area = "Admin" });
+            return Redirect("/Admin/SpecialOffer/Index"); 
         }
 
         void SpecialOfferViewbagList()

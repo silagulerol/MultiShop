@@ -56,14 +56,13 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         public async Task<IActionResult> CreateProduct(CreateProductDto createProductDto)
         {
             await _productService.CreateProductAsync(createProductDto);
-            return RedirectToAction("Index", "Product", new { area = "Admin" });
-
+            return Redirect("/Admin/Product/Index");    
         }
 
         public async Task<IActionResult> DeleteProduct(string id)
         {
             await _productService.DeleteProductAsync(id);
-            return RedirectToAction("Index", "Product", new { area = "Admin" });
+            return Redirect("/Admin/Product/Index");  
         }
 
         [HttpGet]
@@ -86,7 +85,7 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         public async Task<IActionResult> UpdateProduct(UpdateProductDto updateProductDto)
         {
             await _productService.UpdateProductAsync(updateProductDto);
-            return RedirectToAction("GetProductsWithCategory", "Product", new { area = "Admin" });
+            return Redirect("/Admin/Product/GetProductsWithCategory"); 
         }
 
         void ProductViewBagList()

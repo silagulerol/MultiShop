@@ -30,6 +30,8 @@ using MultiShop.WebUI.Services.StatisticServices.MessageStatisticServices;
 using MultiShop.WebUI.Services.StatisticServices.UserStatisticServices;
 using MultiShop.WebUI.Services.UserIdentityServices;
 using MultiShop.WebUI.Services.OrderServices.OrderDetailServices;
+using MultiShop.WebUI.Services.CargoServices.CargoDetailServices;
+using MultiShop.WebUI.Services.CargoServices.CargoOperationServices;
 using MultiShop.WebUI.Services.PaymentServices;
 
 using MultiShop.WebUI.Settings;
@@ -215,6 +217,16 @@ builder.Services.AddHttpClient<IOrderDetailService, OrderDetailService>(opt =>
 builder.Services.AddHttpClient<IPaymentService, PaymentService>(client =>
 {
     client.BaseAddress = new Uri("http://localhost:7076/api/");
+}).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+
+builder.Services.AddHttpClient<ICargoDetailService, CargoDetailService>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:7073/api/");
+}).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+
+builder.Services.AddHttpClient<ICargoOperationService, CargoOperationService>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:7073/api/");
 }).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
 
 builder. Services.AddLocalization(opt =>

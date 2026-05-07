@@ -37,14 +37,15 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         {
             FeatureSliderViewbagList();
             await _featureSliderService.InsertFeatureSliderAsync(createFeatureSliderDto);
-            return RedirectToAction("Index", "FeatureSlider", new { area = "Admin" });
+            return Redirect("/Admin/FeatureSlider/Index");    
         }
 
         public async Task<IActionResult> DeleteFeatureSlider(string id)
         {
             FeatureSliderViewbagList();
             await _featureSliderService.DeleteFeatureSliderAsync(id);
-            return RedirectToAction("Index", "FeatureSlider", new { area = "Admin" });
+            return Redirect("/Admin/FeatureSlider/Index");    
+            
         }
 
 
@@ -61,7 +62,7 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         {
             FeatureSliderViewbagList();
             await _featureSliderService.UpdateFeatureSliderAsync(updateFeatureSliderDto);
-            return RedirectToAction("Index", "FeatureSlider", new { area = "Admin" });
+            return Redirect("/Admin/FeatureSlider/Index");    
         }
 
         void FeatureSliderViewbagList()

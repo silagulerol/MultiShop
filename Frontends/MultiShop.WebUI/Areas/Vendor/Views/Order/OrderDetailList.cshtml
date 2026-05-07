@@ -57,7 +57,9 @@
                                         {
                                             itemCount++;
 
-                                            string statusClass = item.OrderStatus switch
+                                            var currentStatus = item.HasShipment ? item.ShipmentStatus : item.OrderStatus;
+
+                                            string statusClass = currentStatus switch
                                             {
                                                 "Pending" => "label label-default",
                                                 "Preparing" => "label label-warning",
@@ -74,22 +76,44 @@
                                                 <td>@item.Quantity</td>
                                                 <td>@item.ProductTotalPrice</td>
                                                 <td>
-                                                    <span class="@statusClass">@item.OrderStatus</span>
+                                                    <span class="@statusClass">@currentStatus</span>
                                                 </td>
                                                 <td>
-                                                    <form method="post" action="/Vendor/Order/UpdateStatus">
-                                                        <input type="hidden" name="orderDetailId" value="@item.OrderDetailId" />
-                                                        <select name="orderStatus" class="form-control">
-                                                            <option value="Pending" selected="@(item.OrderStatus == "Pending")">Pending</option>
-                                                            <option value="Preparing" selected="@(item.OrderStatus == "Preparing")">Preparing</option>
-                                                            <option value="Shipped" selected="@(item.OrderStatus == "Shipped")">Shipped</option>
-                                                            <option value="Delivered" selected="@(item.OrderStatus == "Delivered")">Delivered</option>
-                                                            <option value="Cancelled" selected="@(item.OrderStatus == "Cancelled")">Cancelled</option>
-                                                        </select>
-                                                        <button type="submit" class="btn btn-sm btn-success" style="margin-top:5px;">
-                                                            Update
-                                                        </button>
-                                                    </form>
+                                                    @if (!item.HasShipment)
+                                                    {
+                                                        <form method="post" action="/Vendor/Cargo/CreateShipment">
+                                                            <input type="hidden" name="orderDetailId" value="@item.OrderDetailId" />
+
+                                                            <select name="cargoCompanyId" class="form-control" style="height:45px; padding:8px 12px; line-height:1.5; font-size:14px; max-width:320px;">
+                                                                <option value="1">Yurtiçi</option>
+                                                            </select>
+
+                                                            <button type="submit" class="btn btn-sm btn-primary" style="margin-top:8px; min-width:170px; height:44px; font-size:14px; line-height:1.2; padding:8px 18px; white-space:nowrap;">
+                                                                Create Shipment
+                                                            </button>
+                                                        </form>
+                                                    }
+                                                    else
+                                                    {
+                                                        <form method="post" action="/Vendor/Cargo/UpdateShipmentStatus">
+                                                            <input type="hidden" name="orderDetailId" value="@item.OrderDetailId" />
+                                                            <div class="text-primary" style="margin-top:5px;">
+                                                                Tracking: @item.TrackingNumber
+                                                            </div>
+                                                            <select name="cargoStatus" class="form-control" style="height:45px; padding:8px 12px; line-height:1.5; font-size:14px;">
+                                                                <option value="Preparing" selected="@(currentStatus == "Preparing")">Preparing</option>
+                                                                <option value="Shipped" selected="@(currentStatus == "Shipped")">Shipped</option>
+                                                                <option value="In Transit" selected="@(currentStatus == "In Transit")">In Transit</option>
+                                                                <option value="Delivered" selected="@(currentStatus == "Delivered")">Delivered</option>
+                                                                <option value="Cancelled" selected="@(currentStatus == "Cancelled")">Cancelled</option>
+                                                            </select>
+
+                                                            <button type="submit" class="btn btn-sm btn-success" style="margin-top:8px; min-width:110px; height:40px; font-size:14px; line-height:1.2; padding:8px 16px;">
+                                                                Update
+                                                            </button>
+                                                        </form>
+                                                    }
+
                                                 </td>
                                             </tr>
                                         }

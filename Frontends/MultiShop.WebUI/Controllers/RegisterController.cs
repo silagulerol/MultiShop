@@ -15,28 +15,59 @@ namespace MultiShop.WebUI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult CustomerRegister()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(CreateRegisterDto createRegisterDto)
+        public async Task<IActionResult> CustomerRegister(CreateRegisterDto createRegisterDto)
         {
+            createRegisterDto.Role = "Customer";
 
-            if(createRegisterDto.Password== createRegisterDto.ConfirmPassword)
+            if (createRegisterDto.Password == createRegisterDto.ConfirmPassword)
             {
                 var client = _httpClientFactory.CreateClient();
                 var jsonData = JsonConvert.SerializeObject(createRegisterDto);
                 var stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
                 var responseMessage = await client.PostAsync("http://localhost:5001/api/Registers", stringContent);
+
                 if (responseMessage.IsSuccessStatusCode)
                 {
                     return RedirectToAction("Index", "LogIn");
                 }
             }
-            return View();
 
+            return View(createRegisterDto);
+        }
+
+        [HttpGet]
+        public IActionResult VendorRegister()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> VendorRegister(CreateRegisterDto createRegisterDto)
+        {
+            createRegisterDto.Role = "Vendor";
+
+            if (createRegisterDto.Password == createRegisterDto.ConfirmPassword)
+            {
+                var client = _httpClientFactory.CreateClient();
+                var jsonData = JsonConvert.SerializeObject(createRegisterDto);
+                var stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
+                var responseMessage = await client.PostAsync("http://localhost:5001/api/Registers", stringContent);
+
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("Index", "LogIn");
+                }
+            }
+
+            return View(createRegisterDto);
         }
     }
 }

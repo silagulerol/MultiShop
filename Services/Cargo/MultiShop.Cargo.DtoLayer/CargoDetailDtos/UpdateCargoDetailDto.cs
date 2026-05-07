@@ -7,15 +7,13 @@ using System.Threading.Tasks;
 namespace MultiShop.Cargo.DtoLayer.CargoDetailDtos
 {
     public class UpdateCargoDetailDto
-    {
-        public int CargoDetailId { get; set; }
-
-        //Göderici firma hakkında- Sender
-        public string SenderCustomer { get; set; }
-
-        //Cargou alan müşteriyi User tablosundan çekicez bu nedenle Id string -  
-        public string ReceiverCustomer { get; set; }
-        public int Barcode { get; set; }
-        public int CargoCompanyId { get; set; }
-    }
+{
+    public int CargoDetailId { get; set; }
+    public int OrderDetailId { get; set; }
+    public string VendorId { get; set; }
+    public string TrackingNumber { get; set; }
+    public int CargoCompanyId { get; set; }
+    public string CargoStatus { get; set; }
+    public DateTime CreatedDate { get; set; }
+}
 }

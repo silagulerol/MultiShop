@@ -38,14 +38,14 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         public async Task<IActionResult> CreateCategory(CreateCategoryDto createCategoryDto)
         {
             await _categoryService.CreateCategoryAsync(createCategoryDto);
-            return RedirectToAction("Index", "Category", new { area = "Admin" });
+            return Redirect("/Admin/Category/Index");
         }
 
         [Route("DeleteCategory/{id}")]
         public async Task<IActionResult> DeleteCategory(string id)
         {
             await _categoryService.DeleteCategoryAsync(id);
-            return RedirectToAction("Index", "Category", new { area = "Admin" });
+            return Redirect("/Admin/Category/Index");
         }
 
         [Route("UpdateCategory/{id}")]
@@ -61,7 +61,7 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         public async Task<IActionResult> UpdateCategory(UpdateCategoryDto updateCategoryDto)
         {
             await _categoryService.UpdateCategoryAsync(updateCategoryDto);
-            return RedirectToAction("Index", "Category", new { area = "Admin" });
+            return Redirect("/Admin/Category/Index");
         }
 
         void CategoryViewbagList()

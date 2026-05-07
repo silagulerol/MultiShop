@@ -10,5 +10,7 @@ namespace MultiShop.Cargo.BusinessLayer.Abstract
 {
     public interface ICargoDetailService : IGenericService<CargoDetail>
     {
+        List<CargoDetail> TGetByVendorId(string vendorId);
+        CargoDetail TGetByOrderDetailId(int orderDetailId);
     }
 }
