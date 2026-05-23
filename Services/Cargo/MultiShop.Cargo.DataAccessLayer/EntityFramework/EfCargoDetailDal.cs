@@ -1,4 +1,5 @@
-﻿using MultiShop.Cargo.DataAccessLayer.Abstract;
+﻿using Microsoft.EntityFrameworkCore;
+using MultiShop.Cargo.DataAccessLayer.Abstract;
 using MultiShop.Cargo.DataAccessLayer.Concrete;
 using MultiShop.Cargo.DataAccessLayer.Repositories;
 using MultiShop.Cargo.EntityLayer.Concrete;
@@ -24,6 +25,7 @@ namespace MultiShop.Cargo.DataAccessLayer.EntityFramework
         public CargoDetail GetByOrderDetailId(int orderDetailId)
         {
             return _context.CargoDetails
+                .Include(x => x.CargoCompany)
                 .FirstOrDefault(x => x.OrderDetailId == orderDetailId);
         }
     }

@@ -1,0 +1,83 @@
+@model List<ResultProductVariantDto>
+@{
+    ViewData["Title"] = "ProductVariantList";
+    Layout = "~/Areas/Vendor/Views/VendorLayout/Index.cshtml";
+    int count = 0;
+}
+
+<section class="content container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="chart-box">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4>Product Variants</h4>
+                    @if (!string.IsNullOrWhiteSpace(ViewBag.ProductName as string))
+                    {
+                        <span>@ViewBag.ProductName</span>
+                    }
+                </div>
+                <br />
+                <div class="bs-example" data-example-id="bordered-table">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Image</th>
+                                <th>Variant</th>
+                                <th>Size</th>
+                                <th>Color</th>
+                                <th>Price</th>
+                                <th>Discounted Price</th>
+                                <th>Stock</th>
+                                <th>Available</th>
+                                <th>Delete</th>
+                                <th>Update</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model == null || !Model.Any())
+                            {
+                                <tr>
+                                    <td colspan="11" class="text-center">No variant has been added for this product yet.</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                @foreach (var item in Model)
+                                {
+                                    count++;
+                                    <tr>
+                                        <th scope="row">@count</th>
+                                        <td>
+                                            @if (!string.IsNullOrWhiteSpace(item.MainImageUrl))
+                                            {
+                                                <img src="@item.MainImageUrl" style="width:60px; height:60px; object-fit:cover;" />
+                                            }
+                                        </td>
+                                        <td>@item.VariantName</td>
+                                        <td>@item.Size</td>
+                                        <td>
+                                            @if (!string.IsNullOrWhiteSpace(item.ColorHexCode))
+                                            {
+                                                <span style="display:inline-block;width:16px;height:16px;border-radius:50%;border:1px solid #ccc;background:@item.ColorHexCode;vertical-align:middle;margin-right:6px;"></span>
+                                            }
+                                            @item.Color
+                                        </td>
+                                        <td>@item.Price</td>
+                                        <td>@item.DiscountedPrice</td>
+                                        <td>@item.Stock</td>
+                                        <td>@(item.IsAvailable ? "Yes" : "No")</td>
+                                        <td><a href="/Vendor/ProductVariant/DeleteProductVariant/@item.ProductVariantId" class="btn btn-danger">Delete</a></td>
+                                        <td><a href="/Vendor/ProductVariant/UpdateProductVariant/@item.ProductVariantId" class="btn btn-success">Update</a></td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    <a href="/Vendor/ProductVariant/CreateProductVariant/@ViewBag.ProductId" class="btn btn-primary">Add New Variant</a>
+                    <a href="/Vendor/Product/GetProductsWithCategory" class="btn btn-secondary">Back To Products</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

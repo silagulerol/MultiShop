@@ -16,10 +16,11 @@
                             <tr>
                                 <th>#</th>
                                 <th>Product Name</th>
-                                <th>Product Price</th>
+                                <th>Starting Price</th>
                                 <th>Category Name</th>
                                 <th>Product Images</th>
                                 <th>Product Details</th>
+                                <th>Variants</th>
                                 <th>Delete</th>
                                 <th>Update</th>
                             </tr>
@@ -32,10 +33,11 @@
                                 <tr>
                                     <th scope="row">@count</th>
                                     <td>@item.ProductName</td>
-                                    <td>@item.ProductPrice</td>
-                                    <td>@item.Category.Name</td>
+                                    <td>@item.StartingPrice</td>
+                                    <td>@item.Category?.Name</td>
                                     <td><a href="/Vendor/ProductImage/ProductImageDetail/@item.ProductId" class="btn btn-warning">Product Images</a></td>
                                     <td><a href="/Vendor/ProductDetail/UpdateProductDetail/@item.ProductId" class="btn btn-warning">Product Details</a></td>
+                                    <td><a href="/Vendor/ProductVariant/ProductVariantList/@item.ProductId" class="btn btn-info">Variants</a></td>
                                     <td><a href="/Vendor/Product/DeleteProduct/@item.ProductId" class="btn btn-danger">Delete</a></td>
                                     <td><a href="/Vendor/Product/UpdateProduct/@item.ProductId" class="btn btn-success">Update</a></td>
                                 </tr>

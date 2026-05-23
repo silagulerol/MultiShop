@@ -7,54 +7,54 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 
-/* Bir ASP.NET Core uygulamasýnýn (senin senaryonda muhtemelen Ocelot Gateway projesinin), 
- * gelen isteklerdeki JWT (JSON Web Token) biletlerini nasýl doðrulayacaðýný belirleyen güvenlik konfigürasyonudur.
- * bir binanýn giriþindeki "Otomatik Bilet Kontrol Sistemi"ni kurmak gibi */
+/* Bir ASP.NET Core uygulamasï¿½nï¿½n (senin senaryonda muhtemelen Ocelot Gateway projesinin), 
+ * gelen isteklerdeki JWT (JSON Web Token) biletlerini nasï¿½l doï¿½rulayacaï¿½ï¿½nï¿½ belirleyen gï¿½venlik konfigï¿½rasyonudur.
+ * bir binanï¿½n giriï¿½indeki "Otomatik Bilet Kontrol Sistemi"ni kurmak gibi */
 
-//Uygulamaya "Varsayýlan kimlik doðrulama yöntemimiz JWT Bearer (Bileti taþýyan getirir) sistemidir" der.
+//Uygulamaya "Varsayï¿½lan kimlik doï¿½rulama yï¿½ntemimiz JWT Bearer (Bileti taï¿½ï¿½yan getirir) sistemidir" der.
 builder.Services.AddAuthentication()
-    //Biletin geçerli sayýlmasý için hangi þartlarýn gerektiðini detaylandýrýr.
-    //Bu satýr, bu güvenlik ayarlarýnýn adýný "OcelotAuthenticationScheme" olarak belirler.
-    //Neden Önemli? Ocelot'un ocelot.json dosyasýndaki AuthenticationProviderKey alanýnda tam olarak bu ismi yazman gerekir.
-    //Eðer bu ismi vermezsen Ocelot hangi bilet kontrol cihazýný kullanacaðýný bilemez.
+    //Biletin geï¿½erli sayï¿½lmasï¿½ iï¿½in hangi ï¿½artlarï¿½n gerektiï¿½ini detaylandï¿½rï¿½r.
+    //Bu satï¿½r, bu gï¿½venlik ayarlarï¿½nï¿½n adï¿½nï¿½ "OcelotAuthenticationScheme" olarak belirler.
+    //Neden ï¿½nemli? Ocelot'un ocelot.json dosyasï¿½ndaki AuthenticationProviderKey alanï¿½nda tam olarak bu ismi yazman gerekir.
+    //Eï¿½er bu ismi vermezsen Ocelot hangi bilet kontrol cihazï¿½nï¿½ kullanacaï¿½ï¿½nï¿½ bilemez.
     .AddJwtBearer("OcelotAuthenticationScheme", options =>
     {
-        //Güvenilir Kaynak (Authority): Bileti kimin daðýttýðýný (IdentityServer) belirler.
-        //Mantýk: "Eðer biletin üzerinde http://localhost:5001 (IdentityServer) imzasý yoksa,
-        //bu bileti sahte kabul et ve kimseyi içeri alma" demektir.Uygulama, biletin doðruluðunu teyit etmek için bu adrese gider.
+        //Gï¿½venilir Kaynak (Authority): Bileti kimin daï¿½ï¿½ttï¿½ï¿½ï¿½nï¿½ (IdentityServer) belirler.
+        //Mantï¿½k: "Eï¿½er biletin ï¿½zerinde http://localhost:5001 (IdentityServer) imzasï¿½ yoksa,
+        //bu bileti sahte kabul et ve kimseyi iï¿½eri alma" demektir.Uygulama, biletin doï¿½ruluï¿½unu teyit etmek iï¿½in bu adrese gider.
         options.Authority = builder.Configuration["IdentityServerUrl"];
 
         //Hedef Kitle (Audience)
-        //Bu biletin hangi "oda" veya "servis" için kesildiðini kontrol eder.
-        //Mantýk: Biletin üzerinde "Bu bilet ResourceOcelot (Ocelot Gateway) için geçerlidir" yazmasý gerekir.
-        //Eðer bilet baþka bir API(örneðin sadece ResourceCatalog) için kesilmiþse, Ocelot bunu kabul etmez.
+        //Bu biletin hangi "oda" veya "servis" iï¿½in kesildiï¿½ini kontrol eder.
+        //Mantï¿½k: Biletin ï¿½zerinde "Bu bilet ResourceOcelot (Ocelot Gateway) iï¿½in geï¿½erlidir" yazmasï¿½ gerekir.
+        //Eï¿½er bilet baï¿½ka bir API(ï¿½rneï¿½in sadece ResourceCatalog) iï¿½in kesilmiï¿½se, Ocelot bunu kabul etmez.
         options.Audience = "ResourceOcelot";
 
-        //Güvenlik bilgilerinin transferi için https protokolü zorunluluðunu kaldýrýr.
+        //Gï¿½venlik bilgilerinin transferi iï¿½in https protokolï¿½ zorunluluï¿½unu kaldï¿½rï¿½r.
         options.RequireHttpsMetadata = false;
 
-        /* Bu kod sayesinde uygulama þu üç soruyu sorar:
-        Bu yapý kurulduktan sonra süreç þöyle iþler:
-        1) Ýstek Gelir: Kullanýcý Postman üzerinden bir istek atar.
-        2) Ocelot Yakalar: ocelot.json dosyasýna bakar ve bu rotanýn bir kimlik doðrulamasý istediðini görür.
-        3) Þema Kontrolü: Dosyada yazan "OcelotAuthenticationScheme" ismini senin bu kodunla eþleþtirir.
-        4)Doðrulama:
-            -Bilet IdentityServer tarafýndan mý imzalanmýþ? (Authority)
-            -Biletin hedefi burasý mý? (Audience)
-        5)Karar: Eðer her iki soruya da "Evet" cevabý gelirse isteði mikroservise yönlendirir, yoksa kapýdan çevirir.
-                Özetle: Bu kod, uygulamanýn önüne bir koruma kalkaný koyar. Geçerli bir bileti olmayan hiç kimse (401 Unauthorized hatasý alarak) arkadaki mikroservislerine ulaþamaz. 
+        /* Bu kod sayesinde uygulama ï¿½u ï¿½ï¿½ soruyu sorar:
+        Bu yapï¿½ kurulduktan sonra sï¿½reï¿½ ï¿½ï¿½yle iï¿½ler:
+        1) ï¿½stek Gelir: Kullanï¿½cï¿½ Postman ï¿½zerinden bir istek atar.
+        2) Ocelot Yakalar: ocelot.json dosyasï¿½na bakar ve bu rotanï¿½n bir kimlik doï¿½rulamasï¿½ istediï¿½ini gï¿½rï¿½r.
+        3) ï¿½ema Kontrolï¿½: Dosyada yazan "OcelotAuthenticationScheme" ismini senin bu kodunla eï¿½leï¿½tirir.
+        4)Doï¿½rulama:
+            -Bilet IdentityServer tarafï¿½ndan mï¿½ imzalanmï¿½ï¿½? (Authority)
+            -Biletin hedefi burasï¿½ mï¿½? (Audience)
+        5)Karar: Eï¿½er her iki soruya da "Evet" cevabï¿½ gelirse isteï¿½i mikroservise yï¿½nlendirir, yoksa kapï¿½dan ï¿½evirir.
+                ï¿½zetle: Bu kod, uygulamanï¿½n ï¿½nï¿½ne bir koruma kalkanï¿½ koyar. Geï¿½erli bir bileti olmayan hiï¿½ kimse (401 Unauthorized hatasï¿½ alarak) arkadaki mikroservislerine ulaï¿½amaz. 
         
-         Neden Bir Ýsim Vermek Zorundayýz?
-            Gerçek projelerde bazen birden fazla kimlik doðrulama yöntemi olabilir:
-            -Bazý kapýlar JWT (Dijital Bilet) ile açýlýr.
-            -Bazý kapýlar ApiKey (Özel Þifre) ile açýlýr.
-            -Bazý kapýlar Google Login ile açýlýr.
-            Eðer hepsine bir isim vermezsen, Ocelot hangi kapýda hangi "dedektörü" kullanacaðýný þaþýrýr.
-            Özetle: OcelotAuthenticationScheme ifadesi, senin kodunla konfigürasyon dosyan (ocelot.json) arasýndaki gizli el sýkýþmadýr. Bu isimler birebir ayný olmazsa, Ocelot "Ben bu kapýda kimlik kontrolü yapacaðým ama hangi kurallara göre yapacaðýmý (hangi cihazý kullanacaðýmý) bilmiyorum" der ve hata fýrlatýr.                     */
+         Neden Bir ï¿½sim Vermek Zorundayï¿½z?
+            Gerï¿½ek projelerde bazen birden fazla kimlik doï¿½rulama yï¿½ntemi olabilir:
+            -Bazï¿½ kapï¿½lar JWT (Dijital Bilet) ile aï¿½ï¿½lï¿½r.
+            -Bazï¿½ kapï¿½lar ApiKey (ï¿½zel ï¿½ifre) ile aï¿½ï¿½lï¿½r.
+            -Bazï¿½ kapï¿½lar Google Login ile aï¿½ï¿½lï¿½r.
+            Eï¿½er hepsine bir isim vermezsen, Ocelot hangi kapï¿½da hangi "dedektï¿½rï¿½" kullanacaï¿½ï¿½nï¿½ ï¿½aï¿½ï¿½rï¿½r.
+            ï¿½zetle: OcelotAuthenticationScheme ifadesi, senin kodunla konfigï¿½rasyon dosyan (ocelot.json) arasï¿½ndaki gizli el sï¿½kï¿½ï¿½madï¿½r. Bu isimler birebir aynï¿½ olmazsa, Ocelot "Ben bu kapï¿½da kimlik kontrolï¿½ yapacaï¿½ï¿½m ama hangi kurallara gï¿½re yapacaï¿½ï¿½mï¿½ (hangi cihazï¿½ kullanacaï¿½ï¿½mï¿½) bilmiyorum" der ve hata fï¿½rlatï¿½r.                     */
     });
 
-/* Bu satýrla programa þunu deriz: 
- "Senin ana ayar dosyan standart appsettings.json deðil, özel olarak oluþturduðum ocelot.json dosyasýdýr." */
+/* Bu satï¿½rla programa ï¿½unu deriz: 
+ "Senin ana ayar dosyan standart appsettings.json deï¿½il, ï¿½zel olarak oluï¿½turduï¿½um ocelot.json dosyasï¿½dï¿½r." */
 IConfiguration configuration = new ConfigurationBuilder().AddJsonFile("ocelot.json").Build();
 
 builder.Services.AddOcelot(configuration);
@@ -67,11 +67,11 @@ app.MapGet("/", () => "Hello World!");
 
 app.Run();
 
-/*  Bu kod çalýþtýðýnda proje bir "Trafik Polisi" gibi davranmaya baþlar:
+/*  Bu kod ï¿½alï¿½ï¿½tï¿½ï¿½ï¿½nda proje bir "Trafik Polisi" gibi davranmaya baï¿½lar:
 
-1) Ýstek Gelir: Bir kullanýcý http://localhost:5000/services/catalog/categories adresine istek atar.
-2) Ocelot Yakalar: UseOcelot katmaný bu isteði durdurur.
-3) Dosyayý Kontrol Eder: ocelot.json içine bakar: "Biri /services/catalog/categories istedi, bunu nereye göndermeliyim?"
-4) Yönlendirir: Dosyada yazan gerçek adrese (örneðin http://localhost:7070/api/categories) isteði paslar.
-5) Cevabý Döner: Mikroservisten gelen cevabý alýr ve kullanýcýya geri iletir.
+1) istek Gelir: Bir kullanÄ±cÄ± http://localhost:5000/services/catalog/categories adresine istek atar.
+2) Ocelot Yakalar: UseOcelot katmanÄ± bu isteÄŸi durdurur.
+3) Dosyayï¿½ Kontrol Eder: ocelot.json iï¿½ine bakar: "Biri /services/catalog/categories istedi, bunu nereye gï¿½ndermeliyim?"
+4) Yï¿½nlendirir: Dosyada yazan gerï¿½ek adrese (ï¿½rneï¿½in http://localhost:7070/api/categories) isteï¿½i paslar.
+5) Cevabï¿½ Dï¿½ner: Mikroservisten gelen cevabï¿½ alï¿½r ve kullanï¿½cï¿½ya geri iletir.
  */

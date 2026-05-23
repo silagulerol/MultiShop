@@ -27,7 +27,9 @@ namespace MultiShop.Order.Application.Features.Mediator.Handlers.OrderingHandler
                 OrderingId = value.OrderingId,
                 UserId = value.UserId,
                 TotalPrice = value.TotalPrice,
-                OrderDate = value.OrderDate
+                OrderDate = value.OrderDate,
+                PaymentMethod = value.PaymentMethod,
+                AddressId = value.AddressId
             };
         }
     }

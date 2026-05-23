@@ -71,10 +71,14 @@ namespace MultiShop.WebUI.Areas.Vendor.Controllers
                 var createProductImageDto = new CreateProductImageDto
                 {
                     ProductId = updateProductImageDto.ProductId,
-                    Image1 = updateProductImageDto.Image1,
-                    Image2 = updateProductImageDto.Image2,
-                    Image3 = updateProductImageDto.Image3,
-                    Image4 = updateProductImageDto.Image4
+                    ImageUrl = updateProductImageDto.ImageUrl,
+                    DisplayOrder = updateProductImageDto.DisplayOrder,
+                    IsMainImage = updateProductImageDto.IsMainImage,
+                    ImageAltText = updateProductImageDto.ImageAltText,
+                    ImageType = updateProductImageDto.ImageType,
+                    CreatedDate = updateProductImageDto.CreatedDate == default
+                        ? DateTime.UtcNow
+                        : updateProductImageDto.CreatedDate
                 };
 
                 await _productImageService.CreateProductImageAsync(createProductImageDto);

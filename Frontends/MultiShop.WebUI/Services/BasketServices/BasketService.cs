@@ -19,8 +19,9 @@ namespace MultiShop.WebUI.Services.BasketServices
             values ??= new BasketTotalDto();
             values.BasketItems ??= new List<BasketItemDto>();
 
-            // Ürün sepette var mı bak
-            var existingItem = values.BasketItems.FirstOrDefault(x => x.ProductId == basketItemDto.ProductId);
+            var existingItem = values.BasketItems.FirstOrDefault(x =>
+                x.ProductId == basketItemDto.ProductId &&
+                x.ProductVariantId == basketItemDto.ProductVariantId);
 
             if (existingItem == null)
             {
@@ -31,6 +32,12 @@ namespace MultiShop.WebUI.Services.BasketServices
             {
                 // Ürün varsa miktarını artır (Örnek mantık)
                 existingItem.Quantity += basketItemDto.Quantity;
+                existingItem.ProductName = basketItemDto.ProductName;
+                existingItem.UnitPrice = basketItemDto.UnitPrice;
+                existingItem.Size = basketItemDto.Size;
+                existingItem.Color = basketItemDto.Color;
+                existingItem.ProductImageUrl = basketItemDto.ProductImageUrl;
+                existingItem.VendorId = basketItemDto.VendorId;
             }
 
             await SaveBasketAsync(values);
@@ -74,10 +81,17 @@ namespace MultiShop.WebUI.Services.BasketServices
                         }
                     ]
                 }
-             */
+            */
             var values = await GetBasketAsync();
-            var deletedItem = values.BasketItems.FirstOrDefault(x => x.ProductId == productId);
-            var result = values.BasketItems.Remove(deletedItem);
+            var deletedItem = values.BasketItems.FirstOrDefault(x =>
+                x.ProductVariantId == productId ||
+                (string.IsNullOrEmpty(x.ProductVariantId) && x.ProductId == productId));
+
+            if (deletedItem != null)
+            {
+                values.BasketItems.Remove(deletedItem);
+            }
+
             await SaveBasketAsync(values);
             return true;
         }

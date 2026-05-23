@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MultiShop.DtoLayer.OrderDtos.CheckoutDtos;
 using MultiShop.DtoLayer.OrderDtos.OrderAddressDtos;
 using MultiShop.WebUI.Services.Interfaces;
 using MultiShop.WebUI.Services.OrderServices.OrderAddressServices;
@@ -16,26 +17,48 @@ namespace MultiShop.WebUI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             OrderViewBag();
-            return View();
+
+            var user = await _userService.GetUserInfo();
+            var model = new CheckoutAddressDto
+            {
+                UseNewAddress = true,
+                ExistingAddresses = await _orderAddressService.GetAddressesByUserIdAsync(user.Id)
+            };
+
+            return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index( CreateAddressDto createAddressDto)
+        public async Task<IActionResult> Index(CheckoutAddressDto checkoutAddressDto)
         {
             //ViewComponent içinden index.cshtml'e taşıdık OrderAdddressViewComponent'i
             //o yüzden artık post request atan service'i controller içinde çağırıyoruz
             var value= await _userService.GetUserInfo();
-            createAddressDto.UserId = value.Id;
+            int addressId;
+            if (!checkoutAddressDto.UseNewAddress && checkoutAddressDto.SelectedAddressId.HasValue)
+            {
+                var selectedAddress = await _orderAddressService.GetAddressByIdAsync(checkoutAddressDto.SelectedAddressId.Value);
 
-            //descriptin şimdilik boş geçmesin diye
-            createAddressDto.Description = "aa";
-            
-            await _orderAddressService.CreateAddressAsync(createAddressDto);
+                if (selectedAddress == null || selectedAddress.UserId != value.Id)
+                {
+                    return BadRequest("Selected address is not valid.");
+                }
 
-            return RedirectToAction("Index", "Payment");
+                addressId = checkoutAddressDto.SelectedAddressId.Value;
+            }
+            else
+            {
+                var createAddressDto = checkoutAddressDto.NewAddress;
+                createAddressDto.UserId = value.Id;
+                //descriptin şimdilik boş geçmesin diye
+                createAddressDto.Description = "aa";
+                addressId = await _orderAddressService.CreateAddressAsync(createAddressDto);
+            }
+           
+            return RedirectToAction("Index", "Payment", new { addressId });
         }
         public void OrderViewBag()
         {

@@ -39,6 +39,13 @@ namespace MultiShop.Order.WebApi.Controllers
             return Ok(result);
         }
 
+        [HttpGet("GetByUserId/{userId}")]
+        public async Task<IActionResult> GetAddressesByUserId(string userId)
+        {
+            var result = await _getAddressQueryHandler.HandleByUserId(userId);
+            return Ok(result);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAddressById(int id)
         {
@@ -49,8 +56,8 @@ namespace MultiShop.Order.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAddress(CreateAddressCommand createAddressCommand)
         {
-            await _createAddressCommandHandler.Handle(createAddressCommand);
-            return Ok("adding is successfull");
+            var addressId = await _createAddressCommandHandler.Handle(createAddressCommand);
+            return Ok(new { AddressId = addressId });
         }
 
         [HttpPut]

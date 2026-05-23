@@ -52,7 +52,9 @@ namespace MultiShop.WebUI.Areas.Vendor.Controllers
             {
                 value = new UpdateProductDetailDto
                 {
-                    ProductId = id
+                    ProductId = id,
+                    Highlights = new List<string>(),
+                    Specifications = new Dictionary<string, string>()
                 };
             }
 
@@ -74,7 +76,17 @@ namespace MultiShop.WebUI.Areas.Vendor.Controllers
                 {
                     ProductId = updateProductDetailDto.ProductId,
                     ProductLongDescription = updateProductDetailDto.ProductLongDescription,
-                    ProductInformation = updateProductDetailDto.ProductInformation
+                    ProductInformation = updateProductDetailDto.ProductInformation,
+                    Highlights = updateProductDetailDto.Highlights ?? new List<string>(),
+                    Specifications = updateProductDetailDto.Specifications ?? new Dictionary<string, string>(),
+                    Material = updateProductDetailDto.Material,
+                    CareInstructions = updateProductDetailDto.CareInstructions,
+                    PackageContent = updateProductDetailDto.PackageContent,
+                    WarrantyInfo = updateProductDetailDto.WarrantyInfo,
+                    SafetyInfo = updateProductDetailDto.SafetyInfo,
+                    IsCustomizable = updateProductDetailDto.IsCustomizable,
+                    PersonalizationInstructions = updateProductDetailDto.PersonalizationInstructions,
+                    PersonalizationMaxLength = updateProductDetailDto.PersonalizationMaxLength
                 };
 
                 await _productDetailService.CreateProductDetailAsync(createDto);

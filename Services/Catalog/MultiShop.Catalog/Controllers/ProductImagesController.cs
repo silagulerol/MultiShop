@@ -19,7 +19,7 @@ namespace MultiShop.Catalog.Controllers
         
 
         [HttpGet]
-        public async Task<IActionResult> GetAllProductImage()
+        public async Task<IActionResult> GetAllProductImages()
         {
             var values = await _productImageService.GetAllProductImageAsync();
             return Ok(values);
@@ -33,24 +33,45 @@ namespace MultiShop.Catalog.Controllers
             return Ok(value);
         }
 
-        [HttpGet("ProductImagesByProductId/{id}")]
-        public async Task<IActionResult> GetProductImagesByProductId(string id)
+        [HttpGet("ImagesByProductId/{productId}")]
+        public async Task<IActionResult> GetImagesByProductId(string productId)
         {
-            var value = await _productImageService.GetByProductIdProductImageAsync(id);
+            var values = await _productImageService.GetImagesByProductIdAsync(productId);
+            return Ok(values);
+        }
+
+        [HttpGet("ImagesByVariantId/{variantId}")]
+        public async Task<IActionResult> GetImagesByVariantId(string variantId)
+        {
+            var values = await _productImageService.GetImagesByVariantIdAsync(variantId);
+            return Ok(values);
+        }
+
+        [HttpGet("MainImageByProductId/{productId}")]
+        public async Task<IActionResult> GetMainImageByProductId(string productId)
+        {
+            var value = await _productImageService.GetMainImageByProductIdAsync(productId);
+            return Ok(value);
+        }
+
+        [HttpGet("MainImageByVariantId/{variantId}")]
+        public async Task<IActionResult> GetMainImageByVariantId(string variantId)
+        {
+            var value = await _productImageService.GetMainImageByVariantIdAsync(variantId);
             return Ok(value);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProductImage(CreateProductImageDto createProductImageDto)
+        public async Task<IActionResult> CreateProductImage(CreateProductImageDto dto)
         {
-            await _productImageService.CreateProductImageAsync(createProductImageDto);
+            await _productImageService.CreateProductImageAsync(dto);
             return Ok();
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateProductImage(UpdateProductImageDto updateProductImageDto)
+        public async Task<IActionResult> UpdateProductImage(UpdateProductImageDto dto)
         {
-            await _productImageService.UpdateProductImageAsync(updateProductImageDto);
+            await _productImageService.UpdateProductImageAsync(dto);
             return Ok();
         }
 

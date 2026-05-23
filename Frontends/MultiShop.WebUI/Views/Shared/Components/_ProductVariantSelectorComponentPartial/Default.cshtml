@@ -1,0 +1,230 @@
+﻿@model List<ResultProductVariantDto>
+
+@{
+    var variants = Model ?? new List<ResultProductVariantDto>();
+    var sizes = variants
+        .Where(x => !string.IsNullOrWhiteSpace(x.Size))
+        .Select(x => x.Size!)
+        .Distinct()
+        .ToList();
+    var colors = variants
+        .Where(x => !string.IsNullOrWhiteSpace(x.Color))
+        .GroupBy(x => x.Color!)
+        .Select(x => x.First())
+        .ToList();
+    var selectedVariant = variants.FirstOrDefault(x => x.IsDefault && x.IsAvailable && x.Stock > 0)
+        ?? variants.FirstOrDefault(x => x.IsAvailable && x.Stock > 0)
+        ?? variants.FirstOrDefault();
+    var selectedPrice = selectedVariant?.DiscountedPrice ?? selectedVariant?.Price ?? (decimal)ViewBag.StartingPrice;
+    var availableStock = selectedVariant?.Stock ?? 0;
+    var selectedMaxOrderQuantity = selectedVariant?.MaxOrderQuantity ?? 0;
+    var quantityMax = selectedMaxOrderQuantity > 0 && availableStock > 0
+        ? Math.Min(selectedMaxOrderQuantity, availableStock)
+        : Math.Max(availableStock, 1);
+    var isAddDisabled = availableStock <= 0;
+    var variantJson = System.Text.Json.JsonSerializer.Serialize(variants);
+    var productImageUrlJson = System.Text.Json.JsonSerializer.Serialize((string?)ViewBag.MainImageUrl ?? string.Empty);
+}
+
+<div class="product-variant-selector" data-product-variant-selector>
+    @if (sizes.Any())
+    {
+        <div class="d-flex mb-3 align-items-center">
+            <strong class="text-dark mr-3">Sizes:</strong>
+            <div>
+                @for (var i = 0; i < sizes.Count; i++)
+                {
+                    var size = sizes[i];
+                    var isChecked = selectedVariant?.Size == size || (selectedVariant?.Size == null && i == 0);
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio"
+                               class="custom-control-input product-variant-size"
+                               id="variant-size-@i"
+                               name="variantSize"
+                               value="@size"
+                               checked="@isChecked">
+                        <label class="custom-control-label" for="variant-size-@i">@size</label>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (colors.Any())
+    {
+        <div class="d-flex mb-4 align-items-center">
+            <strong class="text-dark mr-3">Colors:</strong>
+            <div class="product-variant-colors">
+                @for (var i = 0; i < colors.Count; i++)
+                {
+                    var color = colors[i];
+                    var isChecked = selectedVariant?.Color == color.Color || (selectedVariant?.Color == null && i == 0);
+                    <div class="custom-control custom-radio custom-control-inline product-variant-color-option">
+                        <input type="radio"
+                               class="custom-control-input product-variant-color"
+                               id="variant-color-@i"
+                               name="variantColor"
+                               value="@color.Color"
+                               checked="@isChecked">
+                        <label class="custom-control-label" for="variant-color-@i">
+                            @if (!string.IsNullOrWhiteSpace(color.ColorHexCode))
+                            {
+                                <span class="product-variant-swatch" style="background-color:@color.ColorHexCode"></span>
+                            }
+                            @color.Color
+                        </label>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    <p id="product-variant-stock" class="mb-3 @(selectedVariant?.Stock > 0 ? "text-success" : "text-danger")">
+        @if (selectedVariant == null && variants.Any())
+        {
+            <span>Variant option is not available.</span>
+        }
+        else if (availableStock > 0)
+        {
+            <span>@availableStock items in stock</span>
+        }
+        else
+        {
+            <span>Out of stock</span>
+        }
+    </p>
+
+    <form method="get" action="/ShoppingCart/AddBasketItem/@ViewBag.ProductId">
+        <input type="hidden" id="selectedProductVariantId" name="productVariantId" value="@selectedVariant?.ProductVariantId">
+        <input type="hidden" id="selectedVariantSize" name="size" value="@selectedVariant?.Size">
+        <input type="hidden" id="selectedVariantColor" name="color" value="@selectedVariant?.Color">
+        <input type="hidden" id="selectedVariantPrice" name="price" value="@selectedPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+        <input type="hidden" id="selectedVariantImageUrl" name="productImageUrl" value="@(selectedVariant?.MainImageUrl ?? ViewBag.MainImageUrl)">
+
+        <div class="d-flex align-items-center mb-4 pt-2">
+            <div class="input-group quantity mr-3" style="width: 130px;">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-primary btn-minus">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                </div>
+                <input type="number" name="quantity" class="form-control bg-secondary border-0 text-center" value="1" min="1" max="@quantityMax">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-primary btn-plus">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <button id="product-variant-add-to-cart" type="submit" class="btn btn-primary px-3" @(isAddDisabled ? "disabled" : "")>
+                <i class="fa fa-shopping-cart mr-1"></i> Add To Cart
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+    .product-variant-swatch {
+        width: 16px;
+        height: 16px;
+        border: 1px solid #d6d6d6;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 6px;
+        vertical-align: -3px;
+    }
+
+    .product-variant-color-option .custom-control-label {
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    (function () {
+        const variants = @Html.Raw(variantJson);
+        const baseImageUrl = @Html.Raw(productImageUrlJson);
+
+        function getCheckedValue(selector) {
+            const checked = document.querySelector(selector + ':checked');
+            return checked ? checked.value : '';
+        }
+
+        function findVariant() {
+            const selectedSize = getCheckedValue('.product-variant-size');
+            const selectedColor = getCheckedValue('.product-variant-color');
+
+            return variants.find(function (variant) {
+                const sizeMatches = !selectedSize || variant.Size === selectedSize;
+                const colorMatches = !selectedColor || variant.Color === selectedColor;
+                return sizeMatches && colorMatches;
+            }) || variants[0];
+        }
+
+        function setValue(id, value) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.value = value || '';
+            }
+        }
+
+        function updateVariantUi() {
+            if (!variants.length) {
+                return;
+            }
+
+            const variant = findVariant();
+            if (!variant) {
+                return;
+            }
+
+            const price = variant.DiscountedPrice || variant.Price;
+            const imageUrl = variant.MainImageUrl || baseImageUrl;
+            const stockElement = document.getElementById('product-variant-stock');
+            const priceElement = document.getElementById('product-detail-price');
+            const addToCartButton = document.getElementById('product-variant-add-to-cart');
+            const productImage = document.querySelector('.product-detail-img');
+            const quantityInput = document.querySelector('[name="quantity"]');
+
+            setValue('selectedProductVariantId', variant.ProductVariantId);
+            setValue('selectedVariantSize', variant.Size);
+            setValue('selectedVariantColor', variant.Color);
+            setValue('selectedVariantPrice', price);
+            setValue('selectedVariantImageUrl', imageUrl);
+
+            if (priceElement && price) {
+                priceElement.textContent = Number(price).toFixed(2) + ' ₺';
+            }
+
+            if (stockElement) {
+                stockElement.classList.toggle('text-success', variant.Stock > 0);
+                stockElement.classList.toggle('text-danger', variant.Stock <= 0);
+                stockElement.textContent = variant.Stock > 0
+                    ? variant.Stock + ' items in stock'
+                    : 'Out of stock';
+            }
+
+            if (addToCartButton) {
+                addToCartButton.disabled = variant.Stock <= 0;
+            }
+
+            if (quantityInput) {
+                const maxOrderQuantity = variant.MaxOrderQuantity > 0
+                    ? Math.min(variant.MaxOrderQuantity, variant.Stock)
+                    : variant.Stock;
+                quantityInput.max = maxOrderQuantity > 0 ? maxOrderQuantity : 1;
+                if (Number(quantityInput.value) > Number(quantityInput.max)) {
+                    quantityInput.value = Number(quantityInput.max) > 0 ? quantityInput.max : 1;
+                }
+            }
+
+            if (productImage && imageUrl) {
+                productImage.src = imageUrl;
+            }
+        }
+
+        document.querySelectorAll('.product-variant-size, .product-variant-color').forEach(function (input) {
+            input.addEventListener('change', updateVariantUi);
+        });
+
+        updateVariantUi();
+    })();
+</script>

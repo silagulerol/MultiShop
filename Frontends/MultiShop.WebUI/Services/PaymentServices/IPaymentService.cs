@@ -4,6 +4,6 @@ namespace MultiShop.WebUI.Services.PaymentServices
 {
     public interface IPaymentService
     {
-        Task<PaymentResultDto> CompletePaymentAsync();
+        Task<PaymentResultDto> CompletePaymentAsync(int addressId, string paymentMethod);
     }
 }

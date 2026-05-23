@@ -18,17 +18,12 @@
     <div class="row px-xl-5">
         <div class="col-lg-12">
             <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-0">
-                <a href="/Default/Index/" class="text-decoration-none d-block d-lg-none">
-                    <span class="h1 text-uppercase text-dark bg-light px-2">Multi</span>
-                    <span class="h1 text-uppercase text-light bg-primary px-2 ml-n1">Shop</span>
-                </a>
-
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                    <div class="navbar-nav mr-auto py-0">
+                <div class="collapse navbar-collapse navbar-marketplace-collapse" id="navbarCollapse">
+                    <div class="navbar-nav mr-auto py-0 navbar-main-links">
                         <a href="/Default/Index/" class="nav-item nav-link">Home</a>
 
                         @if (!isAuthenticated)
@@ -145,6 +140,22 @@
                         <a href="/Contact/Index/" class="nav-item nav-link">Contact</a>
                     </div>
 
+                    <form asp-controller="ProductList" asp-action="Search" method="get" class="navbar-search-form">
+                        <div class="navbar-search-shell">
+                            <i class="fas fa-search navbar-search-icon"></i>
+
+                            <input type="text"
+                                name="search"
+                                class="navbar-search-input"
+                                placeholder="Search for products"
+                                aria-label="Search for products" />
+
+                            <button type="submit" class="navbar-search-submit" aria-label="Search">
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </form>
+
                     @if (User.Identity != null && User.Identity.IsAuthenticated)
                     {
                         <div class="navbar-nav ml-auto py-0 auth-actions">
@@ -239,6 +250,99 @@
     .flash-link {
         color: #dc3545;
         font-weight: 700;
+    }
+
+    .navbar-marketplace-collapse {
+        align-items: center;
+        gap: 18px;
+    }
+
+    .navbar-main-links {
+        align-items: center;
+        flex: 0 0 auto;
+    }
+
+    .navbar-search-wrapper {
+        flex: 1 1 420px;
+        max-width: 580px;
+        min-width: 260px;
+        margin: 0 8px;
+    }
+
+    .navbar-search-form {
+        width: 100%;
+        margin: 0;
+    }
+
+    .navbar-search-shell {
+        display: flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 0 6px 0 16px;
+        background: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 999px;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .navbar-search-shell:hover {
+        box-shadow: 0 13px 30px rgba(0, 0, 0, 0.2);
+        transform: translateY(-1px);
+    }
+
+    .navbar-search-shell:focus-within {
+        border-color: #f27a1a;
+        box-shadow: 0 0 0 3px rgba(242, 122, 26, 0.18), 0 14px 32px rgba(0, 0, 0, 0.22);
+        transform: translateY(-1px);
+    }
+
+    .navbar-search-icon {
+        flex: 0 0 auto;
+        color: #f27a1a;
+        font-size: 14px;
+    }
+
+    .navbar-search-input {
+        flex: 1 1 auto;
+        min-width: 0;
+        height: 42px;
+        padding: 0 12px;
+        color: #212529;
+        background: transparent;
+        border: 0;
+        outline: 0;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .navbar-search-input::placeholder {
+        color: #8b95a1;
+        font-weight: 500;
+    }
+
+    .navbar-search-submit {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        flex: 0 0 34px;
+        color: #ffffff;
+        background: #f27a1a;
+        border: 0;
+        border-radius: 50%;
+        font-size: 12px;
+        cursor: pointer;
+        transition: background-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .navbar-search-submit:hover,
+    .navbar-search-submit:focus {
+        background: #ff8a2a;
+        box-shadow: 0 8px 18px rgba(242, 122, 26, 0.28);
+        outline: 0;
+        transform: translateX(1px);
     }
 
     .account-dropdown {
@@ -455,6 +559,7 @@
     .auth-actions {
         align-items: center;
         gap: 8px;
+        flex: 0 0 auto;
     }
 
     .navbar-action-link {
@@ -514,6 +619,34 @@
     }
 
     @@media (max-width: 991.98px) {
+        .navbar-marketplace-collapse {
+            align-items: stretch;
+            gap: 0;
+            padding-top: 10px;
+        }
+
+        .navbar-main-links {
+            align-items: stretch;
+            width: 100%;
+        }
+
+        .navbar-search-wrapper {
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            flex-basis: 100%;
+            margin: 10px 0 6px;
+        }
+
+        .navbar-search-shell {
+            min-height: 42px;
+            box-shadow: none;
+        }
+
+        .navbar-search-input {
+            height: 40px;
+        }
+
         .account-dropdown-toggle {
             width: 100%;
             justify-content: flex-start;

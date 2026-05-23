@@ -7,20 +7,44 @@ namespace MultiShop.Catalog.Entities
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string ProductId { get; set; }
-        public string ProductName { get; set; }
-        public decimal ProductPrice { get; set; }
-        public string? ProductImageUrl { get; set; }
-        public string Description { get; set; }
+        public string ProductId { get; set; } = null!;
+        public string ProductName { get; set; } = null!;
+        public string Slug { get; set; } = null!;
+        public string Description { get; set; } = null!;
 
         [BsonRepresentation(BsonType.ObjectId)]
-        public string CategoryId { get; set; }
+        public string CategoryId { get; set; } = null!;
 
-        public string VendorId { get; set; }
-        
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string BrandId { get; set; } = null!;
+
+        public string VendorId { get; set; } = null!;
+
+        public decimal StartingPrice { get; set; }
+        public decimal? StartingDiscountedPrice { get; set; }
+        public int MaxDiscountRate { get; set; }
+        public string? MainImageUrl { get; set; }
+        public double AverageRating { get; set; }
+        public int ReviewCount { get; set; }
+        public int FavoriteCount { get; set; }
+        public int QuestionCount { get; set; }
+        public int ViewCount { get; set; }
+        public bool IsFeatured { get; set; }
+        public bool IsBestSeller { get; set; }
+        public bool IsNewArrival { get; set; }
+        public bool IsWomenEntrepreneurProduct { get; set; }
+        public bool IsRecyclableProduct { get; set; }
+        public string? BadgeText { get; set; }
+        public bool IsFreeShipping { get; set; }
+        public string? ShippingInfo { get; set; }
+        public string? ReturnPolicy { get; set; }
+        public bool IsActive { get; set; }
+        public DateTime CreatedDate { get; set; }
+
         [BsonIgnore]
-        //bir property’nin veritabanına kaydedilmemesini sağlayan bir attribute’tur.
-        //Bu property C# tarafında var ama MongoDB’ye yazma.
-        public Category Category { get; set; }
+        public Category Category { get; set; } = null!;
+
+        [BsonIgnore]
+        public Brand Brand { get; set; } = null!;
     }
 }

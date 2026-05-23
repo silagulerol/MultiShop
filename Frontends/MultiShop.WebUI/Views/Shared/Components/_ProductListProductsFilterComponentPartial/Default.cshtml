@@ -1,33 +1,96 @@
 ﻿@model List<ResultProductWithCategoryDto>
+@{
+    var favoriteProductIds = ViewBag.FavoriteProductIds as HashSet<string> ?? new HashSet<string>();
+    var returnUrl = Context.Request.Path + Context.Request.QueryString;
+}
 
 <div class="product-list-grid">
     @foreach(var item in Model)
     {
-        decimal x = ((item.ProductPrice / 100) * 15) + item.ProductPrice;
+        var hasDiscount = item.StartingDiscountedPrice.HasValue && item.StartingDiscountedPrice.Value < item.StartingPrice;
+        var displayPrice = hasDiscount ? item.StartingDiscountedPrice!.Value : item.StartingPrice;
+        var rating = Math.Clamp(item.AverageRating, 0, 5);
+        var imageUrl = string.IsNullOrWhiteSpace(item.MainImageUrl) ? "/multishop/img/no-image.png" : item.MainImageUrl;
+
         <article class="listing-product-card">
             <div class="listing-product-media">
-                <img src="@item.ProductImageUrl" alt="@item.ProductName">
-                <div class="listing-product-actions">
-                    <a href="" aria-label="Add to cart"><i class="fa fa-shopping-cart"></i></a>
-                    <a href="" aria-label="Add to favorites"><i class="far fa-heart"></i></a>
+                <img src="@imageUrl" alt="@item.ProductName">
+                <div class="position-absolute" style="top: 12px; left: 12px;">
+                    @if (hasDiscount)
+                    {
+                        <span class="badge badge-danger mr-1">%@item.MaxDiscountRate</span>
+                    }
+                    @if (item.IsFreeShipping)
+                    {
+                        <span class="badge badge-primary mr-1">Free Shipping</span>
+                    }
+                </div>
+                <div class="listing-product-actions product-card-actions">
+                    <a href="/ShoppingCart/AddBasketItem/@item.ProductId" aria-label="Select options"><i class="fa fa-shopping-cart"></i></a>
+                    <form asp-controller="Favorite" asp-action="ToggleFavorite" method="post" class="favorite-form">
+                        <input type="hidden" name="productId" value="@item.ProductId" />
+                        <input type="hidden" name="returnUrl" value="@returnUrl" />
+                        <button type="submit" class="favorite-btn" aria-label="Toggle favorite">
+                            <i class="@(favoriteProductIds.Contains(item.ProductId) ? "fas" : "far") fa-heart"></i>
+                        </button>
+                    </form>
                     <a href="" aria-label="Compare"><i class="fa fa-sync-alt"></i></a>
-                    <a href="" aria-label="View product"><i class="fa fa-search"></i></a>
+                    <a href="/ProductList/ProductDetail/@item.ProductId" aria-label="View product"><i class="fa fa-search"></i></a>
                 </div>
             </div>
 
             <div class="listing-product-body">
-                <a class="listing-product-title" href="">@item.ProductName</a>
+                @if (!string.IsNullOrWhiteSpace(item.BrandName))
+                {
+                    <div class="text-muted small text-uppercase">@item.BrandName</div>
+                }
+                <a class="listing-product-title" href="/ProductList/ProductDetail/@item.ProductId">@item.ProductName</a>
+                <div class="d-flex flex-wrap mb-2">
+                    @if (!string.IsNullOrWhiteSpace(item.BadgeText))
+                    {
+                        <small class="badge badge-info mr-1 mb-1">@item.BadgeText</small>
+                    }
+                    @if (item.IsBestSeller)
+                    {
+                        <small class="badge badge-warning mr-1 mb-1">Best Seller</small>
+                    }
+                    @if (item.IsNewArrival)
+                    {
+                        <small class="badge badge-success mr-1 mb-1">New</small>
+                    }
+                    @if (item.IsWomenEntrepreneurProduct)
+                    {
+                        <small class="badge badge-light mr-1 mb-1">Women Entrepreneur</small>
+                    }
+                    @if (item.IsRecyclableProduct)
+                    {
+                        <small class="badge badge-light mr-1 mb-1">Recyclable</small>
+                    }
+                </div>
                 <div class="listing-product-price">
-                    <span>$@item.ProductPrice</span>
-                    <del>$@x</del>
+                    <span>@displayPrice.ToString("N2") ₺</span>
+                    @if (hasDiscount)
+                    {
+                        <del>@item.StartingPrice.ToString("N2") ₺</del>
+                    }
                 </div>
                 <div class="listing-product-rating">
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <small>(99)</small>
+                    @for (var i = 1; i <= 5; i++)
+                    {
+                        if (rating >= i)
+                        {
+                            <i class="fa fa-star"></i>
+                        }
+                        else if (rating >= i - 0.5)
+                        {
+                            <i class="fas fa-star-half-alt"></i>
+                        }
+                        else
+                        {
+                            <i class="far fa-star"></i>
+                        }
+                    }
+                    <small>@item.AverageRating.ToString("0.0") (@item.ReviewCount)</small>
                 </div>
             </div>
         </article>

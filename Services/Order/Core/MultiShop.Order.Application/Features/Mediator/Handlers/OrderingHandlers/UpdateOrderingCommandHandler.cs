@@ -24,6 +24,8 @@ namespace MultiShop.Order.Application.Features.Mediator.Handlers.OrderingHandler
             values.OrderDate = request.OrderDate;
             values.UserId = request.UserId;
             values.TotalPrice = request.TotalPrice;
+            values.PaymentMethod = request.PaymentMethod;
+            values.AddressId = request.AddressId;
             await _repository.UpdateAsync(values);
         }
     }

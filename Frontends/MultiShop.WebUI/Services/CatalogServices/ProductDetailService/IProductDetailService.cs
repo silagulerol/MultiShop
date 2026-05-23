@@ -10,5 +10,7 @@ namespace MultiShop.WebUI.Services.CatalogServices.ProductDetailService
         Task<UpdateProductDetailDto> GetByIdProductDetailAsync(string id);
         Task<List<ResultProductDetailDto>> GetAllProductDetailAsync();
         Task<UpdateProductDetailDto> GetByProductIdProductDetailAsync(string ProductId);
+        Task<GetByIdProductDetailDto> GetProductDetailByProductIdAsync(string productId);
+        Task<GetByIdProductDetailDto> GetProductDetailByVariantIdAsync(string variantId);
     }
 }

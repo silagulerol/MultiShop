@@ -37,7 +37,9 @@ namespace MultiShop.Order.Application.Features.Mediator.Handlers.OrderingHandler
                 OrderingId = x.OrderingId,
                 UserId  = x.UserId,
                 OrderDate = x.OrderDate,
-                TotalPrice  = x.TotalPrice
+                TotalPrice  = x.TotalPrice,
+                PaymentMethod = x.PaymentMethod,
+                AddressId = x.AddressId
             }).ToList();
         }
     }

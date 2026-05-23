@@ -21,6 +21,19 @@ namespace MultiShop.Order.Application.Features.CQRS.Handlers.AddressHandlers
         {
             var values = await _repository.GetAllAsync();
             //Burada projection yaparak için Select kullanarak GetAddressQueryResult nesneleri oluşturuyoruz.
+            return MapToResult(values);
+        }
+
+        public async Task<List<GetAddressQueryResult>> HandleByUserId(string userId)
+        {
+            var values = await _repository.GetAllAsync();
+            var userAddresses = values.Where(x => x.UserId == userId).ToList();
+
+            return MapToResult(userAddresses);
+        }
+
+        private static List<GetAddressQueryResult> MapToResult(List<Address> values)
+        {
             return values.Select(x => new GetAddressQueryResult
             {
                 AddressId = x.AddressId,

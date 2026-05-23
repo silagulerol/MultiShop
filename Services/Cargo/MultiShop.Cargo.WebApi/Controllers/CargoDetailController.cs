@@ -42,7 +42,17 @@ namespace MultiShop.Cargo.WebApi.Controllers
                 return NotFound("Cargo detail not found for this order detail.");
             }
 
-            return Ok(value);
+            var result = new ResultCargoDetailDto
+            {
+                CargoDetailId = value.CargoDetailId,
+                OrderDetailId = value.OrderDetailId,
+                TrackingNumber = value.TrackingNumber,
+                CargoStatus = value.CargoStatus,
+                CargoCompanyId = value.CargoCompanyId,
+                CargoCompanyName = value.CargoCompany?.CargoCompanyName
+            };
+
+            return Ok(result);
         }
 
         [HttpGet("GetByVendorId/{vendorId}")]
@@ -75,7 +85,8 @@ namespace MultiShop.Cargo.WebApi.Controllers
                 CargoDetailId = cargoDetail.CargoDetailId,
                 OrderDetailId = cargoDetail.OrderDetailId,
                 TrackingNumber = cargoDetail.TrackingNumber,
-                CargoStatus = cargoDetail.CargoStatus
+                CargoStatus = cargoDetail.CargoStatus,
+                CargoCompanyId = cargoDetail.CargoCompanyId
             });
         }
 

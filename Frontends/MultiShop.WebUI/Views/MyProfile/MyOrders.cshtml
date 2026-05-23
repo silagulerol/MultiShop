@@ -151,15 +151,6 @@
         font-size: 18px;
     }
 
-    .review-btn {
-        border: 1px solid #f27a1a;
-        color: #f27a1a;
-        background: #fff;
-        border-radius: 6px;
-        min-width: 130px;
-        height: 42px;
-        font-weight: 700;
-    }
 </style>
 
 <div class="account-page">
@@ -262,7 +253,7 @@
                                         <p class="order-total mb-0 text-nowrap">@item.TotalPrice ₺</p>
                                     </div>
                                     <div class="col-md-2 text-right order-actions-column">
-                                        <a href="/User/OrderDetail/@item.OrderingId" class="btn order-detail-btn">
+                                        <a href="/MyOrders/Detail/@item.OrderingId" class="btn order-detail-btn">
                                             Details
                                         </a>
                                     </div>
@@ -270,14 +261,11 @@
                             </div>
 
                             <div class="order-card-body">
-                                <div class="order-delivery-box d-flex justify-content-between align-items-center">
+                                <div class="order-delivery-box">
                                     <div>
                                         <div class="order-status-success">✓ Order received</div>
                                         <p class="mb-0 mt-2">You can view shipment details from the order detail page.</p>
                                     </div>
-                                    <button type="button" class="review-btn" disabled>
-                                        Review
-                                    </button>
                                 </div>
                             </div>
                         </div>

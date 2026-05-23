@@ -13,5 +13,7 @@ namespace MultiShop.WebUI.Services.CatalogServices.ProductServices
         Task<List<ResultProductWithCategoryDto>> GetProductsWithCategoryByCategoryIdAsync(string CategoryId);
         Task<List<ResultProductDto>> GetProductsByVendorIdAsync(string vendorId);
         Task<List<ResultProductWithCategoryDto>> GetProductsWithCategoryByVendorIdAsync(string vendorId);   
+        Task<List<ResultProductDto>> SearchProductAsync(string searchKey);
+        Task<ProductFilterResponseDto> FilterProductsAsync(ProductFilterRequestDto request);
     }
 }

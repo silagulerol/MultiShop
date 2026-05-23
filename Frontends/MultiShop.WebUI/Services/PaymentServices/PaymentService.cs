@@ -10,9 +10,10 @@ namespace MultiShop.WebUI.Services.PaymentServices
         {
             _httpClient = httpClient;
         }
-        public async Task<PaymentResultDto> CompletePaymentAsync()
+        public async Task<PaymentResultDto> CompletePaymentAsync(int addressId, string paymentMethod)
         {
-            var response = await _httpClient.PostAsync("payment", null);
+            var encodedPaymentMethod = Uri.EscapeDataString(paymentMethod);
+            var response = await _httpClient.PostAsync($"payment?addressId={addressId}&paymentMethod={encodedPaymentMethod}", null);
 
             if (!response.IsSuccessStatusCode)
             {

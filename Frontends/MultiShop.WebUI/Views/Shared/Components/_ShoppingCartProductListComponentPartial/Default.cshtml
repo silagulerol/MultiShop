@@ -16,18 +16,31 @@
     {
         @foreach(var item in Model.BasketItems)
         {
+            var imageUrl = !string.IsNullOrWhiteSpace(item.ProductImageUrl)
+                ? item.ProductImageUrl
+                : Url.Content("~/multishopTemp/img/product-1.jpg");
+            var sellerText = !string.IsNullOrWhiteSpace(item.VendorId)
+                ? item.VendorId
+                : "Seller information unavailable";
+
             <article class="cart-item-card">
                 <a class="cart-item-image" href="/ProductList/ProductDetail/@item.ProductId">
-                    <img src="@item.ProductImageUrl" alt="@item.ProductName">
+                    <img src="@imageUrl" alt="@item.ProductName">
                 </a>
 
                 <div class="cart-item-info">
                     <div>
                         <a class="cart-item-title" href="/ProductList/ProductDetail/@item.ProductId">@item.ProductName</a>
                         <div class="cart-item-meta">
-                            <span>Color: Standard</span>
-                            <span>Size: One Size</span>
-                            <span>Seller: MultiShop</span>
+                            @if (!string.IsNullOrWhiteSpace(item.Color))
+                            {
+                                <span>Color: @item.Color</span>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(item.Size))
+                            {
+                                <span>Size: @item.Size</span>
+                            }
+                            <span>Seller: @sellerText</span>
                         </div>
                     </div>
 
@@ -49,7 +62,7 @@
                         </div>
                     </div>
 
-                    <a class="cart-remove-btn" href="/ShoppingCart/RemoveBasketItem/@item.ProductId" aria-label="Remove @item.ProductName">
+                    <a class="cart-remove-btn" href="/ShoppingCart/RemoveBasketItem/@(item.ProductVariantId ?? item.ProductId)" aria-label="Remove @item.ProductName">
                         <i class="fa fa-times"></i>
                     </a>
                 </div>

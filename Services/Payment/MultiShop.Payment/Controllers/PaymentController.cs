@@ -9,6 +9,14 @@ namespace MultiShop.Payment.Controllers
     [Route("api/[controller]")]
     public class PaymentController : ControllerBase
     {
+        private static readonly HashSet<string> AllowedPaymentMethods = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "CreditCard",
+            "Paypal",
+            "BankTransfer",
+            "UsePoints"
+        };
+
         private readonly HttpClient _httpClient;
         private readonly IHttpContextAccessor _httpContextAccessor;
         public PaymentController(HttpClient httpClient, IHttpContextAccessor httpContextAccessor)
@@ -18,10 +26,22 @@ namespace MultiShop.Payment.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CompletePayment()
+        public async Task<IActionResult> CompletePayment([FromQuery] int addressId, [FromQuery] string paymentMethod)
         {
             try
             {
+                if (addressId <= 0)
+                {
+                    return BadRequest("A valid addressId is required to complete payment.");
+                }
+
+                var selectedPaymentMethod = GetSupportedPaymentMethod(paymentMethod);
+
+                if (string.IsNullOrWhiteSpace(selectedPaymentMethod))
+                {
+                    return BadRequest("A valid paymentMethod is required to complete payment.");
+                }
+
                 var token = _httpContextAccessor.HttpContext?.Request.Headers["Authorization"].ToString();
 
             if (string.IsNullOrWhiteSpace(token))
@@ -53,7 +73,9 @@ namespace MultiShop.Payment.Controllers
             {
                 UserId = basket.UserId,
                 TotalPrice = basket.TotalPrice,
-                OrderDate = DateTime.Now
+                OrderDate = DateTime.Now,
+                PaymentMethod = selectedPaymentMethod,
+                AddressId = addressId
             };
 
             var orderingResponse = await _httpClient.PostAsJsonAsync("http://localhost:7072/api/orderings", ordering);
@@ -116,6 +138,12 @@ namespace MultiShop.Payment.Controllers
             {
                 return StatusCode(500, $"Payment service crashed: {ex.Message} | Inner: {ex.InnerException?.Message}");
             }
+        }
+
+        private static string? GetSupportedPaymentMethod(string paymentMethod)
+        {
+            return AllowedPaymentMethods.FirstOrDefault(x =>
+                string.Equals(x, paymentMethod, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

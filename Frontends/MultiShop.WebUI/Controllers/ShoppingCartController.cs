@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using MultiShop.DtoLayer.BasketDtos;
 using MultiShop.WebUI.Services.BasketServices;
 using MultiShop.WebUI.Services.CatalogServices.ProductServices;
+using MultiShop.WebUI.Services.CatalogServices.ProductVariantService;
 using MultiShop.WebUI.Services.DiscountServices;
-using NuGet.ContentModel;
+using System.Globalization;
 
 namespace MultiShop.WebUI.Controllers
 {
@@ -16,12 +17,14 @@ namespace MultiShop.WebUI.Controllers
         private readonly IProductService _productService;
         private readonly IBasketService _basketService;
         private readonly IDiscountService _discountService;
+        private readonly IProductVariantService _productVariantService;
 
-        public ShoppingCartController(IBasketService basketService, IProductService productService, IDiscountService discountService)
+        public ShoppingCartController(IBasketService basketService, IProductService productService, IDiscountService discountService, IProductVariantService productVariantService)
         {
             _basketService = basketService;
             _productService = productService;
             _discountService = discountService;
+            _productVariantService = productVariantService;
         }
 
 
@@ -43,18 +46,54 @@ namespace MultiShop.WebUI.Controllers
             return View();
         }
 
-        public async Task<IActionResult> AddBasketItem(string id)
+        public async Task<IActionResult> AddBasketItem(
+            string id,
+            string? productVariantId,
+            string? size,
+            string? color,
+            string? price,
+            string? productImageUrl,
+            int quantity = 1)
         {
             var product = await _productService.GetByIdProductAsync(id);
             if (product != null)
             {
+                var unitPrice = product.StartingDiscountedPrice ?? product.StartingPrice;
+                var selectedProductVariantId = string.IsNullOrWhiteSpace(productVariantId) ? null : productVariantId;
+                var selectedSize = size;
+                var selectedColor = color;
+                var selectedProductImageUrl = productImageUrl;
+
+                if (!string.IsNullOrWhiteSpace(selectedProductVariantId))
+                {
+                    var variant = await _productVariantService.GetByIdProductVariantAsync(selectedProductVariantId);
+                    if (!string.IsNullOrWhiteSpace(variant.ProductVariantId) && variant.ProductId == product.ProductId)
+                    {
+                        selectedProductVariantId = variant.ProductVariantId;
+                        selectedSize = variant.Size;
+                        selectedColor = variant.Color;
+                        unitPrice = variant.DiscountedPrice ?? variant.Price;
+                        selectedProductImageUrl = string.IsNullOrWhiteSpace(variant.MainImageUrl)
+                            ? product.MainImageUrl
+                            : variant.MainImageUrl;
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(price) &&
+                         decimal.TryParse(price, NumberStyles.Number, CultureInfo.InvariantCulture, out var parsedPrice))
+                {
+                    unitPrice = parsedPrice;
+                }
+
                 var items = new BasketItemDto
                 {
                     ProductId = product.ProductId,
                     ProductName = product.ProductName,
-                    UnitPrice = product.ProductPrice,
-                    Quantity = 1,
-                    ProductImageUrl= product.ProductImageUrl,
+                    UnitPrice = unitPrice,
+                    Quantity = quantity < 1 ? 1 : quantity,
+                    ProductVariantId = selectedProductVariantId,
+                    Size = selectedSize,
+                    Color = selectedColor,
+                    ProductImageUrl = string.IsNullOrWhiteSpace(selectedProductImageUrl) ? product.MainImageUrl : selectedProductImageUrl,
                     VendorId = product.VendorId
                 };
                 await _basketService.AddBasketItem(items);

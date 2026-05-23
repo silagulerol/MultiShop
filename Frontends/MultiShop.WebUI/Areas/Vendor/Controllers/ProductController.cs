@@ -80,7 +80,25 @@ namespace MultiShop.WebUI.Areas.Vendor.Controllers
         public async Task<IActionResult> CreateProduct(CreateProductDto createProductDto)
         {
             createProductDto.VendorId = GetCurrentVendorId();
+            createProductDto.VendorId = GetCurrentVendorId();
 
+            createProductDto.Slug = createProductDto.ProductName
+            .ToLower()
+            .Replace(" ", "-")
+            .Replace("ı", "i")
+            .Replace("ğ", "g")
+            .Replace("ü", "u")
+            .Replace("ş", "s")
+            .Replace("ö", "o")
+            .Replace("ç", "c");
+
+            createProductDto.CreatedDate = DateTime.UtcNow;
+            createProductDto.IsActive = true;
+            createProductDto.AverageRating = 0;
+            createProductDto.ReviewCount = 0;
+            createProductDto.FavoriteCount = 0;
+            createProductDto.QuestionCount = 0;
+            createProductDto.ViewCount = 0;
             await _productService.CreateProductAsync(createProductDto);
 
             return Redirect("/Vendor/Product/Index");
@@ -126,9 +144,39 @@ namespace MultiShop.WebUI.Areas.Vendor.Controllers
                 return Forbid();
             }
 
+            var existingProduct = await _productService.GetByIdProductAsync(updateProductDto.ProductId);
+
             updateProductDto.VendorId = GetCurrentVendorId();
 
+            updateProductDto.Slug =
+                string.IsNullOrWhiteSpace(updateProductDto.Slug)
+                ? existingProduct.Slug
+                : updateProductDto.Slug;
+
+            updateProductDto.BrandId =
+                string.IsNullOrWhiteSpace(updateProductDto.BrandId)
+                ? existingProduct.BrandId
+                : updateProductDto.BrandId;
+
+            updateProductDto.MainImageUrl =
+                string.IsNullOrWhiteSpace(updateProductDto.MainImageUrl)
+                ? existingProduct.MainImageUrl
+                : updateProductDto.MainImageUrl;
+
+            updateProductDto.Description =
+                string.IsNullOrWhiteSpace(updateProductDto.Description)
+                ? existingProduct.Description
+                : updateProductDto.Description;
+
+            updateProductDto.CreatedDate =
+                updateProductDto.CreatedDate == default
+                ? existingProduct.CreatedDate
+                : updateProductDto.CreatedDate;
+
+            updateProductDto.IsActive = existingProduct.IsActive;
+
             await _productService.UpdateProductAsync(updateProductDto);
+
             return Redirect("/Vendor/Product/GetProductsWithCategory");
         }
 

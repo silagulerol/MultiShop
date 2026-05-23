@@ -4,91 +4,684 @@
 }
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<meta charset="utf-8">
-	<title>Form-v4 by Colorlib</title>
-	<!-- Mobile Specific Metas -->
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	<!-- Font-->
-	<link rel="stylesheet" type="text/css" href="~/colorlib-regform-30/css/opensans-font.css">
-	<link rel="stylesheet" type="text/css" href="~/colorlib-regform-30/fonts/line-awesome/css/line-awesome.min.css">
-	<!-- Jquery -->
-	<link rel="stylesheet" href="https://jqueryvalidation.org/files/demo/site-demos.css">
-	<!-- Main Style Css -->
-	<link rel="stylesheet" href="~/colorlib-regform-30/css/style.css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log In - MultiShop</title>
+    <link href="~/multishopTemp/img/favicon.ico" rel="icon" />
+    <link href="~/multishopTemp/css/style.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
 </head>
-<body class="form-v4">
-	<div class="page-content">
-		<div class="form-v4-content">
-			<div class="form-left">
-				<h2>E-Commerce Log In Page</h2>
-				<p class="text-1">To conduct e-commerce transactions through our project and stay informed about discounted products and offers, you need to log in in just one minute.</p>
-				<p class="text-2">To complete your purchase, add items to your cart, and view your product list, you need to log in. If you don't have an account, you can register using the button below.</p>
-				<div class="form-left-last">
-                    <a href="/Register/Index" class="account">Register</a>
-				</div>
-			</div>
-			<form class="form-detail" action="#" method="post" id="myform">
-				<h2>LOG IN FORM</h2>
-				<!--<div class="form-row">
-					<label for="your_email">Your Email</label>
-					<input type="text" asp-for="Email" id="your_email" class="input-text" required pattern="[^@@]+@@[^@@]+.[a-zA-Z]{2,6}">
-				</div>-->
-				<div class="form-row">
-					<label for="your_email">Your User Name</label>
-					<input type="text" asp-for="UserName" id="your_userName" class="input-text">
-				</div>
-				<div class="form-group">
-					<div class="form-row form-row-1 ">
-						<label for="password">Your Password</label>
-						<input type="password" asp-for="Password" id="password" class="input-text" required>
-					</div>
-				</div>
+<body>
+    <main class="login-page">
+        <section class="login-shell">
+            <aside class="login-hero" aria-label="MultiShop marketplace">
+                <a href="/Default/Index/" class="login-brand" aria-label="MultiShop home">
+                </a>
 
-				<div class="form-row-last">
-					<button class="register" style="height:35px">Log In</button>
-				</div>
-			</form>
-		</div>
-	</div>
-	<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
-	<!--<script>
-		// just for the demos, avoids form submit
-		jQuery.validator.setDefaults({
-		  	debug: true,
-		  	success:  function(label){
-        		label.attr('id', 'valid');
-   		 	},
-		});
-		$( "#myform" ).validate({
-		  	rules: {
-			    password: "required",
-		    	comfirm_password: {
-		      		equalTo: "#password"
-		    	}
-		  	},
-		  	messages: {
-		  		first_name: {
-		  			required: "Please enter a firstname"
-		  		},
-		  		last_name: {
-		  			required: "Please enter a lastname"
-		  		},
-		  		your_email: {
-		  			required: "Please provide an email"
-		  		},
-		  		password: {
-	  				required: "Please enter a password"
-		  		},
-		  		comfirm_password: {
-		  			required: "Please enter a password",
-		      		equalTo: "Wrong Password"
-		    	}
-		  	}
-		});
-	</script>-->
-</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+                <div class="login-hero-content">
+                    <span class="hero-eyebrow">New season marketplace</span>
+                    <h1>Curated style, trusted shopping.</h1>
+                    <p>Discover premium products, member-only deals, and a smoother checkout experience when you sign in.</p>
+                </div>
+
+                <div class="hero-stat-list">
+                    <div>
+                        <strong>24/7</strong>
+                        <span>Secure shopping</span>
+                    </div>
+                    <div>
+                        <strong>Fast</strong>
+                        <span>Basket checkout</span>
+                    </div>
+                    <div>
+                        <strong>Fresh</strong>
+                        <span>Daily offers</span>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="login-panel">
+                <div class="login-card">
+                    <div class="login-card-header">
+                        <span class="secure-badge">
+                            <i class="fas fa-lock"></i>
+                            Secure login
+                        </span>
+                        <h2>Welcome back</h2>
+                        <p>Log in to manage your orders, favorites, basket, and marketplace messages.</p>
+                    </div>
+
+                    <form method="post" class="login-form" autocomplete="on">
+                        <div asp-validation-summary="ModelOnly" class="login-validation"></div>
+
+                        <div class="form-field">
+                            <label asp-for="UserName">Email or username</label>
+                            <div class="input-shell">
+                                <i class="fas fa-user"></i>
+                                <input asp-for="UserName" type="text" placeholder="Enter your email or username" autocomplete="username" />
+                            </div>
+                            <span asp-validation-for="UserName" class="field-validation"></span>
+                        </div>
+
+                        <div class="form-field">
+                            <label asp-for="Password">Password</label>
+                            <div class="input-shell">
+                                <i class="fas fa-key"></i>
+                                <input asp-for="Password" type="password" placeholder="Enter your password" autocomplete="current-password" />
+                            </div>
+                            <span asp-validation-for="Password" class="field-validation"></span>
+                        </div>
+
+                        <div class="form-options">
+                            <label class="remember-option">
+                                <input type="checkbox" name="rememberMe" value="true" />
+                                <span>Remember me</span>
+                            </label>
+                            <a href="#" class="forgot-link">Forgot password?</a>
+                        </div>
+
+                        <button type="submit" class="login-submit">
+                            <span>Log In</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+
+                        <div class="login-divider">
+                            <span>or continue with</span>
+                        </div>
+
+                        <div class="social-login-row" aria-label="Social login options">
+                            <a href="#" class="social-login-button">
+                                <i class="fab fa-google"></i>
+                                Google
+                            </a>
+                            <a href="#" class="social-login-button">
+                                <i class="fab fa-apple"></i>
+                                Apple
+                            </a>
+                        </div>
+
+                        <div class="register-strip">
+                            <span>New to MultiShop?</span>
+                            <div>
+                                <a href="/Register/CustomerRegister/">Create customer account</a>
+                                <a href="/Register/VendorRegister/">Become a vendor</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
 </html>
+
+<style>
+    :root {
+        --login-accent: #f27a1a;
+        --login-dark: #111317;
+        --login-text: #20242a;
+        --login-muted: #747c87;
+        --login-border: #eceff3;
+        --login-soft: #f7f8fa;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        min-height: 100vh;
+        margin: 0;
+        color: var(--login-text);
+        background: #ffffff;
+        font-family: Roboto, Arial, sans-serif;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .login-page {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 28px;
+        background:
+            radial-gradient(circle at top left, rgba(242, 122, 26, 0.1), transparent 32%),
+            linear-gradient(135deg, #ffffff 0%, #f7f8fa 100%);
+    }
+
+    .login-shell {
+        display: grid;
+        grid-template-columns: minmax(420px, 1.05fr) minmax(380px, 0.95fr);
+        width: min(1180px, 100%);
+        min-height: 700px;
+        overflow: hidden;
+        background: #ffffff;
+        border: 1px solid rgba(17, 19, 23, 0.06);
+        border-radius: 28px;
+        box-shadow: 0 28px 70px rgba(17, 19, 23, 0.14);
+        animation: pageIn 0.45s ease both;
+    }
+
+    .login-hero {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 700px;
+        padding: 34px;
+        color: #ffffff;
+        background:
+            linear-gradient(145deg, rgba(17, 19, 23, 0.46), rgba(17, 19, 23, 0.12)),
+            url('/multishopTemp/img/6692bc69-6fe3-46d3-ba0d-b114ff123985.jpg') center/cover no-repeat;
+        background-blend-mode: normal;
+        isolation: isolate;
+    }
+
+    .login-hero::after {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        content: "";
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.18), transparent 55%);
+    }
+
+    .login-brand {
+        display: inline-flex;
+        align-items: center;
+        width: max-content;
+        color: #ffffff;
+        font-size: 26px;
+        font-weight: 800;
+        letter-spacing: 0;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .login-brand:hover {
+        color: #ffffff;
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+
+    .login-brand span,
+    .login-brand strong {
+        display: inline-flex;
+        align-items: center;
+        height: 42px;
+        padding: 0 12px;
+        text-transform: uppercase;
+    }
+
+    .login-brand span {
+        color: var(--login-dark);
+        background: #ffffff;
+    }
+
+    .login-brand strong {
+        color: #ffffff;
+        background: var(--login-accent);
+    }
+
+    .login-hero-content {
+        max-width: 500px;
+        animation: contentIn 0.55s ease 0.08s both;
+    }
+
+    .hero-eyebrow {
+        display: inline-flex;
+        margin-bottom: 16px;
+        padding: 8px 12px;
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        backdrop-filter: blur(10px);
+    }
+
+    .login-hero h1 {
+        margin: 0;
+        color: #ffffff;
+        font-size: 56px;
+        font-weight: 800;
+        line-height: 1.02;
+        text-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+    }
+
+    .login-hero p {
+        max-width: 440px;
+        margin: 18px 0 0;
+        color: rgba(255, 255, 255, 0.84);
+        font-size: 17px;
+        line-height: 1.7;
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+    }
+
+    .hero-stat-list {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .hero-stat-list div {
+        padding: 16px;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
+    }
+
+    .hero-stat-list strong,
+    .hero-stat-list span {
+        display: block;
+    }
+
+    .hero-stat-list strong {
+        color: #ffffff;
+        font-size: 18px;
+        font-weight: 800;
+    }
+
+    .hero-stat-list span {
+        margin-top: 4px;
+        color: rgba(255, 255, 255, 0.76);
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .login-panel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 46px;
+        background: #ffffff;
+    }
+
+    .login-card {
+        width: min(440px, 100%);
+        animation: contentIn 0.5s ease 0.14s both;
+    }
+
+    .login-card-header {
+        margin-bottom: 28px;
+    }
+
+    .secure-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 16px;
+        padding: 8px 12px;
+        color: var(--login-accent);
+        background: #fff4ec;
+        border: 1px solid rgba(242, 122, 26, 0.14);
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .login-card h2 {
+        margin: 0;
+        color: var(--login-dark);
+        font-size: 34px;
+        font-weight: 800;
+    }
+
+    .login-card p {
+        margin: 10px 0 0;
+        color: var(--login-muted);
+        font-size: 15px;
+        line-height: 1.65;
+    }
+
+    .login-form {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .login-validation {
+        color: #c92a2a;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .form-field label {
+        margin: 0;
+        color: var(--login-text);
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .input-shell {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 56px;
+        padding: 0 16px;
+        background: #ffffff;
+        border: 1px solid var(--login-border);
+        border-radius: 14px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .input-shell:focus-within {
+        border-color: rgba(242, 122, 26, 0.58);
+        box-shadow: 0 0 0 4px rgba(242, 122, 26, 0.1);
+        transform: translateY(-1px);
+    }
+
+    .input-shell i {
+        width: 18px;
+        color: var(--login-accent);
+        text-align: center;
+    }
+
+    .input-shell input {
+        width: 100%;
+        min-width: 0;
+        height: 54px;
+        padding: 0;
+        color: var(--login-text);
+        background: transparent;
+        border: 0;
+        outline: 0;
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .input-shell input::placeholder {
+        color: #a1a8b0;
+        font-weight: 500;
+    }
+
+    .field-validation {
+        color: #c92a2a;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .form-options {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin-top: 2px;
+    }
+
+    .remember-option {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        margin: 0;
+        color: #4b535d;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .remember-option input {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--login-accent);
+    }
+
+    .forgot-link {
+        color: var(--login-accent);
+        font-size: 13px;
+        font-weight: 800;
+        transition: color 0.18s ease, opacity 0.18s ease;
+    }
+
+    .forgot-link:hover {
+        color: #d9650d;
+        opacity: 0.85;
+        text-decoration: none;
+    }
+
+    .login-submit {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        min-height: 56px;
+        margin-top: 6px;
+        color: #ffffff;
+        background: var(--login-accent);
+        border: 0;
+        border-radius: 14px;
+        box-shadow: 0 14px 28px rgba(242, 122, 26, 0.28);
+        font-size: 15px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .login-submit:hover,
+    .login-submit:focus {
+        background: #dd6b10;
+        box-shadow: 0 18px 34px rgba(242, 122, 26, 0.34);
+        transform: translateY(-2px);
+    }
+
+    .login-submit i {
+        font-size: 13px;
+    }
+
+    .login-divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #9aa2ad;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+
+    .login-divider::before,
+    .login-divider::after {
+        flex: 1;
+        height: 1px;
+        content: "";
+        background: var(--login-border);
+    }
+
+    .social-login-row {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .social-login-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        min-height: 48px;
+        color: var(--login-text);
+        background: var(--login-soft);
+        border: 1px solid var(--login-border);
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 800;
+        transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+    }
+
+    .social-login-button:hover {
+        color: var(--login-accent);
+        background: #ffffff;
+        border-color: rgba(242, 122, 26, 0.24);
+        text-decoration: none;
+        transform: translateY(-1px);
+    }
+
+    .register-strip {
+        padding: 18px;
+        background: var(--login-soft);
+        border: 1px solid var(--login-border);
+        border-radius: 16px;
+    }
+
+    .register-strip span {
+        display: block;
+        margin-bottom: 10px;
+        color: var(--login-muted);
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .register-strip div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 16px;
+    }
+
+    .register-strip a {
+        color: var(--login-accent);
+        font-size: 13px;
+        font-weight: 800;
+        transition: color 0.18s ease, opacity 0.18s ease;
+    }
+
+    .register-strip a:hover {
+        color: #d9650d;
+        opacity: 0.86;
+        text-decoration: none;
+    }
+
+    @@keyframes pageIn {
+        from {
+            opacity: 0;
+            transform: translateY(14px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes contentIn {
+        from {
+            opacity: 0;
+            transform: translateY(18px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@media (max-width: 991.98px) {
+        .login-page {
+            padding: 18px;
+        }
+
+        .login-shell {
+            grid-template-columns: 1fr;
+            min-height: auto;
+            border-radius: 22px;
+        }
+
+        .login-hero {
+            min-height: 360px;
+            padding: 26px;
+        }
+
+        .login-hero h1 {
+            font-size: 40px;
+        }
+
+        .login-hero p {
+            font-size: 15px;
+        }
+
+        .hero-stat-list {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .login-panel {
+            padding: 34px 26px;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .login-page {
+            align-items: flex-start;
+            padding: 0;
+            background: #ffffff;
+        }
+
+        .login-shell {
+            width: 100%;
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        .login-hero {
+            min-height: 280px;
+            padding: 22px;
+        }
+
+        .login-brand span,
+        .login-brand strong {
+            height: 36px;
+            padding: 0 10px;
+            font-size: 21px;
+        }
+
+        .hero-eyebrow {
+            margin-bottom: 12px;
+            font-size: 11px;
+        }
+
+        .login-hero h1 {
+            font-size: 32px;
+        }
+
+        .login-hero p {
+            margin-top: 12px;
+            font-size: 14px;
+            line-height: 1.55;
+        }
+
+        .hero-stat-list {
+            display: none;
+        }
+
+        .login-panel {
+            padding: 28px 18px 34px;
+        }
+
+        .login-card h2 {
+            font-size: 28px;
+        }
+
+        .form-options {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .social-login-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

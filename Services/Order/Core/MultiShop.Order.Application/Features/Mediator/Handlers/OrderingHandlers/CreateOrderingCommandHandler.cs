@@ -26,7 +26,9 @@ namespace MultiShop.Order.Application.Features.Mediator.Handlers.OrderingHandler
             {
                 UserId = request.UserId,
                 OrderDate = request.OrderDate,
-                TotalPrice = request.TotalPrice
+                TotalPrice = request.TotalPrice,
+                PaymentMethod = request.PaymentMethod,
+                AddressId = request.AddressId
             };
 
             await _repository.CreateAsync(entity);

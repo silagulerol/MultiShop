@@ -17,7 +17,7 @@
                 <div class="nav nav-tabs mb-4">
                     <a class="nav-item nav-link text-dark active" data-toggle="tab" href="#tab-pane-1">Description</a>
                     <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-2">Information</a>
-                    <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-3">Reviews</a>
+                    <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-3" id="reviews-tab">Reviews</a>
                 </div>
                 <div class="tab-content">
                     
@@ -32,3 +32,30 @@
 </div>
 
 @await Component.InvokeAsync("_ProductYouLikeComponentPartial", new { id = ViewBag.i })
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.hash !== '#reviews') {
+            return;
+        }
+
+        var reviewsTab = document.getElementById('reviews-tab');
+        var reviewsPane = document.getElementById('tab-pane-3');
+
+        if (!reviewsTab || !reviewsPane) {
+            return;
+        }
+
+        document.querySelectorAll('.nav-tabs .nav-link').forEach(function (tab) {
+            tab.classList.remove('active');
+        });
+
+        document.querySelectorAll('.tab-content .tab-pane').forEach(function (pane) {
+            pane.classList.remove('show', 'active');
+        });
+
+        reviewsTab.classList.add('active');
+        reviewsPane.classList.add('show', 'active');
+        reviewsPane.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+</script>

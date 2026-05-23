@@ -5,6 +5,14 @@ namespace MultiShop.WebUI.Controllers
 {
     public class PaymentController : Controller
     {
+        private static readonly HashSet<string> AllowedPaymentMethods = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "CreditCard",
+            "Paypal",
+            "BankTransfer",
+            "UsePoints"
+        };
+
         private readonly IPaymentService _paymentService;
 
         public PaymentController(IPaymentService paymentService)
@@ -13,24 +21,37 @@ namespace MultiShop.WebUI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(int addressId)
         {
             ViewBag.directory1 = "Shop";
             ViewBag.directory2 = "Payment";
             ViewBag.directory3 = "Checkout";
+            ViewBag.AddressId = addressId;
             return View();
         }
 
         
         [HttpPost]
-        public async Task<IActionResult> Index(string cardNumber, string cardHolder, string month, string year, string cvv)
+        public async Task<IActionResult> Index(string cardNumber, string cardHolder, string month, string year, string cvv, int addressId, string paymentMethod)
         {
+            var selectedPaymentMethod = GetSupportedPaymentMethod(paymentMethod);
+
+            if (string.IsNullOrWhiteSpace(selectedPaymentMethod))
+            {
+                ViewBag.directory1 = "Shop";
+                ViewBag.directory2 = "Payment";
+                ViewBag.directory3 = "Checkout";
+                ViewBag.AddressId = addressId;
+                ModelState.AddModelError(nameof(paymentMethod), "Please select a valid payment method.");
+                return View();
+            }
+
             try
             {
-                var result = await _paymentService.CompletePaymentAsync();
+                var result = await _paymentService.CompletePaymentAsync(addressId, selectedPaymentMethod);
 
                 return RedirectToAction("Success", new
-                {
+                { 
                     orderingId = result.OrderingId,
                     totalPrice = result.TotalPrice
                 });
@@ -54,6 +75,12 @@ namespace MultiShop.WebUI.Controllers
         {
             ViewBag.Error = message;
             return View();
+        }
+
+        private static string? GetSupportedPaymentMethod(string paymentMethod)
+        {
+            return AllowedPaymentMethods.FirstOrDefault(x =>
+                string.Equals(x, paymentMethod, StringComparison.OrdinalIgnoreCase));
         }
     } 
 }

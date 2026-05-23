@@ -38,9 +38,9 @@ namespace MultiShop.Order.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateOrdering(CreateOrderingCommand command)
         {
-            var id = await _mediator.Send(command); // 🔥 BURASI DEĞİŞTİ
+            var id = await _mediator.Send(command); 
 
-            return Ok(new { OrderingId = id });     // 🔥 ID dön
+            return Ok(new { OrderingId = id });    
         }
 
         [HttpDelete]
