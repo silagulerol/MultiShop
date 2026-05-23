@@ -9,5 +9,7 @@ namespace MultiShop.Cargo.DataAccessLayer.Abstract
 {
     public interface ICargoDetailDal : IGenericDal<CargoDetail>
     {
+        List<CargoDetail> GetByVendorId(string vendorId);
+        CargoDetail GetByOrderDetailId(int orderDetailId);
     }
 }

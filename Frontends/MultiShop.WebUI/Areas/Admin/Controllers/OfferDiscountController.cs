@@ -37,14 +37,14 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         {
             OfferDiscountViewbagList();
             await _offerDiscountService.CreateOfferDiscountAsync(createOfferDiscountDto);
-            return RedirectToAction("Index", "OfferDiscount", new { area = "Admin" });
+            return Redirect("/Admin/OfferDiscount/Index");
         }
 
         public async Task<IActionResult> DeleteOfferDiscount(string id)
         {
             OfferDiscountViewbagList();
             await _offerDiscountService.DeleteOfferDiscountAsync(id);
-            return RedirectToAction("Index", "OfferDiscount", new { area = "Admin" });
+            return Redirect("/Admin/OfferDiscount/Index");
         }
 
 
@@ -61,7 +61,7 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         {
             OfferDiscountViewbagList();
             await _offerDiscountService.UpdateOfferDiscountAsync(updateOfferDiscountDto);
-            return RedirectToAction("Index", "OfferDiscount", new { area = "Admin" });
+            return Redirect("/Admin/OfferDiscount/Index");
         }
 
         void OfferDiscountViewbagList()

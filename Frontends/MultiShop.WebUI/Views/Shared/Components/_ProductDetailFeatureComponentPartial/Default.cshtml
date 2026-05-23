@@ -1,91 +1,107 @@
 ﻿@model UpdateProductDto
 
+@{
+    var hasDiscount = Model.StartingDiscountedPrice.HasValue && Model.StartingDiscountedPrice.Value < Model.StartingPrice;
+    var displayPrice = hasDiscount ? Model.StartingDiscountedPrice!.Value : Model.StartingPrice;
+    var rating = Math.Clamp(Model.AverageRating, 0, 5);
+    var isFavorited = ViewBag.IsFavorited is bool value && value;
+    var returnUrl = Context.Request.Path + Context.Request.QueryString;
+}
+
 <div class="col-lg-7 h-auto mb-30">
     <div class="h-100 bg-light p-30">
+        @if (!string.IsNullOrWhiteSpace(Model.BrandName))
+        {
+            <div class="text-uppercase text-muted font-weight-semibold mb-2" style="font-size: 13px;">@Model.BrandName</div>
+        }
+
         <h3>@Model.ProductName</h3>
+
+        <div class="d-flex flex-wrap align-items-center mb-3">
+            @if (!string.IsNullOrWhiteSpace(Model.BadgeText))
+            {
+                <span class="badge badge-info mr-2 mb-2">@Model.BadgeText</span>
+            }
+            @if (Model.IsBestSeller)
+            {
+                <span class="badge badge-warning mr-2 mb-2">Best Seller</span>
+            }
+            @if (Model.IsNewArrival)
+            {
+                <span class="badge badge-success mr-2 mb-2">New Arrival</span>
+            }
+            @if (Model.IsWomenEntrepreneurProduct)
+            {
+                <span class="badge badge-light mr-2 mb-2">Women Entrepreneur</span>
+            }
+            @if (Model.IsRecyclableProduct)
+            {
+                <span class="badge badge-light mr-2 mb-2">Recyclable</span>
+            }
+            @if (Model.IsFreeShipping)
+            {
+                <span class="badge badge-primary mr-2 mb-2">Free Shipping</span>
+            }
+        </div>
+
         <div class="d-flex mb-3">
             <div class="text-primary mr-2">
-                <small class="fas fa-star"></small>
-                <small class="fas fa-star"></small>
-                <small class="fas fa-star"></small>
-                <small class="fas fa-star-half-alt"></small>
-                <small class="far fa-star"></small>
+                @for (var i = 1; i <= 5; i++)
+                {
+                    if (rating >= i)
+                    {
+                        <small class="fas fa-star"></small>
+                    }
+                    else if (rating >= i - 0.5)
+                    {
+                        <small class="fas fa-star-half-alt"></small>
+                    }
+                    else
+                    {
+                        <small class="far fa-star"></small>
+                    }
+                }
             </div>
-            <small class="pt-1">(99 Reviews)</small>
+            <small class="pt-1">
+                @Model.AverageRating.ToString("0.0") (@Model.ReviewCount Reviews) · @Model.QuestionCount Questions · @Model.FavoriteCount Favorites
+            </small>
         </div>
-        <h3 class="font-weight-semi-bold mb-4">$@Model.ProductPrice</h3>
+        <h3 class="font-weight-semi-bold mb-4">
+            <span id="product-detail-price">@displayPrice.ToString("N2") ₺</span>
+            @if (hasDiscount)
+            {
+                <del class="text-muted h5 ml-2">@Model.StartingPrice.ToString("N2") ₺</del>
+                <span class="badge badge-danger ml-2">%@Model.MaxDiscountRate</span>
+            }
+        </h3>
+        <form asp-controller="Favorite" asp-action="ToggleFavorite" method="post" class="mb-3">
+            <input type="hidden" name="productId" value="@Model.ProductId" />
+            <input type="hidden" name="returnUrl" value="@returnUrl" />
+            <button type="submit" class="btn btn-outline-primary">
+                <i class="@(isFavorited ? "fas" : "far") fa-heart mr-2"></i>
+                Favorite
+            </button>
+        </form>
         <p class="mb-4">
            @Model.Description
         </p>
-        <div class="d-flex mb-3">
-            <strong class="text-dark mr-3">Sizes:</strong>
-            <form>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="size-1" name="size">
-                    <label class="custom-control-label" for="size-1">XS</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="size-2" name="size">
-                    <label class="custom-control-label" for="size-2">S</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="size-3" name="size">
-                    <label class="custom-control-label" for="size-3">M</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="size-4" name="size">
-                    <label class="custom-control-label" for="size-4">L</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="size-5" name="size">
-                    <label class="custom-control-label" for="size-5">XL</label>
-                </div>
-            </form>
-        </div>
-        <div class="d-flex mb-4">
-            <strong class="text-dark mr-3">Colors:</strong>
-            <form>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="color-1" name="color">
-                    <label class="custom-control-label" for="color-1">Black</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="color-2" name="color">
-                    <label class="custom-control-label" for="color-2">White</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="color-3" name="color">
-                    <label class="custom-control-label" for="color-3">Red</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="color-4" name="color">
-                    <label class="custom-control-label" for="color-4">Blue</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="color-5" name="color">
-                    <label class="custom-control-label" for="color-5">Green</label>
-                </div>
-            </form>
-        </div>
-        <div class="d-flex align-items-center mb-4 pt-2">
-            <div class="input-group quantity mr-3" style="width: 130px;">
-                <div class="input-group-btn">
-                    <button class="btn btn-primary btn-minus">
-                        <i class="fa fa-minus"></i>
-                    </button>
-                </div>
-                <input type="text" class="form-control bg-secondary border-0 text-center" value="1">
-                <div class="input-group-btn">
-                    <button class="btn btn-primary btn-plus">
-                        <i class="fa fa-plus"></i>
-                    </button>
-                </div>
+
+        @await Component.InvokeAsync("_ProductVariantSelectorComponentPartial", new { id = Model.ProductId, startingPrice = Model.StartingPrice, mainImageUrl = Model.MainImageUrl })
+
+        @if (!string.IsNullOrWhiteSpace(Model.ShippingInfo) || !string.IsNullOrWhiteSpace(Model.ReturnPolicy))
+        {
+            <div class="border-top pt-3 mt-3">
+                @if (!string.IsNullOrWhiteSpace(Model.ShippingInfo))
+                {
+                    <p class="mb-2"><i class="fa fa-truck text-primary mr-2"></i>@Model.ShippingInfo</p>
+                }
+                @if (!string.IsNullOrWhiteSpace(Model.ReturnPolicy))
+                {
+                    <p class="mb-0"><i class="fa fa-undo text-primary mr-2"></i>@Model.ReturnPolicy</p>
+                }
             </div>
-            <button class="btn btn-primary px-3">
-                <i class="fa fa-shopping-cart mr-1"></i> Add To
-                Cart
-            </button>
-        </div>
+        }
+
         <div class="d-flex pt-2">
             <strong class="text-dark mr-2">Share on:</strong>
             <div class="d-inline-flex">

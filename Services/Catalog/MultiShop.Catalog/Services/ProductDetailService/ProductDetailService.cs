@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using MultiShop.Catalog.Dtos.CategoryDtos;
 using MultiShop.Catalog.Dtos.ProductDetailDtos;
 using MultiShop.Catalog.Entities;
 using MultiShop.Catalog.Settings;
@@ -11,7 +9,6 @@ namespace MultiShop.Catalog.Services.ProductDetailService
     public class ProductDetailService : IProductDetailService
     {
         private readonly IMongoCollection<ProductDetail> _productDetailCollection;
-        private readonly IMongoCollection<Product> _productCollection;
         private readonly IMapper _mapper;
 
         public ProductDetailService(IMapper mapper, IDatabaseSettings databaseSettings)
@@ -20,7 +17,6 @@ namespace MultiShop.Catalog.Services.ProductDetailService
             var mongoClient = new MongoClient(databaseSettings.ConnectionString);
             var database = mongoClient.GetDatabase(databaseSettings.DatabaseName);
             _productDetailCollection = database.GetCollection<ProductDetail>(databaseSettings.ProductDetailCollectionName);
-            _productCollection = database.GetCollection<Product>(databaseSettings.ProductCollectionName);
         }
         public async Task CreateProductDetailAsync(CreateProductDetailDto createProductDetailDto)
         {
@@ -45,9 +41,21 @@ namespace MultiShop.Catalog.Services.ProductDetailService
             return _mapper.Map<GetByIdProductDetailDto>(value);
         }
 
-        public async Task<GetByIdProductDetailDto> GetByProductIdProductDetailAsync(string ProductId)
+        public async Task<GetByIdProductDetailDto> GetByProductIdProductDetailAsync(string productId)
         {
-            var value= await _productDetailCollection.Find(x=>x.ProductId == ProductId).FirstOrDefaultAsync();
+            var value = await _productDetailCollection
+                .Find(x => x.ProductId == productId && x.ProductVariantId == null)
+                .FirstOrDefaultAsync();
+
+            return _mapper.Map<GetByIdProductDetailDto>(value);
+        }
+
+        public async Task<GetByIdProductDetailDto> GetProductDetailByVariantIdAsync(string productVariantId)
+        {
+            var value = await _productDetailCollection
+                .Find(x => x.ProductVariantId == productVariantId)
+                .FirstOrDefaultAsync();
+
             return _mapper.Map<GetByIdProductDetailDto>(value);
         }
 

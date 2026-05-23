@@ -29,8 +29,30 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         public async Task<IActionResult> ProductImageDetail(UpdateProductImageDto updateProductImageDto)
         {
             ProductImageViewBag();
-            await _productImageService.UpdateProductImageAsync(updateProductImageDto);
-            return RedirectToAction("GetProductsWithCategory", "Product", new { area = "Admin" });
+
+            if (string.IsNullOrEmpty(updateProductImageDto.ProductImageId))
+            {
+                var createProductImageDto = new CreateProductImageDto
+                {
+                    ProductId = updateProductImageDto.ProductId,
+                    ImageUrl = updateProductImageDto.ImageUrl,
+                    DisplayOrder = updateProductImageDto.DisplayOrder,
+                    IsMainImage = updateProductImageDto.IsMainImage,
+                    ImageAltText = updateProductImageDto.ImageAltText,
+                    ImageType = updateProductImageDto.ImageType,
+                    CreatedDate = updateProductImageDto.CreatedDate == default
+                        ? DateTime.UtcNow
+                        : updateProductImageDto.CreatedDate
+                };
+
+                await _productImageService.CreateProductImageAsync(createProductImageDto);
+            }
+            else
+            {
+                await _productImageService.UpdateProductImageAsync(updateProductImageDto);
+            }
+
+            return Redirect("/Admin/Product/GetProductsWithCategory"); 
         }
 
         void ProductImageViewBag()

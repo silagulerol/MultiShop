@@ -2,12 +2,13 @@
 {
     public class CreateProductImageDto
     {
-        public string Image1 { get; set; }
-        public string Image2 { get; set; }
-        public string Image3 { get; set; }
-        public string Image4 { get; set; }
-
-        // Product 1 --- N ProductImages
-        public string ProductId { get; set; }
+        public string ProductId { get; set; } = null!;
+        public string? ProductVariantId { get; set; }
+        public string ImageUrl { get; set; } = null!;
+        public int DisplayOrder { get; set; }
+        public bool IsMainImage { get; set; }
+        public string? ImageAltText { get; set; }
+        public string ImageType { get; set; } = null!;
+        public DateTime CreatedDate { get; set; }
     }
 }

@@ -1,0 +1,472 @@
+@model ResultOrderDetailPageDto
+@{
+    ViewData["Title"] = "Order Details";
+    Layout = "~/Views/UILayout/_UILayout.cshtml";
+}
+
+<style>
+    .account-page {
+        background-color: #f8f8f8;
+    }
+
+    .account-sidebar-card,
+    .orders-header-card,
+    .order-detail-card {
+        background: #fff;
+        border: 1px solid #e6e6e6;
+        border-radius: 12px;
+    }
+
+    .account-sidebar-card .card-header {
+        background: #fff;
+        border-bottom: 1px solid #eeeeee;
+        font-size: 18px;
+        font-weight: 700;
+        padding: 18px 22px;
+    }
+
+    .account-sidebar-card .list-group-item {
+        border: 0;
+        padding: 14px 22px;
+        font-size: 15px;
+        color: #333;
+    }
+
+    .account-sidebar-card .list-group-item.active,
+    .account-sidebar-card .list-group-item:hover {
+        background-color: #fff4ec;
+        color: #f27a1a;
+        font-weight: 600;
+    }
+
+    .orders-header-card {
+        padding: 28px 32px;
+        margin-bottom: 24px;
+    }
+
+    .orders-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #333;
+    }
+
+    .order-detail-card {
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+
+    .order-detail-card-header {
+        background: #f7f7f7;
+        border-bottom: 1px solid #e6e6e6;
+        padding: 18px 24px;
+    }
+
+    .order-detail-card-body {
+        padding: 24px;
+    }
+
+    .order-info-title {
+        color: #333;
+        display: block;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .order-info-text {
+        color: #333;
+        margin: 0;
+    }
+
+    .order-total {
+        color: #f27a1a;
+        font-weight: 700;
+    }
+
+    .order-detail-btn,
+    .order-outline-btn {
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        min-height: 42px;
+        padding: 10px 18px;
+        white-space: nowrap;
+    }
+
+    .order-detail-btn {
+        background: #f27a1a;
+        border: 1px solid #f27a1a;
+        color: #fff;
+    }
+
+    .order-detail-btn:hover {
+        background: #df6f15;
+        border-color: #df6f15;
+        color: #fff;
+    }
+
+    .order-outline-btn {
+        background: #fff;
+        border: 1px solid #f27a1a;
+        color: #f27a1a;
+    }
+
+    .order-outline-btn:hover {
+        background: #fff4ec;
+        color: #f27a1a;
+    }
+
+    .status-badge {
+        background: #fff4ec;
+        border-radius: 999px;
+        color: #f27a1a;
+        display: inline-flex;
+        font-weight: 700;
+        padding: 8px 14px;
+    }
+
+    .summary-grid {
+        display: grid;
+        gap: 18px;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .info-box {
+        border: 1px solid #eeeeee;
+        border-radius: 10px;
+        padding: 18px;
+    }
+
+    .timeline {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .timeline-step {
+        border: 1px solid #e6e6e6;
+        border-radius: 10px;
+        padding: 18px;
+        position: relative;
+    }
+
+    .timeline-step.completed {
+        border-color: #f27a1a;
+        background: #fffaf6;
+    }
+
+    .timeline-dot {
+        align-items: center;
+        background: #e5e5e5;
+        border-radius: 50%;
+        color: #fff;
+        display: inline-flex;
+        font-weight: 700;
+        height: 28px;
+        justify-content: center;
+        margin-bottom: 10px;
+        width: 28px;
+    }
+
+    .timeline-step.completed .timeline-dot {
+        background: #f27a1a;
+    }
+
+    .product-row {
+        border: 1px solid #eeeeee;
+        border-radius: 10px;
+        display: grid;
+        gap: 18px;
+        grid-template-columns: 96px 1fr auto;
+        margin-bottom: 16px;
+        padding: 18px;
+    }
+
+    .product-image {
+        background: #f7f7f7;
+        border: 1px solid #eeeeee;
+        border-radius: 8px;
+        height: 96px;
+        object-fit: cover;
+        width: 96px;
+    }
+
+    .product-image-placeholder {
+        align-items: center;
+        color: #999;
+        display: inline-flex;
+        font-size: 12px;
+        font-weight: 700;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .product-title {
+        color: #333;
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .product-meta {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    .product-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        min-width: 150px;
+    }
+
+    .actions-grid {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    @@media (max-width: 991.98px) {
+        .summary-grid,
+        .timeline,
+        .actions-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .product-row {
+            grid-template-columns: 90px 1fr;
+        }
+
+        .product-actions {
+            grid-column: 1 / -1;
+            flex-direction: row;
+        }
+    }
+
+    @@media (max-width: 767.98px) {
+        .orders-header-card {
+            padding: 22px;
+        }
+
+        .summary-grid,
+        .timeline,
+        .actions-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .product-row {
+            grid-template-columns: 76px 1fr;
+            padding: 14px;
+        }
+
+        .product-image {
+            height: 76px;
+            width: 76px;
+        }
+
+        .product-actions {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div class="account-page">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="account-sidebar-card mb-3 p-3">
+                    <h5 class="mb-1">@ViewBag.UserEmail</h5>
+                    <small>@ViewBag.UserEmail</small>
+                    <button class="btn btn-sm btn-warning mt-2">Verify</button>
+                </div>
+
+                <div class="account-sidebar-card mb-3">
+                    <div class="card-header">Orders</div>
+                    <div class="list-group list-group-flush">
+                        <a href="/MyProfile/MyOrders" class="list-group-item list-group-item-action active">My Orders</a>
+                        <a href="#" class="list-group-item list-group-item-action">My Reviews</a>
+                        <a href="#" class="list-group-item list-group-item-action">Seller Messages</a>
+                        <a href="#" class="list-group-item list-group-item-action">Buy Again</a>
+                    </div>
+                </div>
+
+                <div class="account-sidebar-card mb-3">
+                    <div class="card-header">Personal</div>
+                    <div class="list-group list-group-flush">
+                        <a href="#" class="list-group-item list-group-item-action">Coupons</a>
+                        <a href="#" class="list-group-item list-group-item-action">Recently Viewed</a>
+                        <a href="#" class="list-group-item list-group-item-action">Followed Stores</a>
+                    </div>
+                </div>
+
+                <div class="account-sidebar-card">
+                    <div class="card-header">Account & Support</div>
+                    <div class="list-group list-group-flush">
+                        <a href="#" class="list-group-item list-group-item-action">User Information</a>
+                        <a href="#" class="list-group-item list-group-item-action">Address Information</a>
+                        <a href="#" class="list-group-item list-group-item-action">Saved Cards</a>
+                        <a href="#" class="list-group-item list-group-item-action">Change Password</a>
+                        <a href="#" class="list-group-item list-group-item-action">Help</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="orders-header-card">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center">
+                        <div>
+                            <div class="orders-title">Order Details</div>
+                            <p class="order-info-text mt-2">Order #@Model.Order.OrderingId</p>
+                        </div>
+                        <a href="/MyProfile/MyOrders" class="order-outline-btn mt-3 mt-md-0">Back to My Orders</a>
+                    </div>
+                </div>
+
+                <div class="order-detail-card">
+                    <div class="order-detail-card-header">
+                        <span class="order-info-title">Order Summary</span>
+                    </div>
+                    <div class="order-detail-card-body">
+                        <div class="summary-grid">
+                            <div>
+                                <span class="order-info-title">Order Number</span>
+                                <p class="order-info-text">#@Model.Order.OrderingId</p>
+                            </div>
+                            <div>
+                                <span class="order-info-title">Order Date</span>
+                                <p class="order-info-text">@Model.Order.OrderDate.ToString("dd MMMM yyyy")</p>
+                            </div>
+                            <div>
+                                <span class="order-info-title">Total Amount</span>
+                                <p class="order-total mb-0">@Model.Order.TotalPrice ₺</p>
+                            </div>
+                            <div>
+                                <span class="order-info-title">Order Status</span>
+                                <span class="status-badge">@(string.IsNullOrWhiteSpace(Model.EffectiveOrderStatus) ? "Order status is not available yet." : Model.EffectiveOrderStatus)</span>
+                            </div>
+                            <div>
+                                <span class="order-info-title">Payment Method</span>
+                                <p class="order-info-text">@(string.IsNullOrWhiteSpace(Model.Order.PaymentMethod) ? "Payment method is not available yet." : Model.Order.PaymentMethod)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-detail-card">
+                    <div class="order-detail-card-header">
+                        <span class="order-info-title">Delivery Information</span>
+                    </div>
+                    <div class="order-detail-card-body">
+                        <div class="row">
+                            <div class="col-lg-6 mb-3 mb-lg-0">
+                                <div class="info-box h-100">
+                                    <span class="order-info-title">Receiver Name</span>
+                                    <p class="order-info-text mb-3">@Model.ReceiverName</p>
+                                    <span class="order-info-title">Address</span>
+                                    <p class="order-info-text">@Model.Address</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="info-box h-100">
+                                    <span class="order-info-title">Cargo Company</span>
+                                    <p class="order-info-text mb-3">@Model.CargoCompanyName</p>
+                                    <span class="order-info-title">Tracking Number</span>
+                                    <p class="order-info-text mb-3">@Model.TrackingNumber</p>
+                                    <span class="order-info-title">Estimated Delivery</span>
+                                    <p class="order-info-text">@(Model.EstimatedDeliveryDate.HasValue ? Model.EstimatedDeliveryDate.Value.ToString("dd MMMM yyyy") : "Estimated delivery is not available yet.")</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-detail-card">
+                    <div class="order-detail-card-header">
+                        <span class="order-info-title">Order Timeline</span>
+                    </div>
+                    <div class="order-detail-card-body">
+                        <div class="timeline">
+                            @foreach (var step in Model.Timeline)
+                            {
+                                <div class="timeline-step @(step.IsCompleted ? "completed" : "")">
+                                    <span class="timeline-dot">@(step.IsCompleted ? "✓" : "")</span>
+                                    <span class="order-info-title">@step.Title</span>
+                                    <p class="order-info-text mb-2">@step.Description</p>
+                                    <small>@(step.Date.HasValue ? step.Date.Value.ToString("dd MMMM yyyy") : "Pending")</small>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-detail-card">
+                    <div class="order-detail-card-header">
+                        <span class="order-info-title">Ordered Products</span>
+                    </div>
+                    <div class="order-detail-card-body">
+                        @if (!Model.Products.Any())
+                        {
+                            <div class="alert alert-info mb-0">No products were found for this order.</div>
+                        }
+                        else
+                        {
+                            foreach (var item in Model.Products)
+                            {
+                                <div class="product-row">
+                                    @if (string.IsNullOrWhiteSpace(item.ImageUrl))
+                                    {
+                                        <div class="product-image product-image-placeholder">No Image</div>
+                                    }
+                                    else
+                                    {
+                                        <img src="@item.ImageUrl" class="product-image" alt="@item.ProductName" />
+                                    }
+                                    <div>
+                                        <div class="product-title">@item.ProductName</div>
+                                        <div class="product-meta">Brand: @(string.IsNullOrWhiteSpace(item.BrandName) ? "Brand information is not available yet." : item.BrandName)</div>
+                                        <div class="product-meta">Seller: @(string.IsNullOrWhiteSpace(item.VendorName) ? "Seller information is not available yet." : item.VendorName)</div>
+                                        @if (!string.IsNullOrWhiteSpace(item.ShipmentStatus))
+                                        {
+                                            <div class="product-meta">Shipment Status: @item.ShipmentStatus</div>
+                                        }
+                                        <div class="product-meta">Quantity: @item.Quantity</div>
+                                        <div class="product-meta">Unit Price: @item.UnitPrice ₺</div>
+                                        <div class="order-total">Total: @item.ProductTotalPrice ₺</div>
+                                    </div>
+                                    <div class="product-actions">
+                                        @if (item.IsCatalogProductFound)
+                                        {
+                                            <a href="/ProductList/ProductDetail/@item.ProductId#reviews" class="order-outline-btn">Review</a>
+                                            <a href="/ProductList/ProductDetail/@item.ProductId" class="order-detail-btn">Product Detail</a>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="order-outline-btn" disabled>Review</button>
+                                            <button type="button" class="order-detail-btn" disabled>Product Detail</button>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+
+                <div class="order-detail-card">
+                    <div class="order-detail-card-header">
+                        <span class="order-info-title">Actions</span>
+                    </div>
+                    <div class="order-detail-card-body">
+                        <div class="actions-grid">
+                            <button type="button" class="order-outline-btn" disabled>Cancel Order</button>
+                            <button type="button" class="order-outline-btn" disabled>Download Invoice</button>
+                            <button type="button" class="order-outline-btn" disabled>Contact Seller</button>
+                            <button type="button" class="order-detail-btn" disabled>Reorder</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

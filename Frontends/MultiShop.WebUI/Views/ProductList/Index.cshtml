@@ -1,28 +1,446 @@
-﻿
-@{
-    ViewData["Title"] = "Index";
+﻿@{
+    ViewData["Title"] = "Products";
     Layout = "~/Views/UILayout/_UILayout.cshtml";
+
+    var categoryId = ViewBag.i as string ?? string.Empty;
+    var filterRequest = ViewBag.FilterRequest as ProductFilterRequestDto ?? new ProductFilterRequestDto { CategoryId = categoryId };
+    var filterResponse = ViewBag.FilterResponse as ProductFilterResponseDto ?? new ProductFilterResponseDto();
+    var favoriteProductIds = ViewBag.FavoriteProductIds as HashSet<string> ?? new HashSet<string>();
+    var categoryName = string.IsNullOrWhiteSpace(filterResponse.CategoryName) ? "Products" : filterResponse.CategoryName;
+    var normalizedCategoryName = categoryName.ToLowerInvariant();
+    var isElectronics = normalizedCategoryName.Contains("electronic") || normalizedCategoryName.Contains("phone") || normalizedCategoryName.Contains("computer");
+    var isClothing = normalizedCategoryName.Contains("clothing") || normalizedCategoryName.Contains("fashion") || normalizedCategoryName.Contains("shirt") || normalizedCategoryName.Contains("hoodie");
+    var isHome = normalizedCategoryName.Contains("home") || normalizedCategoryName.Contains("living") || normalizedCategoryName.Contains("furniture");
+    var isSports = normalizedCategoryName.Contains("sport");
+    var showSizes = isClothing || isSports || filterResponse.Sizes.Any();
+    var showMaterials = isClothing || isHome || isSports || filterResponse.Materials.Any();
+    var showCapacities = isElectronics || filterResponse.Capacities.Any();
+    var showStyles = isClothing || isSports || filterResponse.Styles.Any();
+
+    bool IsChecked(IEnumerable<string> selectedValues, string value) =>
+        selectedValues.Any(x => x.Equals(value, StringComparison.OrdinalIgnoreCase));
+
+    string CheckedAttr(bool value) => value ? "checked" : string.Empty;
 }
 
-<div class="container-fluid">
-    <div class="row px-xl-5">
-        <div class="col-lg-3 col-md-4">
+<style>
+    .advanced-filter-page {
+        background: #f6f6f7;
+        padding-bottom: 42px;
+    }
 
-            @await Component.InvokeAsync("_ProductListPriceFilterComponentPartial")
-            @await Component.InvokeAsync("_ProductListColorFilterComponentPartial")
-            @await Component.InvokeAsync("_ProductListSizeFilterComponentPartial")
-            
-        </div>
+    .advanced-filter-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 28px 0 18px;
+    }
 
-        <div class="col-lg-9 col-md-8">
-            <div class="row pb-3">
+    .advanced-filter-title h2 {
+        margin: 0;
+        color: #20252a;
+        font-size: 28px;
+        font-weight: 700;
+    }
 
-                @await Component.InvokeAsync("_ProductListGetProductCountComponentPartial")
-                @await Component.InvokeAsync("_ProductListProductsFilterComponentPartial", new {id =ViewBag.i})
+    .advanced-filter-title p {
+        margin: 6px 0 0;
+        color: #747b83;
+    }
+
+    .advanced-filter-layout {
+        display: grid;
+        grid-template-columns: 280px minmax(0, 1fr);
+        gap: 24px;
+        align-items: start;
+    }
+
+    .advanced-filter-sidebar {
+        position: sticky;
+        top: 18px;
+        padding: 16px;
+        border: 1px solid #ececec;
+        border-radius: 8px;
+        background: #fff;
+    }
+
+    .filter-top-row,
+    .filter-results-bar,
+    .selected-filter-list {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .filter-top-row {
+        justify-content: space-between;
+        margin-bottom: 14px;
+    }
+
+    .filter-top-row h5 {
+        margin: 0;
+        color: #20252a;
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+    .filter-clear-link {
+        color: #f05a28;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .filter-clear-link:hover {
+        color: #c94417;
+        text-decoration: none;
+    }
+
+    .filter-section {
+        padding: 14px 0;
+        border-top: 1px solid #f0f0f0;
+    }
+
+    .filter-section summary {
+        cursor: pointer;
+        color: #252b31;
+        font-weight: 700;
+        list-style: none;
+    }
+
+    .filter-section summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .filter-section-body {
+        margin-top: 12px;
+    }
+
+    .filter-price-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .filter-price-row input,
+    .sort-select {
+        width: 100%;
+        height: 38px;
+        border: 1px solid #dedede;
+        border-radius: 6px;
+        padding: 0 10px;
+        color: #3D464D;
+    }
+
+    .filter-checkbox {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin: 8px 0;
+        color: #3D464D;
+        font-size: 14px;
+    }
+
+    .filter-checkbox span:first-of-type {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .filter-checkbox input {
+        margin-right: 8px;
+    }
+
+    .filter-count {
+        color: #9aa0a6;
+        font-size: 12px;
+    }
+
+    .filter-submit-btn {
+        width: 100%;
+        height: 42px;
+        margin-top: 14px;
+        border: 0;
+        border-radius: 6px;
+        background: #FFD333;
+        color: #3D464D;
+        font-weight: 800;
+        cursor: pointer;
+    }
+
+    .filter-results-panel {
+        min-width: 0;
+    }
+
+    .filter-results-bar {
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+        padding: 12px 14px;
+        border: 1px solid #ececec;
+        border-radius: 8px;
+        background: #fff;
+    }
+
+    .selected-filter-list {
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+    }
+
+    .selected-filter-badge {
+        display: inline-flex;
+        align-items: center;
+        min-height: 30px;
+        padding: 0 10px;
+        border-radius: 999px;
+        background: #fff8db;
+        color: #3D464D;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .filter-empty-state {
+        padding: 48px 20px;
+        border: 1px solid #ececec;
+        border-radius: 8px;
+        background: #fff;
+        text-align: center;
+    }
+
+    @@media (max-width: 991.98px) {
+        .advanced-filter-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .advanced-filter-sidebar {
+            position: static;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .advanced-filter-header,
+        .filter-results-bar {
+            align-items: stretch;
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div class="container-fluid advanced-filter-page">
+    <div class="px-xl-5">
+        <div class="advanced-filter-header">
+            <div class="advanced-filter-title">
+                <h2>@categoryName</h2>
+                <p>Filter by brand, variant, price, rating, and shipping options.</p>
             </div>
+            <a class="filter-clear-link" href="/ProductList/Index/@categoryId">Clear all filters</a>
         </div>
 
-            @await Component.InvokeAsync("_ProductListPaginationComponentPartial")
-                
+        <div class="advanced-filter-layout">
+            <aside class="advanced-filter-sidebar">
+                <form method="get" action="/ProductList/Index/@categoryId">
+                    <div class="filter-top-row">
+                        <h5>Filters</h5>
+                        <a class="filter-clear-link" href="/ProductList/Index/@categoryId">Reset</a>
+                    </div>
+
+                    <details class="filter-section" open>
+                        <summary>Price</summary>
+                        <div class="filter-section-body filter-price-row">
+                            <input type="number" step="0.01" min="0" name="minPrice" value="@filterRequest.MinPrice" placeholder="Min">
+                            <input type="number" step="0.01" min="0" name="maxPrice" value="@filterRequest.MaxPrice" placeholder="Max">
+                        </div>
+                    </details>
+
+                    <details class="filter-section" open>
+                        <summary>Brand</summary>
+                        <div class="filter-section-body">
+                            @foreach (var option in filterResponse.Brands)
+                            {
+                                <label class="filter-checkbox">
+                                    <span><input type="checkbox" name="brand" value="@option.Value" @CheckedAttr(IsChecked(filterRequest.Brands, option.Value))> @option.Label</span>
+                                    <span class="filter-count">@option.Count</span>
+                                </label>
+                            }
+                        </div>
+                    </details>
+
+                    <details class="filter-section" open>
+                        <summary>Rating</summary>
+                        <div class="filter-section-body">
+                            @foreach (var rating in new[] { 4, 3, 2, 1 })
+                            {
+                                <label class="filter-checkbox">
+                                    <span><input type="radio" name="rating" value="@rating" @CheckedAttr(filterRequest.Rating == rating)> @rating+ stars</span>
+                                </label>
+                            }
+                        </div>
+                    </details>
+
+                    @if (filterResponse.Colors.Any())
+                    {
+                        <details class="filter-section" open>
+                            <summary>Color</summary>
+                            <div class="filter-section-body">
+                                @foreach (var option in filterResponse.Colors)
+                                {
+                                    <label class="filter-checkbox">
+                                        <span><input type="checkbox" name="color" value="@option.Value" @CheckedAttr(IsChecked(filterRequest.Colors, option.Value))> @option.Label</span>
+                                        <span class="filter-count">@option.Count</span>
+                                    </label>
+                                }
+                            </div>
+                        </details>
+                    }
+
+                    @if (showSizes)
+                    {
+                        <details class="filter-section" open>
+                            <summary>Size</summary>
+                            <div class="filter-section-body">
+                                @foreach (var option in filterResponse.Sizes)
+                                {
+                                    <label class="filter-checkbox">
+                                        <span><input type="checkbox" name="size" value="@option.Value" @CheckedAttr(IsChecked(filterRequest.Sizes, option.Value))> @option.Label</span>
+                                        <span class="filter-count">@option.Count</span>
+                                    </label>
+                                }
+                            </div>
+                        </details>
+                    }
+
+                    @if (showCapacities)
+                    {
+                        <details class="filter-section" open>
+                            <summary>Storage capacity</summary>
+                            <div class="filter-section-body">
+                                @foreach (var option in filterResponse.Capacities)
+                                {
+                                    <label class="filter-checkbox">
+                                        <span><input type="checkbox" name="capacity" value="@option.Value" @CheckedAttr(IsChecked(filterRequest.Capacities, option.Value))> @option.Label</span>
+                                        <span class="filter-count">@option.Count</span>
+                                    </label>
+                                }
+                            </div>
+                        </details>
+                    }
+
+                    @if (showMaterials)
+                    {
+                        <details class="filter-section" open>
+                            <summary>Material</summary>
+                            <div class="filter-section-body">
+                                @foreach (var option in filterResponse.Materials)
+                                {
+                                    <label class="filter-checkbox">
+                                        <span><input type="checkbox" name="material" value="@option.Value" @CheckedAttr(IsChecked(filterRequest.Materials, option.Value))> @option.Label</span>
+                                        <span class="filter-count">@option.Count</span>
+                                    </label>
+                                }
+                            </div>
+                        </details>
+                    }
+
+                    @if (showStyles)
+                    {
+                        <details class="filter-section" open>
+                            <summary>Style</summary>
+                            <div class="filter-section-body">
+                                @foreach (var option in filterResponse.Styles)
+                                {
+                                    <label class="filter-checkbox">
+                                        <span><input type="checkbox" name="style" value="@option.Value" @CheckedAttr(IsChecked(filterRequest.Styles, option.Value))> @option.Label</span>
+                                        <span class="filter-count">@option.Count</span>
+                                    </label>
+                                }
+                            </div>
+                        </details>
+                    }
+
+                    <details class="filter-section" open>
+                        <summary>Product options</summary>
+                        <div class="filter-section-body">
+                            <label class="filter-checkbox"><span><input type="checkbox" name="freeShipping" value="true" @CheckedAttr(filterRequest.IsFreeShipping == true)> Free shipping</span></label>
+                            <label class="filter-checkbox"><span><input type="checkbox" name="bestSeller" value="true" @CheckedAttr(filterRequest.IsBestSeller == true)> Best seller</span></label>
+                            <label class="filter-checkbox"><span><input type="checkbox" name="featured" value="true" @CheckedAttr(filterRequest.IsFeatured == true)> Featured</span></label>
+                            <label class="filter-checkbox"><span><input type="checkbox" name="recyclable" value="true" @CheckedAttr(filterRequest.IsRecyclable == true)> Recyclable</span></label>
+                            <label class="filter-checkbox"><span><input type="checkbox" name="womenEntrepreneur" value="true" @CheckedAttr(filterRequest.IsWomenEntrepreneur == true)> Women entrepreneur</span></label>
+                            <label class="filter-checkbox"><span><input type="checkbox" name="inStock" value="true" @CheckedAttr(filterRequest.InStock == true)> In stock</span></label>
+                        </div>
+                    </details>
+
+                    <button type="submit" class="filter-submit-btn">Apply filters</button>
+                </form>
+            </aside>
+
+            <section class="filter-results-panel">
+                <div class="filter-results-bar">
+                    <span>@filterResponse.TotalCount products found</span>
+                    <form method="get" action="/ProductList/Index/@categoryId">
+                        @foreach (var brand in filterRequest.Brands) { <input type="hidden" name="brand" value="@brand"> }
+                        @foreach (var color in filterRequest.Colors) { <input type="hidden" name="color" value="@color"> }
+                        @foreach (var size in filterRequest.Sizes) { <input type="hidden" name="size" value="@size"> }
+                        @foreach (var material in filterRequest.Materials) { <input type="hidden" name="material" value="@material"> }
+                        @foreach (var capacity in filterRequest.Capacities) { <input type="hidden" name="capacity" value="@capacity"> }
+                        @foreach (var style in filterRequest.Styles) { <input type="hidden" name="style" value="@style"> }
+                        @if (filterRequest.MinPrice.HasValue) { <input type="hidden" name="minPrice" value="@filterRequest.MinPrice"> }
+                        @if (filterRequest.MaxPrice.HasValue) { <input type="hidden" name="maxPrice" value="@filterRequest.MaxPrice"> }
+                        @if (filterRequest.Rating.HasValue) { <input type="hidden" name="rating" value="@filterRequest.Rating"> }
+                        @if (filterRequest.IsFreeShipping == true) { <input type="hidden" name="freeShipping" value="true"> }
+                        @if (filterRequest.IsBestSeller == true) { <input type="hidden" name="bestSeller" value="true"> }
+                        @if (filterRequest.IsFeatured == true) { <input type="hidden" name="featured" value="true"> }
+                        @if (filterRequest.IsRecyclable == true) { <input type="hidden" name="recyclable" value="true"> }
+                        @if (filterRequest.IsWomenEntrepreneur == true) { <input type="hidden" name="womenEntrepreneur" value="true"> }
+                        @if (filterRequest.InStock == true) { <input type="hidden" name="inStock" value="true"> }
+                        <select class="sort-select" name="sort" onchange="this.form.submit()">
+                            <option value="">Recommended</option>
+                            <option value="price_asc" selected="@(filterRequest.SortBy == "price_asc")">Price ascending</option>
+                            <option value="price_desc" selected="@(filterRequest.SortBy == "price_desc")">Price descending</option>
+                            <option value="newest" selected="@(filterRequest.SortBy == "newest")">Newest</option>
+                            <option value="popular" selected="@(filterRequest.SortBy == "popular")">Most popular</option>
+                            <option value="rating" selected="@(filterRequest.SortBy == "rating")">Highest rated</option>
+                        </select>
+                    </form>
+                </div>
+
+                <div class="selected-filter-list">
+                    @foreach (var value in filterRequest.Brands.Concat(filterRequest.Colors).Concat(filterRequest.Sizes).Concat(filterRequest.Materials).Concat(filterRequest.Capacities).Concat(filterRequest.Styles))
+                    {
+                        <span class="selected-filter-badge">@value</span>
+                    }
+                    @if (filterRequest.MinPrice.HasValue || filterRequest.MaxPrice.HasValue)
+                    {
+                        <span class="selected-filter-badge">@filterRequest.MinPrice?.ToString("N0") - @filterRequest.MaxPrice?.ToString("N0") ₺</span>
+                    }
+                    @if (filterRequest.Rating.HasValue)
+                    {
+                        <span class="selected-filter-badge">@filterRequest.Rating+ stars</span>
+                    }
+                    @if (filterRequest.IsFreeShipping == true) { <span class="selected-filter-badge">Free shipping</span> }
+                    @if (filterRequest.IsBestSeller == true) { <span class="selected-filter-badge">Best seller</span> }
+                    @if (filterRequest.IsFeatured == true) { <span class="selected-filter-badge">Featured</span> }
+                    @if (filterRequest.IsRecyclable == true) { <span class="selected-filter-badge">Recyclable</span> }
+                    @if (filterRequest.IsWomenEntrepreneur == true) { <span class="selected-filter-badge">Women entrepreneur</span> }
+                    @if (filterRequest.InStock == true) { <span class="selected-filter-badge">In stock</span> }
+                </div>
+
+                @if (!filterResponse.Products.Any())
+                {
+                    <div class="filter-empty-state">
+                        <h4>No products match these filters.</h4>
+                        <p class="mb-0">Try removing one or two filters to broaden the result set.</p>
+                    </div>
+                }
+                else
+                {
+                    @await Component.InvokeAsync("_ProductListProductsFilterComponentPartial", new { id = categoryId, products = filterResponse.Products, favoriteProductIds })
+                    @await Component.InvokeAsync("_ProductListPaginationComponentPartial")
+                }
+            </section>
+        </div>
     </div>
 </div>

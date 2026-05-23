@@ -3,4 +3,32 @@
 <div class="tab-pane fade show active" id="tab-pane-1">
     <h4 class="mb-3">Product Description</h4>
     <p>@Model.ProductLongDescription</p>
+
+    @if (Model.Highlights != null && Model.Highlights.Any())
+    {
+        <h5 class="mt-4 mb-3">Highlights</h5>
+        <ul class="list-group list-group-flush">
+            @foreach (var highlight in Model.Highlights.Where(x => !string.IsNullOrWhiteSpace(x)))
+            {
+                <li class="list-group-item px-0">
+                    <i class="fa fa-check text-primary mr-2"></i>@highlight
+                </li>
+            }
+        </ul>
+    }
+
+    @if (Model.IsCustomizable)
+    {
+        <div class="alert alert-light border mt-4 mb-0">
+            <strong>Personalization available</strong>
+            @if (!string.IsNullOrWhiteSpace(Model.PersonalizationInstructions))
+            {
+                <p class="mb-1 mt-2">@Model.PersonalizationInstructions</p>
+            }
+            @if (Model.PersonalizationMaxLength.HasValue)
+            {
+                <small class="text-muted">Maximum @Model.PersonalizationMaxLength characters.</small>
+            }
+        </div>
+    }
 </div>

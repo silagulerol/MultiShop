@@ -34,12 +34,13 @@ namespace MultiShop.Order.WebApi.Controllers
             var value = await _mediator.Send(new GetOrderingByIdQuery(id));
             return Ok(value);
         }
-
+        
         [HttpPost]
         public async Task<IActionResult> CreateOrdering(CreateOrderingCommand command)
         {
-            await _mediator.Send(command);
-            return Ok("creation is successfull");
+            var id = await _mediator.Send(command); 
+
+            return Ok(new { OrderingId = id });    
         }
 
         [HttpDelete]

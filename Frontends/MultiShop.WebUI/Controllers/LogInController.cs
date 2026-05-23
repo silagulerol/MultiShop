@@ -21,6 +21,13 @@ namespace MultiShop.WebUI.Controllers
             return View();
         }
 
+        [HttpGet]
+        public async Task<IActionResult> LogOut()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Default");
+        }
+
         [HttpPost]
         public async Task<IActionResult> Index(SignInDto signInDto)
         {

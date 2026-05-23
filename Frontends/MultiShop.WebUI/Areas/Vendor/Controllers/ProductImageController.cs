@@ -4,33 +4,91 @@ using MultiShop.DtoLayer.CatalogDtos.ProductImageDtos;
 using MultiShop.WebUI.Services.CatalogServices.ProductImageService;
 using Newtonsoft.Json;
 using System.Text;
+using MultiShop.WebUI.Services.CatalogServices.ProductServices;
+using System.Security.Claims;
 
-namespace MultiShop.WebUI.Areas.Admin.Controllers
+namespace MultiShop.WebUI.Areas.Vendor.Controllers
 {
-    [Area("Admin")]
+    [Area("Vendor")]
+    [Authorize(Roles = "Vendor")]
     public class ProductImageController : Controller
     {
         private readonly IProductImageService _productImageService;
+        private readonly IProductService _productService;
 
-        public ProductImageController(IProductImageService productImageService)
+        public ProductImageController(IProductImageService productImageService, IProductService productService)
         {
             _productImageService = productImageService;
+            _productService = productService;
+        }
+
+        private string GetCurrentVendorId()
+        {
+            return User.FindFirst("sub")?.Value
+                ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+
+        private async Task<bool> IsProductOwner(string productId)
+        {
+            var product = await _productService.GetByIdProductAsync(productId);
+
+            if (product == null)
+            {
+                return false;
+            }
+
+            return product.VendorId == GetCurrentVendorId();
         }
 
         [HttpGet]
         public async Task<IActionResult> ProductImageDetail(string id)
         {
+            if (!await IsProductOwner(id))
+            {
+                return Forbid();
+            }
+
             ProductImageViewBag();
-            var values= await _productImageService.GetByProductIdProductImageAsync(id);
+            var values = await _productImageService.GetByProductIdProductImageAsync(id);
             return View(values);
         }
 
         [HttpPost]
         public async Task<IActionResult> ProductImageDetail(UpdateProductImageDto updateProductImageDto)
         {
-            ProductImageViewBag();
-            await _productImageService.UpdateProductImageAsync(updateProductImageDto);
-            return RedirectToAction("GetProductsWithCategory", "Product", new { area = "Admin" });
+            if (string.IsNullOrEmpty(updateProductImageDto.ProductId))
+            {
+                return BadRequest("ProductId boş geliyor.");
+            }
+
+            if (!await IsProductOwner(updateProductImageDto.ProductId))
+            {
+                return Forbid();
+            }
+
+            if (string.IsNullOrEmpty(updateProductImageDto.ProductImageId))
+            {
+                var createProductImageDto = new CreateProductImageDto
+                {
+                    ProductId = updateProductImageDto.ProductId,
+                    ImageUrl = updateProductImageDto.ImageUrl,
+                    DisplayOrder = updateProductImageDto.DisplayOrder,
+                    IsMainImage = updateProductImageDto.IsMainImage,
+                    ImageAltText = updateProductImageDto.ImageAltText,
+                    ImageType = updateProductImageDto.ImageType,
+                    CreatedDate = updateProductImageDto.CreatedDate == default
+                        ? DateTime.UtcNow
+                        : updateProductImageDto.CreatedDate
+                };
+
+                await _productImageService.CreateProductImageAsync(createProductImageDto);
+            }
+            else
+            {
+                await _productImageService.UpdateProductImageAsync(updateProductImageDto);
+            }
+
+            return Redirect("/Vendor/Product/GetProductsWithCategory");
         }
 
         void ProductImageViewBag()

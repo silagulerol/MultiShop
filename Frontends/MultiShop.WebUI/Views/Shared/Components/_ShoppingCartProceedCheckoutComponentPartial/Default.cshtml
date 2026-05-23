@@ -1,0 +1,30 @@
+@{
+    decimal total = ViewBag.total != null ? Convert.ToDecimal(ViewBag.total) : 0;
+}
+
+<div class="cart-summary-card">
+    <div class="cart-summary-header">
+        <span>Order Summary</span>
+        <h2>Cart Total</h2>
+    </div>
+
+    <div class="cart-summary-lines">
+        <div class="cart-summary-line">
+            <span>Subtotal</span>
+            <strong>$@total</strong>
+        </div>
+        <div class="cart-summary-line muted">
+            <span>Shipping</span>
+            <strong>Calculated at checkout</strong>
+        </div>
+    </div>
+
+    <div class="cart-summary-total">
+        <span>Total</span>
+        <strong>$@total</strong>
+    </div>
+
+    <a class="cart-checkout-btn" href="/Order/Index">
+        Proceed To Checkout
+    </a>
+</div>

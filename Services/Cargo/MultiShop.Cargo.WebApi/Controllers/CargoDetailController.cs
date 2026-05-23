@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MultiShop.Cargo.BusinessLayer.Abstract;
 using MultiShop.Cargo.DtoLayer.CargoDetailDtos;
@@ -33,40 +32,87 @@ namespace MultiShop.Cargo.WebApi.Controllers
             return Ok(value);
         }
 
+        [HttpGet("GetByOrderDetailId/{orderDetailId}")]
+        public IActionResult GetByOrderDetailId(int orderDetailId)
+        {
+            var value = _service.TGetByOrderDetailId(orderDetailId);
+
+            if (value == null)
+            {
+                return NotFound("Cargo detail not found for this order detail.");
+            }
+
+            var result = new ResultCargoDetailDto
+            {
+                CargoDetailId = value.CargoDetailId,
+                OrderDetailId = value.OrderDetailId,
+                TrackingNumber = value.TrackingNumber,
+                CargoStatus = value.CargoStatus,
+                CargoCompanyId = value.CargoCompanyId,
+                CargoCompanyName = value.CargoCompany?.CargoCompanyName
+            };
+
+            return Ok(result);
+        }
+
+        [HttpGet("GetByVendorId/{vendorId}")]
+        public IActionResult GetByVendorId(string vendorId)
+        {
+            var values = _service.TGetByVendorId(vendorId);
+
+            return Ok(values);
+        }
+
         [HttpPost]
         public IActionResult AddCargoDetail(CreateCargoDetailDto createCargoDetailDto)
         {
-            CargoDetail cargoDetail = new CargoDetail()
+            var cargoDetail = new CargoDetail
             {
-                SenderCustomer = createCargoDetailDto.SenderCustomer,
-                ReceiverCustomer = createCargoDetailDto.ReceiverCustomer,
-                Barcode = createCargoDetailDto.Barcode,
+                OrderDetailId = createCargoDetailDto.OrderDetailId,
+                VendorId = createCargoDetailDto.VendorId,
+                TrackingNumber = "TRK-" + Guid.NewGuid().ToString("N").Substring(0, 8).ToUpper(),
                 CargoCompanyId = createCargoDetailDto.CargoCompanyId,
+                CargoStatus = string.IsNullOrWhiteSpace(createCargoDetailDto.CargoStatus)
+                    ? "Preparing"
+                    : createCargoDetailDto.CargoStatus,
+                CreatedDate = DateTime.Now
             };
+
             _service.TInsert(cargoDetail);
-            return Ok();
+
+            return Ok(new ResultCargoDetailDto
+            {
+                CargoDetailId = cargoDetail.CargoDetailId,
+                OrderDetailId = cargoDetail.OrderDetailId,
+                TrackingNumber = cargoDetail.TrackingNumber,
+                CargoStatus = cargoDetail.CargoStatus,
+                CargoCompanyId = cargoDetail.CargoCompanyId
+            });
         }
 
         [HttpPut]
         public IActionResult UpdateCargoDetail(UpdateCargoDetailDto updateCargoDetailDto)
         {
-            CargoDetail cargoDetail = new CargoDetail()
+            var cargoDetail = new CargoDetail
             {
                 CargoDetailId = updateCargoDetailDto.CargoDetailId,
-                SenderCustomer = updateCargoDetailDto.SenderCustomer,
-                ReceiverCustomer = updateCargoDetailDto.ReceiverCustomer,
-                Barcode = updateCargoDetailDto.Barcode,
+                OrderDetailId = updateCargoDetailDto.OrderDetailId,
+                VendorId = updateCargoDetailDto.VendorId,
+                TrackingNumber = updateCargoDetailDto.TrackingNumber,
                 CargoCompanyId = updateCargoDetailDto.CargoCompanyId,
+                CargoStatus = updateCargoDetailDto.CargoStatus,
+                CreatedDate = updateCargoDetailDto.CreatedDate
             };
+
             _service.TUpdate(cargoDetail);
-            return Ok();
+            return Ok("Cargo detail updated successfully.");
         }
 
         [HttpDelete]
         public IActionResult DeleteCargoDetail(int id)
         {
             _service.TDelete(id);
-            return Ok();
+            return Ok("Cargo detail deleted successfully.");
         }
     }
 }

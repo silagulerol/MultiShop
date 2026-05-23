@@ -1,0 +1,124 @@
+@model List<MultiShop.DtoLayer.OrderDtos.OrderDetailDtos.ResultOrderDetailDto>
+@{
+    var cargos = ViewBag.CargoDetails as List<MultiShop.DtoLayer.CargoDtos.CargoDetailDtos.ResultCargoDetailDto>;
+}
+
+<style>
+    .order-summary-card {
+    display: flex;
+    justify-content: space-between;
+    background: #f7f7f7;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.shipment-card {
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.shipment-header {
+    margin-bottom: 10px;
+}
+
+.status .badge {
+    padding: 6px 12px;
+    border-radius: 8px;
+}
+
+.tracking-box {
+    background: #fafafa;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.product-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.actions {
+    margin-left: auto;
+    display: flex;
+    gap: 10px;
+}
+</style>
+
+<div class="order-summary-card">
+    <div>
+        <strong>Order No:</strong> #@Model.First().OrderingId
+    </div>
+    <!--
+    
+    -->
+    <div>
+        <strong>Package Details:</strong> @Model.Count item(s)
+    </div>
+    <div>
+        <strong>Status:</strong> Delivered
+    </div>
+</div>
+
+@foreach (var item in Model)
+{
+    var cargo = cargos?.FirstOrDefault(x => x.OrderDetailId == item.OrderDetailId);
+
+    <div class="shipment-card">
+
+        <!-- Seller -->
+        <div class="shipment-header">
+            <strong>Seller:</strong> @item.VendorId
+        </div>
+
+        <!-- Status -->
+        <div class="status">
+            <span class="badge badge-success">
+                @(cargo?.CargoStatus ?? "Preparing")
+            </span>
+        </div>
+
+        <!-- Tracking -->
+        @if (cargo != null)
+        {
+            <div class="tracking-box">
+                <span><strong>Tracking Number:</strong> @cargo.TrackingNumber</span>
+                <span><strong>Cargo Company:</strong> @cargo.CargoCompanyId</span>
+
+                <a href="/Hesabim/KargoTakip/@item.OrderDetailId"
+                   class="btn btn-warning">
+                    Track Package
+                </a>
+            </div>
+        }
+
+        <!-- Product -->
+        <div class="product-row">
+
+            <div>
+                <h5>@item.ProductName</h5>
+                <p>Quantity: @item.Quantity</p>
+                <p>Unit Price: @item.UnitPrice ₺</p>
+                <p><strong>Total:</strong> @item.ProductTotalPrice ₺</p>
+            </div>
+
+            <div class="actions">
+                <a href="/ProductList/ProductDetail/@item.ProductId#reviews" class="btn btn-outline-warning">
+                    Review Product
+                </a>
+
+                <button class="btn btn-outline-secondary">
+                    Buy Again
+                </button>
+            </div>
+        </div>
+
+    </div>
+}

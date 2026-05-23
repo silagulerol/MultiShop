@@ -1,7 +1,8 @@
-﻿@model List<ResultProductDto>
+﻿@using MultiShop.DtoLayer.CatalogDtos.ProductDtos
+@model List<ResultProductDto>
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
+    Layout = "~/Areas/Vendor/Views/VendorLayout/Index.cshtml";
     int count = 0;
 }
 
@@ -16,9 +17,10 @@
                             <tr>
                                 <th>#</th>
                                 <th>Product Name</th>
-                                <th>Product Price</th>
-                                <th>Product Image Url</th>
+                                <th>Starting Price</th>
+                                <th>Main Image</th>
                                 <th>Description</th>
+                                <th>Variants</th>
                                 <th>Delete</th>
                                 <th>Update</th>
                             </tr>
@@ -31,9 +33,10 @@
                                 <tr>
                                     <th scope="row">@count</th>
                                     <td>@item.ProductName</td>
-                                    <td>@item.ProductPrice</td>
-                                    <td><img src="@item.ProductImageUrl" style="width:60px; height:60px;" /></td>
+                                    <td>@item.StartingPrice</td>
+                                    <td><img src="@item.MainImageUrl" style="width:60px; height:60px;" /></td>
                                     <td>@item.Description</td>
+                                    <td><a href="/Vendor/ProductVariant/ProductVariantList/@item.ProductId" class="btn btn-info">Variants</a></td>
                                     <td><a href="/Vendor/Product/DeleteProduct/@item.ProductId" class="btn btn-danger">Delete</a></td>
                                     <td><a href="/Vendor/Product/UpdateProduct/@item.ProductId" class="btn btn-success">Update</a></td>
                                 </tr>

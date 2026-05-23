@@ -2,35 +2,101 @@
 using Microsoft.AspNetCore.Mvc;
 using MultiShop.DtoLayer.CatalogDtos.ProductDetailDtos;
 using MultiShop.WebUI.Services.CatalogServices.ProductDetailService;
-using Newtonsoft.Json;
-using System.Net.Http;
-using System.Text;
+using MultiShop.WebUI.Services.CatalogServices.ProductServices;
+using System.Security.Claims;
 
-namespace MultiShop.WebUI.Areas.Admin.Controllers
+namespace MultiShop.WebUI.Areas.Vendor.Controllers
 {
-    [Area("Admin")]
+    [Area("Vendor")]
+    [Authorize(Roles = "Vendor")]
     public class ProductDetailController : Controller
     {
         private readonly IProductDetailService _productDetailService;
+        private readonly IProductService _productService;
 
-        public ProductDetailController(IProductDetailService productDetailService)
+        public ProductDetailController(
+            IProductDetailService productDetailService,
+            IProductService productService)
         {
             _productDetailService = productDetailService;
+            _productService = productService;
+        }
+
+        private string GetCurrentVendorId()
+        {
+            return User.FindFirst("sub")?.Value
+                ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+
+        private async Task<bool> IsProductOwner(string productId)
+        {
+            var product = await _productService.GetByIdProductAsync(productId);
+
+            if (product == null)
+                return false;
+
+            return product.VendorId == GetCurrentVendorId();
         }
 
         [HttpGet]
-        // Buradaki id değeri productId'ye karşılık gelmektedir. 
         public async Task<IActionResult> UpdateProductDetail(string id)
         {
+            if (!await IsProductOwner(id))
+                return Forbid();
+
+            ProductDetailViewBag();
+
             var value = await _productDetailService.GetByProductIdProductDetailAsync(id);
+
+            if (value == null)
+            {
+                value = new UpdateProductDetailDto
+                {
+                    ProductId = id,
+                    Highlights = new List<string>(),
+                    Specifications = new Dictionary<string, string>()
+                };
+            }
+
             return View(value);
         }
 
         [HttpPost]
         public async Task<IActionResult> UpdateProductDetail(UpdateProductDetailDto updateProductDetailDto)
         {
-            await _productDetailService.UpdateProductDetailAsync(updateProductDetailDto);
-            return RedirectToAction("GetProductsWithCategory", "Product", new { area = "Admin" });
+            if (string.IsNullOrEmpty(updateProductDetailDto.ProductId))
+                return BadRequest("ProductId boş geliyor.");
+
+            if (!await IsProductOwner(updateProductDetailDto.ProductId))
+                return Forbid();
+
+            if (string.IsNullOrEmpty(updateProductDetailDto.ProductDetailId))
+            {
+                var createDto = new CreateProductDetailDto
+                {
+                    ProductId = updateProductDetailDto.ProductId,
+                    ProductLongDescription = updateProductDetailDto.ProductLongDescription,
+                    ProductInformation = updateProductDetailDto.ProductInformation,
+                    Highlights = updateProductDetailDto.Highlights ?? new List<string>(),
+                    Specifications = updateProductDetailDto.Specifications ?? new Dictionary<string, string>(),
+                    Material = updateProductDetailDto.Material,
+                    CareInstructions = updateProductDetailDto.CareInstructions,
+                    PackageContent = updateProductDetailDto.PackageContent,
+                    WarrantyInfo = updateProductDetailDto.WarrantyInfo,
+                    SafetyInfo = updateProductDetailDto.SafetyInfo,
+                    IsCustomizable = updateProductDetailDto.IsCustomizable,
+                    PersonalizationInstructions = updateProductDetailDto.PersonalizationInstructions,
+                    PersonalizationMaxLength = updateProductDetailDto.PersonalizationMaxLength
+                };
+
+                await _productDetailService.CreateProductDetailAsync(createDto);
+            }
+            else
+            {
+                await _productDetailService.UpdateProductDetailAsync(updateProductDetailDto);
+            }
+
+            return Redirect("/Vendor/Product/GetProductsWithCategory");
         }
 
         void ProductDetailViewBag()
@@ -40,6 +106,5 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
             ViewBag.v3 = "Product Detail Update";
             ViewBag.v0 = "Product Detail Operation";
         }
-        
     }
 }

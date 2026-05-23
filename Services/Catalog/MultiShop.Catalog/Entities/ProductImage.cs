@@ -1,5 +1,4 @@
-﻿
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace MultiShop.Catalog.Entities
@@ -8,16 +7,25 @@ namespace MultiShop.Catalog.Entities
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string ProductImageId { get; set; }
-        public string Image1 { get; set; }
-        public string Image2 { get; set; }
-        public string Image3 { get; set; }
-        public string Image4 { get; set; }
+        public string ProductImageId { get; set; } = null!;
 
-        // Product 1 --- N ProductImages
-        public string ProductId { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string ProductId { get; set; } = null!;
+
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string? ProductVariantId { get; set; }
+
+        public string ImageUrl { get; set; } = null!;
+        public int DisplayOrder { get; set; }
+        public bool IsMainImage { get; set; }
+        public string? ImageAltText { get; set; }
+        public string? ImageType { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         [BsonIgnore]
-        public Product Product { get; set; }
+        public Product Product { get; set; } = null!;
+
+        [BsonIgnore]
+        public ProductVariant ProductVariant { get; set; } = null!;
     }
 }

@@ -13,13 +13,13 @@ namespace MultiShop.Cargo.DataAccessLayer.Concrete
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //connection adresini buraya yazıyoruz
-            optionsBuilder.UseSqlServer("Server=localhost,1441;Database=MultiShopCargoDb;User=sa;Password=Sero1234. ;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer("Server=localhost,1441;Database=MultiShopCargoDb;User=sa;Password=Sero1234.;TrustServerCertificate=True;");
 
         }
         public DbSet<CargoCustomer> CargoCustomers { get; set; }
         public DbSet<CargoCompany> CargoCompanies { get; set; }
         public DbSet<CargoDetail> CargoDetails { get; set; }
         public DbSet<CargoOperation> CargoOperations { get; set; }
-
+        public DbSet<VendorCargoCompany> VendorCargoCompanies { get; set; }
     }
 }

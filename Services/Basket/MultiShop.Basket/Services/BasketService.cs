@@ -23,6 +23,19 @@ namespace MultiShop.Basket.Services
         public async Task<BasketTotalDto> GetBasketAsync(string userId)
         {
             var existBasket = await _redisService.GetDb().StringGetAsync(userId);
+
+            if (string.IsNullOrEmpty(existBasket))
+            {
+                return new BasketTotalDto
+                {
+                    UserId = userId,
+                    BasketItems = new List<BasketItemDto>(),
+                    DiscountCode = "Yok",
+                    DiscountRate = 0,
+                    ShippingPrice = 0
+                };
+            }
+
             return JsonSerializer.Deserialize<BasketTotalDto>(existBasket);
         }
 

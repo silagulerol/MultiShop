@@ -16,5 +16,10 @@ namespace MultiShop.WebUI.Services.OrderServices.OrderOrderingServices
             var values = await _httpClient.GetFromJsonAsync<List<ResultOrderingByUserId>>($"orderings/GetOrderingsByUserId/{id}");
             return values;
         }
+
+        public async Task CreateOrderingAsync(CreateOrderingDto dto)
+        {
+            await _httpClient.PostAsJsonAsync("orderings", dto);
+        }
     }
 }

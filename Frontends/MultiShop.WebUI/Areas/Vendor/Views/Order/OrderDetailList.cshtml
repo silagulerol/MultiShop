@@ -1,0 +1,129 @@
+@using MultiShop.DtoLayer.OrderDtos.OrderDetailDtos
+@model List<ResultOrderDetailDto>
+
+@{
+    ViewData["Title"] = "OrderDetailList";
+    Layout = "~/Areas/Vendor/Views/VendorLayout/Index.cshtml";
+    int orderCount = 0;
+}
+
+<section class="content container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="chart-box">
+                <h4>Vendor Orders</h4>
+                <br />
+
+                @if (!Model.Any())
+                {
+                    <div class="alert alert-info">
+                        No order details found for this vendor.
+                    </div>
+                }
+                else
+                {
+                    @foreach (var orderGroup in Model.GroupBy( x => x.OrderingId))
+                    {
+                        orderCount++;
+
+                        <div class="panel panel-default" style="margin-bottom:20px;">
+                            <div class="panel-heading">
+                                <strong>Order #@orderGroup.Key</strong>
+                                <span style="float:right;">
+                                    Vendor Total:
+                                    @orderGroup.Sum(x => x.ProductTotalPrice)
+                                </span>
+                            </div>
+
+                            <div class="panel-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Product</th>
+                                            <th>Unit Price</th>
+                                            <th>Quantity</th>
+                                            <th>Product Total</th>
+                                            <th>Status</th>
+                                            <th>Update Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            int itemCount = 0;
+                                        }
+
+                                        @foreach (var item in orderGroup)
+                                        {
+                                            itemCount++;
+
+                                            var currentStatus = item.HasShipment ? item.ShipmentStatus : item.OrderStatus;
+
+                                            string statusClass = currentStatus switch
+                                            {
+                                                "Pending" => "label label-default",
+                                                "Preparing" => "label label-warning",
+                                                "Shipped" => "label label-info",
+                                                "Delivered" => "label label-success",
+                                                "Cancelled" => "label label-danger",
+                                                _ => "label label-default"
+                                            };
+
+                                            <tr>
+                                                <td>@itemCount</td>
+                                                <td>@item.ProductName</td>
+                                                <td>@item.UnitPrice</td>
+                                                <td>@item.Quantity</td>
+                                                <td>@item.ProductTotalPrice</td>
+                                                <td>
+                                                    <span class="@statusClass">@currentStatus</span>
+                                                </td>
+                                                <td>
+                                                    @if (!item.HasShipment)
+                                                    {
+                                                        <form method="post" action="/Vendor/Cargo/CreateShipment">
+                                                            <input type="hidden" name="orderDetailId" value="@item.OrderDetailId" />
+
+                                                            <select name="cargoCompanyId" class="form-control" style="height:45px; padding:8px 12px; line-height:1.5; font-size:14px; max-width:320px;">
+                                                                <option value="1">Yurtiçi</option>
+                                                            </select>
+
+                                                            <button type="submit" class="btn btn-sm btn-primary" style="margin-top:8px; min-width:170px; height:44px; font-size:14px; line-height:1.2; padding:8px 18px; white-space:nowrap;">
+                                                                Create Shipment
+                                                            </button>
+                                                        </form>
+                                                    }
+                                                    else
+                                                    {
+                                                        <form method="post" action="/Vendor/Cargo/UpdateShipmentStatus">
+                                                            <input type="hidden" name="orderDetailId" value="@item.OrderDetailId" />
+                                                            <div class="text-primary" style="margin-top:5px;">
+                                                                Tracking: @item.TrackingNumber
+                                                            </div>
+                                                            <select name="cargoStatus" class="form-control" style="height:45px; padding:8px 12px; line-height:1.5; font-size:14px;">
+                                                                <option value="Preparing" selected="@(currentStatus == "Preparing")">Preparing</option>
+                                                                <option value="Shipped" selected="@(currentStatus == "Shipped")">Shipped</option>
+                                                                <option value="In Transit" selected="@(currentStatus == "In Transit")">In Transit</option>
+                                                                <option value="Delivered" selected="@(currentStatus == "Delivered")">Delivered</option>
+                                                                <option value="Cancelled" selected="@(currentStatus == "Cancelled")">Cancelled</option>
+                                                            </select>
+
+                                                            <button type="submit" class="btn btn-sm btn-success" style="margin-top:8px; min-width:110px; height:40px; font-size:14px; line-height:1.2; padding:8px 16px;">
+                                                                Update
+                                                            </button>
+                                                        </form>
+                                                    }
+
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>

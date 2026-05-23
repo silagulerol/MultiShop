@@ -15,17 +15,23 @@
                     <form method="post">
                         <input type="hidden" readonly class="form-control" asp-for="@Model.ProductImageId">
                         <input type="hidden" readonly class="form-control" asp-for="@Model.ProductId">
-                        <label>Image-1</label>
-                        <input type="text" class="form-control" asp-for="@Model.Image1" />
+                        <input type="hidden" readonly class="form-control" asp-for="@Model.CreatedDate">
+                        <label>Image Url</label>
+                        <input type="text" class="form-control" asp-for="@Model.ImageUrl" />
                         <br />
-                        <label>Image-2</label>
-                        <input type="text" class="form-control" asp-for="@Model.Image2">
+                        <label>Display Order</label>
+                        <input type="number" class="form-control" asp-for="@Model.DisplayOrder">
                         <br />
-                        <label>Image-3</label>
-                        <input type="text" class="form-control" asp-for="@Model.Image3">
+                        <label>Image Alt Text</label>
+                        <input type="text" class="form-control" asp-for="@Model.ImageAltText">
                         <br />
-                        <label>Image-4</label>
-                        <input type="text" class="form-control" asp-for="@Model.Image4">
+                        <label>Image Type</label>
+                        <input type="text" class="form-control" asp-for="@Model.ImageType">
+                        <br />
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" asp-for="@Model.IsMainImage">
+                            <label class="form-check-label" asp-for="@Model.IsMainImage">Main Image</label>
+                        </div>
                         <br />
                         <button class="btn btn-primary">Update Product Image</button>
                     </form>

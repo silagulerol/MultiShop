@@ -34,7 +34,7 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         public async Task<IActionResult> CreateComment(CreateCommentDto createCommentDto)
         {
             await _commentService.CreateCommentAsync(createCommentDto);
-            return RedirectToAction("Index", "Comment", new { area = "Admin" });
+            return Redirect("/Admin/Comment/Index");
            
         }
 
@@ -42,7 +42,7 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteComment(string id)
         {
             await _commentService.DeleteCommentAsync(id);
-            return RedirectToAction("Index", "Comment", new { area = "Admin" });
+            return Redirect("/Admin/Comment/Index");
             
         }
 
@@ -58,7 +58,7 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         public async Task<IActionResult> UpdateComment(UpdateCommentDto updateCommentDto)
         {
             await _commentService.UpdateCommentAsync(updateCommentDto);
-            return RedirectToAction("Index", "Comment", new { area = "Admin" });
+            return Redirect("/Admin/Comment/Index");
         }
 
         void CommentViewBag()

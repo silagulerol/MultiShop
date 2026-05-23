@@ -24,7 +24,8 @@ namespace MultiShop.Catalog.Controllers
             return Ok(values);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetByIdProduct/{id}")]
+        [HttpGet("{id:length(24)}")]
         public async Task<IActionResult> GetByIdProduct(string id)
         {
             var value = await _productService.GetByIdProductAsync(id);
@@ -63,6 +64,34 @@ namespace MultiShop.Catalog.Controllers
         public async Task<IActionResult> ProductListWithCategoryByCategoryId(string id)
         {
             var values = await _productService.GetProductsWithCategoryByCategoryIdAsync(id);
+            return Ok(values);
+        }
+
+        [HttpGet("GetProductsByVendorId/{vendorId}")]
+        public async Task<IActionResult> GetProductsByVendorId(string vendorId)
+        {
+            var values = await _productService.GetProductsByVendorIdAsync(vendorId);
+            return Ok(values);
+        }
+
+        [HttpGet("ProductListWithCategoryByVendorId/{vendorId}")]
+        public async Task<IActionResult> ProductListWithCategoryByVendorId(string vendorId)
+        {
+            var values = await _productService.GetProductsWithCategoryByVendorIdAsync(vendorId);
+            return Ok(values);
+        }
+
+        [HttpGet("SearchProduct")]
+        public async Task<IActionResult> SearchProduct([FromQuery] string? searchKey)
+        {
+            var values = await _productService.SearchProductAsync(searchKey);
+            return Ok(values);
+        }
+
+        [HttpGet("FilterProducts")]
+        public async Task<IActionResult> FilterProducts([FromQuery] ProductFilterRequestDto request)
+        {
+            var values = await _productService.FilterProductsAsync(request);
             return Ok(values);
         }
     }

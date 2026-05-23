@@ -1,0 +1,352 @@
+﻿@{
+    var currentPath = Context.Request.Path.Value ?? string.Empty;
+
+    bool IsActive(string path)
+    {
+        return currentPath.Equals(path, StringComparison.OrdinalIgnoreCase)
+            || currentPath.StartsWith(path + "/", StringComparison.OrdinalIgnoreCase);
+    }
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<aside class="main-sidebar dark-bg vendor-sidebar">
+    <section class="sidebar vendor-sidebar-inner">
+        <div class="vendor-sidebar-header">
+            <a href="/Vendor/Product/Index" class="vendor-brand">
+                <span class="vendor-brand-mark">
+                    <i class="fa fa-store"></i>
+                </span>
+                <span>
+                    <strong>MultiShop</strong>
+                    <small>Vendor Panel</small>
+                </span>
+            </a>
+        </div>
+
+        <div class="vendor-user-panel">
+            <div class="vendor-user-avatar">
+                <i class="fa fa-user"></i>
+            </div>
+            <div class="vendor-user-info">
+                <strong>Seller Account</strong>
+                <span><i class="fa fa-circle"></i> Online</span>
+            </div>
+        </div>
+
+        <ul class="sidebar-menu vendor-menu" data-widget="tree">
+            <li class="vendor-menu-label">Management</li>
+
+            <li class="@(IsActive("/Vendor/Product/Index") ? "active" : "")">
+                <a href="/Vendor/Product/Index">
+                    <i class="fa fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            <li class="@(IsActive("/Vendor/Product/Index") ? "active" : "")">
+                <a href="/Vendor/Product/Index">
+                    <i class="fa fa-shopping-bag"></i>
+                    <span>My Products</span>
+                </a>
+            </li>
+
+            <li class="@(IsActive("/Vendor/Product/GetProductsWithCategory") ? "active" : "")">
+                <a href="/Vendor/Product/GetProductsWithCategory">
+                    <i class="fa fa-tags"></i>
+                    <span>Products With Categories</span>
+                </a>
+            </li>
+
+            <li class="@(IsActive("/Vendor/SpecialOffer/Index") ? "active" : "")">
+                <a href="/Vendor/SpecialOffer/Index">
+                    <i class="fa fa-percent"></i>
+                    <span>Special Offers</span>
+                </a>
+            </li>
+
+            <li class="@(IsActive("/Vendor/Comment/Index") ? "active" : "")">
+                <a href="/Vendor/Comment/Index">
+                    <i class="fa fa-comments"></i>
+                    <span>Customer Comments</span>
+                </a>
+            </li>
+
+            <li class="vendor-menu-label">Operations</li>
+
+            <li class="@(IsActive("/Vendor/Cargo/CargoCompanyList") ? "active" : "")">
+                <a href="/Vendor/Cargo/CargoCompanyList">
+                    <i class="fa fa-truck"></i>
+                    <span>Cargo Management</span>
+                </a>
+            </li>
+
+            <li class="@(IsActive("/Vendor/Order/OrderDetailList") ? "active" : "")">
+                <a href="/Vendor/Order/OrderDetailList">
+                    <i class="fa fa-shopping-cart"></i>
+                    <span>Orders</span>
+                </a>
+            </li>
+
+            <li class="vendor-menu-separator"></li>
+
+            <li>
+                <a href="/Default/Index">
+                    <i class="fa fa-globe"></i>
+                    <span>Go To Website</span>
+                </a>
+            </li>
+
+            <li class="vendor-logout-item">
+                <a href="/LogIn/LogOut">
+                    <i class="fa fa-sign-out"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+</aside>
+
+<style>
+    .vendor-sidebar {
+        background: #ffffff !important;
+        border-right: 1px solid #e5e7eb;
+        box-shadow: 10px 0 30px rgba(15, 23, 42, 0.06);
+    }
+
+    .vendor-sidebar-inner {
+        padding: 18px 14px 20px;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    }
+
+    .vendor-sidebar-header {
+        padding: 4px 4px 18px;
+        margin-bottom: 14px;
+        border-bottom: 1px solid #eef2f7;
+    }
+
+    .vendor-brand,
+    .vendor-brand:hover,
+    .vendor-brand:focus {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #111827;
+        text-decoration: none;
+    }
+
+    .vendor-brand-mark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        flex: 0 0 42px;
+        color: #4f46e5;
+        background: #eef2ff;
+        border: 1px solid #e0e7ff;
+        border-radius: 12px;
+        box-shadow: 0 10px 22px rgba(79, 70, 229, 0.08);
+    }
+
+    .vendor-brand strong,
+    .vendor-brand small {
+        display: block;
+        line-height: 1.2;
+    }
+
+    .vendor-brand strong {
+        color: #111827;
+        font-size: 17px;
+        font-weight: 850;
+        letter-spacing: 0;
+    }
+
+    .vendor-brand small {
+        margin-top: 3px;
+        color: #6b7280;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .vendor-user-panel {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px;
+        margin-bottom: 20px;
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        box-shadow: 0 8px 22px rgba(15, 23, 42, 0.035);
+    }
+
+    .vendor-user-avatar {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        flex: 0 0 38px;
+        color: #4f46e5;
+        background: #eef2ff;
+        border: 1px solid #e0e7ff;
+        border-radius: 50%;
+    }
+
+    .vendor-user-info strong,
+    .vendor-user-info span {
+        display: block;
+        line-height: 1.25;
+    }
+
+    .vendor-user-info strong {
+        color: #111827;
+        font-size: 13px;
+        font-weight: 850;
+    }
+
+    .vendor-user-info span {
+        margin-top: 4px;
+        color: #6b7280;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .vendor-user-info span i {
+        margin-right: 5px;
+        color: #10b981;
+        font-size: 8px;
+    }
+
+    .vendor-menu {
+        padding: 0;
+        margin: 0;
+    }
+
+    .vendor-menu,
+    .vendor-menu li {
+        list-style: none;
+    }
+
+    .vendor-menu-label {
+        padding: 18px 12px 9px;
+        color: #9ca3af;
+        font-size: 11px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .vendor-menu li a {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 48px;
+        padding: 12px 13px;
+        margin: 4px 0;
+        overflow: hidden;
+        color: #4b5563;
+        border: 1px solid transparent;
+        border-radius: 13px;
+        font-size: 14px;
+        font-weight: 750;
+        letter-spacing: 0;
+        transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .vendor-menu li a::before {
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 3px;
+        content: "";
+        background: #4f46e5;
+        border-radius: 999px;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+
+    .vendor-menu li a i {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        flex: 0 0 22px;
+        color: #9ca3af;
+        font-size: 15px;
+        text-align: center;
+        transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .vendor-menu li a span {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .vendor-menu li a:hover,
+    .vendor-menu li a:focus,
+    .vendor-menu li.active > a {
+        color: #111827;
+        background: #f8fafc;
+        border-color: #e5e7eb;
+        text-decoration: none;
+        transform: translateX(2px);
+    }
+
+    .vendor-menu li a:hover::before,
+    .vendor-menu li a:focus::before,
+    .vendor-menu li.active > a::before {
+        opacity: 1;
+    }
+
+    .vendor-menu li a:hover i,
+    .vendor-menu li a:focus i,
+    .vendor-menu li.active > a i {
+        color: #4f46e5;
+        transform: scale(1.03);
+    }
+
+    .vendor-menu li.active > a {
+        color: #111827;
+        background: #eef2ff;
+        border-color: #dbe3ff;
+        box-shadow: 0 8px 18px rgba(79, 70, 229, 0.08);
+        font-weight: 850;
+    }
+
+    .vendor-menu-separator {
+        height: 1px;
+        margin: 18px 10px 14px;
+        background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
+    }
+
+    .vendor-logout-item a:hover,
+    .vendor-logout-item a:focus {
+        color: #dc2626 !important;
+        background: #fef2f2 !important;
+        border-color: #fee2e2 !important;
+    }
+
+    .vendor-logout-item a:hover i,
+    .vendor-logout-item a:focus i {
+        color: #dc2626 !important;
+    }
+
+    @@media (max-width: 767.98px) {
+        .vendor-sidebar-inner {
+            padding: 12px;
+        }
+
+        .vendor-menu li a {
+            min-height: 44px;
+            padding: 10px 12px;
+        }
+
+        .vendor-user-panel {
+            margin-bottom: 14px;
+        }
+    }
+</style>

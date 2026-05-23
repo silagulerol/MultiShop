@@ -1,49 +1,303 @@
 ﻿@model List<ResultFeatureSliderDto>
-@{
-    int count = 0;
-}
 
-<div class="container-fluid mb-3">
-    <div class="row px-xl-5">
-        <div class="col-lg-8">
-            <div id="header-carousel" class="carousel slide carousel-fade mb-30 mb-lg-0" data-ride="carousel">
-                <ol class="carousel-indicators">
-                    @for (int i = 0; i < Model.Count; i++)
-                    {
-                        <li data-target="#header-carousel"
-                            data-slide-to="@i"
-                            class="@(i == 0 ? "active" : "")"></li>
-                    }
-                </ol>
-                <div class="carousel-inner">
-                    @for (int i = 0; i < Model.Count; i++)
-                    {
-                        var item = Model[i];
+<div class="container-fluid px-0 mb-4">
+    <div id="header-carousel" class="carousel slide carousel-fade gap-style-carousel" data-ride="carousel">
+        <ol class="carousel-indicators gap-carousel-indicators">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <li data-target="#header-carousel"
+                    data-slide-to="@i"
+                    class="@(i == 0 ? "active" : "")"></li>
+            }
+        </ol>
 
-                        <div class="carousel-item position-relative @(i == 0 ? "active" : "")" style="height: 430px;">
-                            <img class="position-absolute w-100 h-100"
-                                 src="~/multishopTemp/img/carousel-2.jpg"
-                                 style="object-fit: cover;">
+        <div class="carousel-inner">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var item = Model[i];
 
-                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                                <div class="p-3" style="max-width: 700px;">
-                                    <h1 class="display-4 text-white mb-3 animate__animated animate__fadeInDown">
-                                        @item.Title
-                                    </h1>
-                                    <p class="mx-md-5 px-5 animate__animated animate__bounceIn">
-                                        @item.Description
-                                    </p>
-                                    <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" href="#">
-                                        Shop Now
-                                    </a>
-                                </div>
+                <div class="carousel-item @(i == 0 ? "active" : "")">
+                    <div class="gap-hero-slide">
+                        <div class="gap-hero-content">
+                            <h1>@item.Title</h1>
+                            <p>@item.Description</p>
+                            <div class="gap-hero-buttons">
+                                <a href="/ProductList/Index/" class="gap-btn gap-btn-dark">Start Shopping</a>
+                                <a href="/ProductList/Index/" class="gap-btn gap-btn-outline">Explore</a>
                             </div>
                         </div>
-                    }
+
+                        <div class="gap-hero-image">
+                            <img src="@Url.Content(item.ImageUrl)" alt="@item.Title" />
+                        </div>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
 
-        @await Component.InvokeAsync("_SpecialOfferDefaultComponentPartial")
+        <a class="carousel-control-prev gap-carousel-control" href="#header-carousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+
+        <a class="carousel-control-next gap-carousel-control" href="#header-carousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
     </div>
 </div>
+
+<style>
+    .gap-style-carousel {
+        width: 100%;
+        height: clamp(560px, 52vw, 680px);
+        background-color: #000000;
+        border-bottom: 1px solid #eeeeee;
+        overflow: hidden;
+    }
+
+    .gap-style-carousel .carousel-inner,
+    .gap-style-carousel .carousel-item {
+        height: 100%;
+    }
+
+    .gap-hero-slide {
+        height: 100%;
+        min-height: 560px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        background-color: #000000;
+        overflow: hidden;
+    }
+
+    .gap-hero-slide::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: linear-gradient(90deg, rgba(0, 0, 0, .46) 0%, rgba(0, 0, 0, .28) 38%, rgba(0, 0, 0, .08) 72%, rgba(0, 0, 0, 0) 100%);
+    }
+
+    .gap-hero-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: min(560px, calc(100% - 120px));
+        margin-left: clamp(72px, 10vw, 150px);
+        padding: 0;
+        color: #ffffff;
+        background: none;
+        border: 0;
+        box-shadow: none;
+        backdrop-filter: none;
+        animation: gapHeroContentIn .62s ease-out both;
+    }
+
+    .gap-hero-content h1 {
+        font-size: clamp(48px, 5.4vw, 78px);
+        font-weight: 500;
+        line-height: .96;
+        color: #ffffff;
+        margin-bottom: 20px;
+        letter-spacing: 0;
+        text-shadow: 0 3px 18px rgba(0, 0, 0, .38);
+    }
+
+    .gap-hero-content p {
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 1.55;
+        color: rgba(255, 255, 255, .92);
+        margin-bottom: 28px;
+        max-width: 470px;
+        text-shadow: 0 2px 14px rgba(0, 0, 0, .34);
+    }
+
+    .gap-hero-buttons {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .gap-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 148px;
+        min-height: 48px;
+        padding: 13px 26px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        text-decoration: none;
+        border: 1px solid #ffffff;
+        border-radius: 0;
+        box-shadow: none;
+        transition: transform .24s ease, background-color .24s ease, border-color .24s ease, color .24s ease, box-shadow .24s ease;
+        will-change: transform;
+    }
+
+    .gap-btn-dark {
+        background-color: #ffffff;
+        color: #000000 !important;
+    }
+
+    .gap-btn-dark:hover {
+        background-color: #f1f1f1;
+        border-color: #f1f1f1;
+        color: #000000 !important;
+        text-decoration: none;
+        transform: translateY(-1px);
+        box-shadow: none;
+    }
+
+    .gap-btn-outline {
+        background-color: transparent;
+        color: #ffffff !important;
+        backdrop-filter: none;
+    }
+
+    .gap-btn-outline:hover {
+        background-color: #ffffff;
+        color: #000000 !important;
+        text-decoration: none;
+        transform: translateY(-1px);
+        box-shadow: none;
+    }
+
+    .gap-hero-image {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .gap-hero-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center center;
+        display: block;
+    }
+
+    .gap-carousel-indicators {
+        bottom: 24px;
+        margin-bottom: 0;
+    }
+
+    .gap-carousel-indicators li {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 1px solid #ffffff;
+        background-color: transparent;
+        opacity: 1;
+    }
+
+    .gap-carousel-indicators .active {
+        background-color: #ffffff;
+    }
+
+    .gap-carousel-control {
+        width: 6%;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+
+    .gap-style-carousel:hover .gap-carousel-control {
+        opacity: 0.8;
+    }
+
+    @@keyframes gapHeroContentIn {
+        from {
+            opacity: 0;
+            transform: translateY(14px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@media (max-width: 991.98px) {
+        .gap-style-carousel {
+            height: clamp(460px, 62vw, 520px);
+        }
+
+        .gap-hero-slide {
+            min-height: 460px;
+        }
+
+        .gap-hero-slide::before {
+            background: linear-gradient(180deg, rgba(0, 0, 0, .16) 0%, rgba(0, 0, 0, .34) 42%, rgba(0, 0, 0, .58) 100%);
+        }
+
+        .gap-hero-content {
+            width: calc(100% - 48px);
+            margin: 0 auto;
+            padding: 0;
+            text-align: center;
+            align-items: center;
+        }
+
+        .gap-hero-content h1 {
+            font-size: 42px;
+            line-height: 1.04;
+            margin-bottom: 18px;
+        }
+
+        .gap-hero-content p {
+            font-size: 16px;
+            line-height: 1.58;
+            margin-bottom: 26px;
+        }
+
+        .gap-hero-buttons {
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .gap-btn {
+            min-width: 138px;
+            min-height: 46px;
+            padding: 12px 22px;
+            font-size: 12px;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .gap-style-carousel {
+            height: clamp(360px, 112vw, 440px);
+        }
+
+        .gap-hero-slide {
+            min-height: 360px;
+            align-items: end;
+            padding-bottom: 44px;
+        }
+
+        .gap-hero-content {
+            width: calc(100% - 28px);
+            padding: 0;
+        }
+
+        .gap-hero-content h1 {
+            font-size: 34px;
+        }
+
+        .gap-hero-content p {
+            font-size: 15px;
+        }
+
+        .gap-btn {
+            width: 100%;
+        }
+    }
+</style>

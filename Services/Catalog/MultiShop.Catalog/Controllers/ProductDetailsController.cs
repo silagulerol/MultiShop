@@ -19,7 +19,7 @@ namespace MultiShop.Catalog.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllProductDetail()
+        public async Task<IActionResult> GetAllProductDetails()
         {
             var values = await _productDetailService.GetAllProductDetailAsync();
             return Ok(values);
@@ -33,16 +33,16 @@ namespace MultiShop.Catalog.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProductDetail(CreateProductDetailDto createProductDetailDto)
+        public async Task<IActionResult> CreateProductDetail(CreateProductDetailDto dto)
         {
-            await _productDetailService.CreateProductDetailAsync(createProductDetailDto);
+            await _productDetailService.CreateProductDetailAsync(dto);
             return Ok();
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateProductDetail(UpdateProductDetailDto updateProductDetailDto)
+        public async Task<IActionResult> UpdateProductDetail(UpdateProductDetailDto dto)
         {
-            await _productDetailService.UpdateProductDetailAsync(updateProductDetailDto);
+            await _productDetailService.UpdateProductDetailAsync(dto);
             return Ok();
         }
 
@@ -53,10 +53,17 @@ namespace MultiShop.Catalog.Controllers
             return Ok();
         }
 
-        [HttpGet("Product/{id}")]
-        public async Task<IActionResult> GetByProductIdProductDetail(string id)
+        [HttpGet("ProductDetailByProductId/{productId}")]
+        public async Task<IActionResult> GetProductDetailByProductId(string productId)
         {
-            var value = await _productDetailService.GetByProductIdProductDetailAsync(id);
+            var value = await _productDetailService.GetByProductIdProductDetailAsync(productId);
+            return Ok(value);
+        }
+
+        [HttpGet("ProductDetailByVariantId/{variantId}")]
+        public async Task<IActionResult> GetProductDetailByVariantId(string variantId)
+        {
+            var value = await _productDetailService.GetProductDetailByVariantIdAsync(variantId);
             return Ok(value);
         }
     }

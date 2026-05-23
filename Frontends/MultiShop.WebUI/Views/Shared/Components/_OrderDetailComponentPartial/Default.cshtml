@@ -1,31 +1,40 @@
 ﻿@model BasketTotalDto
 
-<h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Order Total</span></h5>
-<div class="bg-light p-30 mb-5">
-    <div class="border-bottom">
-        <h6 class="mb-3">Products</h6>
+<div class="checkout-card order-summary-card p-30 mb-5">
+    <div class="order-summary-section">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h6 class="mb-0">Products</h6>
+            <span class="order-summary-count">@Model.BasketItems.Sum(x => x.Quantity) item(s)</span>
+        </div>
+
         @foreach (var item in Model.BasketItems)
         {
-             <div class="d-flex justify-content-between">
+            <div class="order-summary-line">
                 <p>@item.ProductName</p>
                 <p>$@item.UnitPrice x @item.Quantity</p>
             </div>
         }
     </div>
-    <div class="border-bottom pt-3 pb-2">
-        <div class="d-flex justify-content-between mb-3">
+
+    <div class="order-summary-section pt-3 pb-2">
+        <div class="order-summary-line mb-3">
             <h6>Subtotal</h6>
             <h6>$@Model.TotalPrice</h6>
         </div>
-        <div class="d-flex justify-content-between">
+        <div class="order-summary-line">
             <h6 class="font-weight-medium">Shipping</h6>
             <h6 class="font-weight-medium">$@Model.ShippingPrice</h6>
         </div>
     </div>
+
     <div class="pt-2">
-        <div class="d-flex justify-content-between mt-2">
+        <div class="order-summary-total mt-2">
             <h5>Total</h5>
             <h5>$ @(Model.TotalPrice + Model.ShippingPrice) </h5>
         </div>
     </div>
+
+    <button type="submit" class="btn checkout-primary-btn btn-block font-weight-bold py-3 mt-4">
+        Continue to Payment
+    </button>
 </div>

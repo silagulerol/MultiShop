@@ -1,15 +1,28 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Index";
     Layout = "~/Views/UILayout/_UILayout.cshtml";
 }
 
+<div class="container-fluid shopping-cart-page">
+    <div class="shopping-cart-shell">
+        <div class="shopping-cart-main">
+            <div class="shopping-cart-heading">
+                <span>Shopping cart</span>
+                <h1>Your Bag</h1>
+            </div>
 
-<div class="container-fluid">
-    <div class="row px-xl-5">
+            @await Component.InvokeAsync("_ShoppingCartProductListComponentPartial")
+        </div>
 
-        @await Component.InvokeAsync("_ShoppingCartProductListComponentPartial")
-        @*@await Component.InvokeAsync("_ShoppingCartDiscountCouponComponentPartial")*@
-        @await Html.PartialAsync("~/Views/Discount/ConfirmDiscountCoupon.cshtml")
+        <aside class="shopping-cart-summary-panel">
+            @await Html.PartialAsync("~/Views/Discount/ConfirmDiscountCoupon.cshtml")
+            @await Component.InvokeAsync("_ShoppingCartProceedCheckoutComponentPartial")
+        </aside>
+    </div>
+
+    <div class="cart-recommendations">
+        @await Component.InvokeAsync("_ProductYouLikeComponentPartial")
     </div>
 </div>
+
+@*@await Component.InvokeAsync("_ShoppingCartDiscountCouponComponentPartial")*@

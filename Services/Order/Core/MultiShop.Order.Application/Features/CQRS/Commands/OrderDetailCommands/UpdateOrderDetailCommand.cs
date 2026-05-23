@@ -16,5 +16,7 @@ namespace MultiShop.Order.Application.Features.CQRS.Commands.OrderDetailCommands
         public int Quantity { get; set; }
         public decimal ProductTotalPrice { get; set; }
         public int OrderingId { get; set; }
+        public string VendorId { get; set; }
+        public string OrderStatus { get; set; } = "Pending";
     }
 }

@@ -27,6 +27,10 @@ namespace MultiShop.Order.Application.Features.CQRS.Handlers.OrderDetailHandlers
             values.ProductName = command.ProductName;
             values.ProductTotalPrice = command.ProductTotalPrice;
             values.Quantity = command.Quantity;
+            values.VendorId = command.VendorId;
+            values.OrderStatus = string.IsNullOrWhiteSpace(command.OrderStatus)
+                                ? values.OrderStatus
+                                : command.OrderStatus;
             await _repository.UpdateAsync(values);
         }
     }

@@ -36,14 +36,15 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         {
             AboutViewBag();
             await _aboutService.CreateAboutAsync(createAboutDto);
-            return RedirectToAction("Index", "About", new { area = "Admin" });
+            return Redirect("/Admin/About/Index");
+            
         }
 
         public async Task<IActionResult> DeleteAbout(string id)
         {
             AboutViewBag();
             await _aboutService.DeleteAboutAsync(id);
-            return RedirectToAction("Index", "About", new { area = "Admin" });
+            return Redirect("/Admin/About/Index");
         }
 
 
@@ -60,7 +61,7 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         {
             AboutViewBag();
             await _aboutService.UpdateAboutAsync(updateAboutDto);
-            return RedirectToAction("Index", "About", new { area = "Admin" });
+            return Redirect("/Admin/About/Index");
         }
 
         void AboutViewBag()

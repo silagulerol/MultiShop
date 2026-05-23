@@ -1,7 +1,7 @@
 ﻿@model UpdateProductDto
 @{
     ViewData["Title"] = "UpdateProduct";
-    Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
+    Layout = "~/Areas/Vendor/Views/VendorLayout/Index.cshtml";
 }
 
 <section class="content container-fluid">
@@ -17,11 +17,14 @@
                         <label>Product Name</label>
                         <input type="text" class="form-control" asp-for="ProductName">
                         <br />
-                        <label>Product Price</label>
-                        <input type="text" class="form-control" asp-for="ProductPrice">
+                        <label>Starting Price</label>
+                        <input type="text" class="form-control" asp-for="StartingPrice">
                         <br />
-                        <label>Product Image Url</label>
-                        <input type="text" class="form-control" asp-for="ProductImageUrl">
+                        <label>Main Image Url</label>
+                        <input type="text" class="form-control" asp-for="MainImageUrl">
+                        <br />
+                        <label>Brand Id</label>
+                        <input type="text" class="form-control" asp-for="BrandId">
                         <br />
                         <label>Category Name</label>
                         @Html.DropDownListFor(x => x.CategoryId, (List<SelectListItem>)ViewBag.CategoryValues, new { @class = "form-control" })
@@ -36,5 +39,4 @@
         </div>
     </div>
 </section>
-
 

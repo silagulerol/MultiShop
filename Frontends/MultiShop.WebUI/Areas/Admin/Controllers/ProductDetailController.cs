@@ -30,7 +30,7 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         public async Task<IActionResult> UpdateProductDetail(UpdateProductDetailDto updateProductDetailDto)
         {
             await _productDetailService.UpdateProductDetailAsync(updateProductDetailDto);
-            return RedirectToAction("GetProductsWithCategory", "Product", new { area = "Admin" });
+            return Redirect("/Admin/Product/GetProductsWithCategory"); 
         }
 
         void ProductDetailViewBag()
