@@ -17,18 +17,23 @@ namespace MultiShop.Order.WebApi.Controllers
         private readonly RemoveOrderDetailCommandHandler _removeOrderDetailCommandHandler;
         private readonly GetOrderDetailByIdQueryHandler _getOrderDetailByIdQueryHandler;
         private readonly GetOrderDetailQueryHandler _getOrderDetailQueryHandler;
-
+        private readonly GetOrderDetailsByVendorIdQueryHandler _getOrderDetailsByVendorIdQueryHandler;
+        private readonly GetOrderDetailsByOrderingIdQueryHandler _getOrderDetailsByOrderingIdQueryHandler;
         public OrderDetailsController(CreateOrderDetailCommandHandler createOrderDetailCommandHandler,
             UpdateOrderDetailCommandHandler updateOrderDetailCommandHandler,
             RemoveOrderDetailCommandHandler removeOrderDetailCommandHandler,
              GetOrderDetailByIdQueryHandler getOrderDetailByIdQueryHandler,
-             GetOrderDetailQueryHandler getOrderDetailQueryHandler)
+             GetOrderDetailQueryHandler getOrderDetailQueryHandler,
+              GetOrderDetailsByVendorIdQueryHandler getOrderDetailsByVendorIdQueryHandler,
+              GetOrderDetailsByOrderingIdQueryHandler getOrderDetailsByOrderingIdQueryHandler)
         {
             _createOrderDetailCommandHandler = createOrderDetailCommandHandler;
             _updateOrderDetailCommandHandler = updateOrderDetailCommandHandler;
             _removeOrderDetailCommandHandler = removeOrderDetailCommandHandler;
             _getOrderDetailByIdQueryHandler = getOrderDetailByIdQueryHandler;
             _getOrderDetailQueryHandler = getOrderDetailQueryHandler;
+            _getOrderDetailsByVendorIdQueryHandler = getOrderDetailsByVendorIdQueryHandler;
+            _getOrderDetailsByOrderingIdQueryHandler = getOrderDetailsByOrderingIdQueryHandler;
         }
 
         [HttpGet] 
@@ -64,6 +69,24 @@ namespace MultiShop.Order.WebApi.Controllers
         {
             await _updateOrderDetailCommandHandler.Handle(updateOrderDetailCommand);
             return Ok("updating is successfull");
+        }
+
+        [HttpGet("GetByVendorId/{vendorId}")]
+        public async Task<IActionResult> GetByVendorId(string vendorId)
+        {
+            var values = await _getOrderDetailsByVendorIdQueryHandler
+                .Handle(new GetOrderDetailsByVendorIdQuery(vendorId));
+
+            return Ok(values);
+        }
+
+        [HttpGet("GetByOrderingId/{orderingId}")]
+        public async Task<IActionResult> GetByOrderingId(int orderingId)
+        {
+            var values = await _getOrderDetailsByOrderingIdQueryHandler
+                .Handle(new GetOrderDetailsByOrderingIdQuery(orderingId));
+
+            return Ok(values);
         }
     }
 }

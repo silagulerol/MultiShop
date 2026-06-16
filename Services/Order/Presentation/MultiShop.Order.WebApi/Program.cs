@@ -67,6 +67,8 @@ builder.Services.AddScoped<GetOrderDetailQueryHandler>();
 builder.Services.AddScoped<CreateOrderDetailCommandHandler>();
 builder.Services.AddScoped<UpdateOrderDetailCommandHandler>();
 builder.Services.AddScoped<RemoveOrderDetailCommandHandler>();
+builder.Services.AddScoped<GetOrderDetailsByVendorIdQueryHandler>();
+builder.Services.AddScoped<GetOrderDetailsByOrderingIdQueryHandler>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

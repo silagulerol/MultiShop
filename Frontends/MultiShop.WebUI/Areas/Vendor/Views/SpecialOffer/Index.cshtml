@@ -1,7 +1,7 @@
 ﻿@model List<ResultSpecialOfferDto>
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
+    Layout = "~/Areas/Vendor/Views/VendorLayout/Index.cshtml";
     int count = 0;
     List<ResultSpecialOfferDto> deactive = [];
 }
@@ -37,8 +37,8 @@
                                         <td>@item.Title</td>
                                         <td>@item.SubTitle</td>
                                         <td>@item.Status</td>
-                                        <td><a href="/Admin/SpecialOffer/DeleteSpecialOffer/@item.SpecialOfferId" class="btn btn-danger">Delete</a></td>
-                                        <td><a href="/Admin/SpecialOffer/UpdateSpecialOffer/@item.SpecialOfferId" class="btn btn-success">Update</a></td>
+                                        <td><a href="/Vendor/SpecialOffer/DeleteSpecialOffer/@item.SpecialOfferId" class="btn btn-danger">Delete</a></td>
+                                        <td><a href="/Vendor/SpecialOffer/UpdateSpecialOffer/@item.SpecialOfferId" class="btn btn-success">Update</a></td>
                                     </tr>
                                 }
                             }
@@ -63,13 +63,13 @@
                                     <td>@item.Title</td>
                                     <td>@item.SubTitle</td>
                                     <td>@item.Status</td>
-                                    <td><a href="/Admin/SpecialOffer/DeleteSpecialOffer/@item.SpecialOfferId" class="btn btn-danger">Delete</a></td>
-                                    <td><a href="/Admin/SpecialOffer/UpdateSpecialOffer/@item.SpecialOfferId" class="btn btn-success">Update</a></td>
+                                    <td><a href="/Vendor/SpecialOffer/DeleteSpecialOffer/@item.SpecialOfferId" class="btn btn-danger">Delete</a></td>
+                                    <td><a href="/Vendor/SpecialOffer/UpdateSpecialOffer/@item.SpecialOfferId" class="btn btn-success">Update</a></td>
                                 </tr>
                             }
                         </tbody>
                     </table>
-                    <a href="/Admin/SpecialOffer/CreateSpecialOffer" class="btn btn-primary">Add New Feature Slider</a>
+                    <a href="/Vendor/SpecialOffer/CreateSpecialOffer" class="btn btn-primary">Add New Feature Slider</a>
                 </div>
             </div>
         </div>

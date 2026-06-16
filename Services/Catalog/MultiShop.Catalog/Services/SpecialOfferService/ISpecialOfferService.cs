@@ -11,6 +11,6 @@ namespace MultiShop.Catalog.Services.SpecialOfferService
         Task InsertSpecialOfferAsync(CreateSpecialOfferDto createSpecialOfferDto);
         Task FeatureSliderChangeToFalseAsync(string id);
         Task FeatureSliderChangeToTrueAsync(string id);
-
+        Task<List<ResultSpecialOfferDto>> GetSpecialOffersByVendorIdAsync(string vendorId);
     }
 }

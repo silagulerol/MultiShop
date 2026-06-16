@@ -57,5 +57,14 @@ namespace MultiShop.Catalog.Services.SpecialOfferService
         {
             throw new NotImplementedException();
         }
+
+        public async Task<List<ResultSpecialOfferDto>> GetSpecialOffersByVendorIdAsync(string vendorId)
+        {
+            var values = await _specialOfferCollection
+                .Find(x => x.VendorId == vendorId)
+                .ToListAsync();
+
+            return _mapper.Map<List<ResultSpecialOfferDto>>(values);
+        }
     }
 }

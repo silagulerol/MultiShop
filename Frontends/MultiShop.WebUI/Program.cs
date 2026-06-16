@@ -29,6 +29,9 @@ using MultiShop.WebUI.Services.StatisticServices.DiscountStatisticServices;
 using MultiShop.WebUI.Services.StatisticServices.MessageStatisticServices;
 using MultiShop.WebUI.Services.StatisticServices.UserStatisticServices;
 using MultiShop.WebUI.Services.UserIdentityServices;
+using MultiShop.WebUI.Services.OrderServices.OrderDetailServices;
+using MultiShop.WebUI.Services.PaymentServices;
+
 using MultiShop.WebUI.Settings;
 using System.Security.Principal;
 
@@ -70,15 +73,15 @@ builder.Services.AddControllersWithViews();
 builder.Services.Configure<ClientSettings>(builder.Configuration.GetSection("ClientSettings"));
 builder.Services.Configure<ServiceApiSettings>(builder.Configuration.GetSection("ServiceApiSettings"));
 
-//Token üretimini ve kontrolünü yapacak olan iþleyiciyi (handler) sisteme tanýtýyoruz:
+//Token ï¿½retimini ve kontrolï¿½nï¿½ yapacak olan iï¿½leyiciyi (handler) sisteme tanï¿½tï¿½yoruz:
 builder.Services.AddScoped<ResourceOwnerPasswordTokenHandler>();
 builder.Services.AddScoped<ClientCredentialTokenHandler>();
 
 builder.Services.AddHttpClient<IClientCredentialTokenService, ClientCredentialTokenService>();
 
-//appsettings.json içindeki servis adreslerini içeren sýnýfý (ServiceApiSettings) çekiyoruz:
+//appsettings.json iï¿½indeki servis adreslerini iï¿½eren sï¿½nï¿½fï¿½ (ServiceApiSettings) ï¿½ekiyoruz:
 var values = builder.Configuration.GetSection("ServiceApiSettings").Get<ServiceApiSettings>();
-//User Service çaðýrýldýðýnda hem Base Address'in otomatik set edilmesi hem de her isteðe token eklenmesi için Handler'ýn baðlanmasý:
+//User Service ï¿½aï¿½ï¿½rï¿½ldï¿½ï¿½ï¿½nda hem Base Address'in otomatik set edilmesi hem de her isteï¿½e token eklenmesi iï¿½in Handler'ï¿½n baï¿½lanmasï¿½:
 builder.Services.AddHttpClient<IUserService, UserService>( opt =>
 {
     opt.BaseAddress = new Uri(values.IdentityServerUrl);
@@ -204,6 +207,15 @@ builder.Services.AddHttpClient<ICommentService, CommentService>(opt =>
     opt.BaseAddress = new Uri($"{values.OcelotUrl}/{values.Comment.Path}");
 }).AddHttpMessageHandler<ClientCredentialTokenHandler>();
 
+builder.Services.AddHttpClient<IOrderDetailService, OrderDetailService>(opt =>
+{
+    opt.BaseAddress = new Uri($"{values.OcelotUrl}/{values.Order.Path}");
+}).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+
+builder.Services.AddHttpClient<IPaymentService, PaymentService>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:7076/api/");
+}).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
 
 builder. Services.AddLocalization(opt =>
 {

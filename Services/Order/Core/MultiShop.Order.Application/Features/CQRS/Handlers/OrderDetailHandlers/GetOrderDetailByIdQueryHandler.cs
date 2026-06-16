@@ -31,6 +31,7 @@ namespace MultiShop.Order.Application.Features.CQRS.Handlers.OrderDetailHandlers
                 Quantity = value.Quantity,
                 ProductTotalPrice = value.ProductTotalPrice,
                 OrderingId = value.OrderingId,
+                OrderStatus= value.OrderStatus
             };
         }
     }

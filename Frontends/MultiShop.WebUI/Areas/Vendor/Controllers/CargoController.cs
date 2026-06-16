@@ -2,9 +2,9 @@
 using MultiShop.DtoLayer.CargoDtos.CargoCompanyDtos;
 using MultiShop.WebUI.Services.CargoServices.CargoCompanyServices;
 
-namespace MultiShop.WebUI.Areas.Admin.Controllers
+namespace MultiShop.WebUI.Areas.Vendor.Controllers
 {
-    [Area("Admin")]
+    [Area("Vendor")]
     public class CargoController : Controller
     {
         private readonly ICargoCompanyService _cargoCompanyService;
@@ -30,14 +30,14 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         public async Task<IActionResult> CreateCargoCompany(CreateCargoCompanyDto createCargoCompanyDto)
         {
             await _cargoCompanyService.CreateCargoCompanyAsync(createCargoCompanyDto);
-            return RedirectToAction("CargoCompanyList", "Cargo", new { Area = "Admin" });
+            return RedirectToAction("CargoCompanyList", "Cargo", new { Area = "Vendor" });
         }
 
 
         public async Task<IActionResult> DeleteCargoCompany(int id)
         {
             await _cargoCompanyService.DeleteCargoCompanyAsync(id);
-            return RedirectToAction("CargoCompanyList", "Cargo", new { Area = "Admin" });
+            return RedirectToAction("CargoCompanyList", "Cargo", new { Area = "Vendor" });
         }
 
         [HttpGet]
@@ -51,7 +51,7 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         public async Task<IActionResult> UpdateCargoCompany(UpdateCargoCompanyDto updateCargoCompanyDto)
         {
             await _cargoCompanyService.UpdateCargoCompanyAsync(updateCargoCompanyDto);
-            return RedirectToAction("CargoCompanyList", "Cargo", new { Area = "Admin" });
+            return RedirectToAction("CargoCompanyList", "Cargo", new { Area = "Vendor" });
         }
     }
 }

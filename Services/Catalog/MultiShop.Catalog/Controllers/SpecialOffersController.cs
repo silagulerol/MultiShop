@@ -51,6 +51,13 @@ namespace MultiShop.Catalog.Controllers
             await _specialOfferService.DeleteSpecialOfferAsync(id);
             return Ok();
         }
+
+        [HttpGet("GetSpecialOffersByVendorId/{vendorId}")]
+        public async Task<IActionResult> GetSpecialOffersByVendorId(string vendorId)
+        {
+            var values = await _specialOfferService.GetSpecialOffersByVendorIdAsync(vendorId);
+            return Ok(values);
+        }
     }
     
 }

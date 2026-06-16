@@ -72,10 +72,37 @@ namespace MultiShop.Catalog.Services.ProductService
             
             foreach (var item in values)
             {
-                item.Category = await _categoryCollection.Find(x => x.CategoryId == item.CategoryId).FirstAsync();
+                item.Category = await _categoryCollection.Find(x => x.CategoryId == item.CategoryId).FirstOrDefaultAsync();
             }
             
             return _mapper.Map<List<ResultProductsWithCategoryDto>>(values);
         }
+
+        public async Task<List<ResultProductDto>> GetProductsByVendorIdAsync(string vendorId)
+        {
+            var values = await _productCollection
+                .Find(x => x.VendorId == vendorId)
+                .ToListAsync();
+
+            return _mapper.Map<List<ResultProductDto>>(values);
+        }
+
+        public async Task<List<ResultProductsWithCategoryDto>> GetProductsWithCategoryByVendorIdAsync(string vendorId)
+        {
+            var values = await _productCollection
+                .Find(x => x.VendorId == vendorId)
+                .ToListAsync();
+
+            foreach (var item in values)
+            {
+                item.Category = await _categoryCollection
+                    .Find(x => x.CategoryId == item.CategoryId)
+                    .FirstOrDefaultAsync();
+            }
+
+            return _mapper.Map<List<ResultProductsWithCategoryDto>>(values);
+        }
+
+       
     }
 }

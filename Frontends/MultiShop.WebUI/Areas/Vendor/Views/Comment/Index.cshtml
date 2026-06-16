@@ -2,7 +2,7 @@
 @model List<ResultCommentDto>
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
+    Layout = "~/Areas/Vendor/Views/VendorLayout/Index.cshtml";
     int count = 0;
 }
 
@@ -37,13 +37,12 @@
                                     <td>@item.CommentDetail</td>
                                     <td>@item.CreatedDate.ToShortDateString()</td>
                                     <td>@item.Status</td>
-                                    <td><a href="/Admin/Comment/DeleteComment/@item.UserCommentId" class="btn btn-danger">Delete</a></td>
-                                    <td><a href="/Admin/Comment/UpdateComment/@item.UserCommentId" class="btn btn-success">Update</a></td>
+                                    <td><a href="/Vendor/Comment/DeleteComment/@item.UserCommentId" class="btn btn-danger">Delete</a></td>
+                                    <td><a href="/Vendor/Comment/UpdateComment/@item.UserCommentId" class="btn btn-success">Update</a></td>
                                 </tr>
                             }
                         </tbody>
                     </table>
-                    <a href="/Admin/Comment/CreateComment" class="btn btn-primary">Add New Comment</a>
                 </div>
             </div>
         </div>

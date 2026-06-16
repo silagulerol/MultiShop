@@ -28,6 +28,8 @@ namespace MultiShop.Order.Application.Features.CQRS.Handlers.OrderDetailHandlers
                 Quantity= createOrderDetailCommand.Quantity,
                 ProductTotalPrice= createOrderDetailCommand.ProductTotalPrice,
                 OrderingId= createOrderDetailCommand.OrderingId,
+                VendorId = createOrderDetailCommand.VendorId,
+                OrderStatus = createOrderDetailCommand.OrderStatus
             });
         }
     }

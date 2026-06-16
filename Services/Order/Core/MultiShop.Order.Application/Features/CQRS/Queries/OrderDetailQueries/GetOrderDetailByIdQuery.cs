@@ -13,5 +13,6 @@ namespace MultiShop.Order.Application.Features.CQRS.Queries.OrderDetailQueries
         {
             OrderDetailId = id;
         }
+        
     }
 }
